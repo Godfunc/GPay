@@ -149,7 +149,7 @@ CREATE TABLE `mg_user`
 
 insert into `mg_user`(`id`, `username`, `password`, `gender`, `mobile`, `super_manager`, `status`, `create_id`,
                       `update_id`, `create_time`, `update_time`, `rm_tag`)
-values (1, 'admin', '$2a$10$NZp1NOTR/uR1Oh8IMVlyPemaueL8P.ZlcIvGNKdw7CZRnEfItjO/W', 1, '17332345631', 1, 1, 0, NULL,
+values (1, 'admin', '$2a$10$Xo7.iYXJyC0hNIiB6lJdkunp/iH65qiB.OS0ot7xxQE2wjSavY1rO', 1, '17332345631', 1, 1, 0, NULL,
         '2019-12-07 19:40:00', NULL, 0),
        (1207472422173884418, 'godfunc', '$2a$10$ByDrbRzojQkfGbYDbikQzuJ6BxWCUp88hyCzIoJL.Kny0YaL8Lk3K', 1,
         '17564345431', 0, 1, 1, 1, '2019-12-19 09:27:14', '2019-12-19 09:27:31', 0);

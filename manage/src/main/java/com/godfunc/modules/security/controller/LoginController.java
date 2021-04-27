@@ -19,17 +19,17 @@ import java.io.IOException;
 /**
  * @author Godfunc
  */
+@RestController
 @Api(tags = "登录")
 @RequiredArgsConstructor
-@RestController
 public class LoginController {
 
     private final CaptchaService captchaService;
 
+    @GetMapping("captcha")
+    @LogRecord("验证码")
     @ApiOperation("验证码")
     @ApiImplicitParam(name = "uuid", value = "uuid", paramType = "query", dataType = "String", dataTypeClass = String.class)
-    @LogRecord("验证码")
-    @GetMapping("captcha")
     public void captcha(@ApiIgnore HttpServletResponse response, String uuid) throws IOException {
         BufferedImage image = captchaService.create(uuid);
         response.setHeader("Cache-Control", "no-store, no-cache");

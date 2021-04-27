@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.godfunc.modules.merchant.mapper.MerchantMapper">
+
+    <select id="selectCustomPage" resultType="com.godfunc.entity.Merchant">
+        select id,
+        user_id,
+        name,
+        code,
+        type,
+        plat_public_key,
+        public_key,
+        status,
+        create_id,
+        update_id,
+        from merchant
+        where rm_tag = 0
+        <if test="type!=null">and type = #{type}</if>
+        <if test="status!=null">and status = #{status}</if>
+        <if test="code!=null and code!=''">and status = #{code}</if>
+        <if test="name!=null and name!=''">and status = #{name}</if>
+    </select>
+</mapper>

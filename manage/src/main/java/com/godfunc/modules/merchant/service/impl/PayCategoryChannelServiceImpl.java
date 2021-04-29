@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class PayCategoryChannelServiceImpl extends ServiceImpl<PayCategoryChannelMapper, PayCategoryChannel> implements PayCategoryChannelService {
     @Override
-    public boolean removeByCategory(String code) {
-        return remove(Wrappers.<PayCategoryChannel>lambdaQuery().eq(PayCategoryChannel::getCategoryCode, code));
+    public boolean removeByCategory(Long categoryId) {
+        return remove(Wrappers.<PayCategoryChannel>lambdaQuery().eq(PayCategoryChannel::getCategoryId, categoryId));
     }
 }

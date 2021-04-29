@@ -62,7 +62,7 @@ public class PayCategoryServiceImpl extends ServiceImpl<PayCategoryMapper, PayCa
     public boolean removeData(Long id) {
         PayCategory payCategory = getById(id);
         Assert.isNull(payCategory, "数据不存在或已被删除");
-        payCategoryChannelService.removeByCategory(payCategory.getCode());
+        payCategoryChannelService.removeByCategory(payCategory.getId());
         return removeById(payCategory.getId());
     }
 

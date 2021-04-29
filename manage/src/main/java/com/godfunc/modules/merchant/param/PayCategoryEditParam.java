@@ -20,6 +20,10 @@ public class PayCategoryEditParam {
     @NotBlank(message = "名称不能为空")
     public String name;
 
+    @ApiModelProperty("编号")
+    @NotBlank(message = "编号不能为空")
+    public String code;
+
     @ApiModelProperty("状态")
     @NotNull(message = "状态不能为空")
     private Integer status;

@@ -29,16 +29,16 @@ public class LogOperationController {
 
     private final LogOperationService logOperationService;
 
+    @GetMapping("page/{page}/{limit}")
+    @LogRecord(LogRecordConstant.PAGE)
     @ApiOperation(LogRecordConstant.PAGE)
+    @PreAuthorize("hasAuthority('mg:log:page')")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "page", value = "当前页码", paramType = "path", required = true, dataType = "int", dataTypeClass = Integer.class),
             @ApiImplicitParam(name = "limit", value = "每页条数", paramType = "path", required = true, dataType = "int", dataTypeClass = Integer.class),
             @ApiImplicitParam(name = "status", value = "状态", paramType = "query", dataType = "int", dataTypeClass = Integer.class),
             @ApiImplicitParam(name = "operation", value = "用户操作", paramType = "query", dataType = "String", dataTypeClass = String.class)
     })
-    @LogRecord(LogRecordConstant.PAGE)
-    @PreAuthorize("hasAuthority('mg:log:page')")
-    @GetMapping("page/{page}/{limit}")
     public R<PageDTO<LogDTO>> page(@PathVariable Integer page,
                                    @PathVariable Integer limit,
                                    @RequestParam(required = false) Integer status,

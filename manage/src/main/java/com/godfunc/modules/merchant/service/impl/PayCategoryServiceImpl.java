@@ -52,6 +52,7 @@ public class PayCategoryServiceImpl extends ServiceImpl<PayCategoryMapper, PayCa
         PayCategory payCategory = getById(param.getId());
         Assert.isNull(payCategory, "修改的数据不存在或已被删除");
         payCategory.setName(param.getName());
+        payCategory.setCode(param.getCode());
         payCategory.setStatus(param.getStatus());
         updateById(payCategory);
         return payCategory.getId();

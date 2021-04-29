@@ -81,7 +81,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = "user::detail")
+    @CacheEvict(cacheNames = "user::detail", allEntries = true)
     public Long add(MenuAddParam param) {
         ValidatorUtils.validate(param);
         if (MenuTypeEnum.MENU.getValue() == param.getType()) {
@@ -122,7 +122,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = "user::detail")
+    @CacheEvict(cacheNames = "user::detail", allEntries = true)
     public boolean removeData(Long id) {
         deleteData(id);
         return true;

@@ -1,5 +1,6 @@
 package com.godfunc.modules.security.handler;
 
+import com.godfunc.result.ApiCodeMsg;
 import com.godfunc.result.R;
 import com.godfunc.util.ResponseUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,6 @@ public class NoAuthEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         log.info("授权错误", authException);
-        ResponseUtils.out(response, R.fail("请先登录"));
+        ResponseUtils.out(response, R.fail(ApiCodeMsg.UNAUTHORIZED));
     }
 }

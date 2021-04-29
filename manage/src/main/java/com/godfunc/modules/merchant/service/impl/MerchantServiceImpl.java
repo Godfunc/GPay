@@ -48,7 +48,6 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantMapper, Merchant> i
         Merchant merchant = getById(param.getId());
         Assert.isNull(merchant, "商户不存在");
         merchant.setName(param.getName());
-        merchant.setCode(param.getCode());
         merchant.setPublicKey(param.getPublicKey());
         merchant.setStatus(param.getStatus());
         updateById(merchant);

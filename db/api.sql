@@ -1,6 +1,6 @@
 -- user table
 CREATE TABLE `t_user` (
-  `id` BIGINT(16) NOT NULL COMMENT '主键',
+  `id` bigint(20) NOT NULL COMMENT '主键',
   `username` VARCHAR(128) NOT NULL COMMENT '用户名',
   `password` VARCHAR(128) NOT NULL COMMENT '密码',
   `mobile` VARCHAR(16) NOT NULL COMMENT '手机号',
@@ -13,8 +13,8 @@ CREATE TABLE `t_user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '用户表';
 
 CREATE TABLE `t_user_token` (
-  `id` BIGINT(16) NOT NULL COMMENT '主键',
-  `user_id` BIGINT(16) NOT NULL COMMENT '用户id',
+  `id` bigint(20) NOT NULL COMMENT '主键',
+  `user_id` bigint(20) NOT NULL COMMENT '用户id',
   `token` VARCHAR(512) NOT NULL COMMENT 'token',
   `expire_time` DATETIME NOT NULL COMMENT '过期时间',
   `create_time` DATETIME NOT NULL COMMENT '创建时间',

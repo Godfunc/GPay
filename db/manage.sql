@@ -4,7 +4,7 @@ USE `gpay`;
 DROP TABLE IF EXISTS `mg_log_operation`;
 CREATE TABLE `mg_log_operation`
 (
-    `id`             bigint(16) NOT NULL COMMENT '主键',
+    `id`             bigint(20) NOT NULL COMMENT '主键',
     `operation`      varchar(512) DEFAULT NULL COMMENT '用户操作',
     `request_url`    varchar(512) DEFAULT NULL COMMENT '请求地址',
     `request_params` text COMMENT '请求参数',
@@ -12,7 +12,7 @@ CREATE TABLE `mg_log_operation`
     `user_agent`     varchar(512) DEFAULT NULL COMMENT '用户代理',
     `ip`             varchar(64)  DEFAULT NULL COMMENT 'ip地址',
     `status`         tinyint(2) NOT NULL COMMENT '状态 0失败 1成功',
-    `create_id`      bigint(16)   DEFAULT NULL COMMENT '创建人',
+    `create_id`      bigint(20)   DEFAULT NULL COMMENT '创建人',
     `create_user`    varchar(128) DEFAULT NULL COMMENT '用户名',
     `create_time`    datetime   NOT NULL COMMENT '创建时间',
     PRIMARY KEY (`id`),
@@ -25,8 +25,8 @@ CREATE TABLE `mg_log_operation`
 DROP TABLE IF EXISTS `mg_menu`;
 CREATE TABLE `mg_menu`
 (
-    `id`          bigint(16)    NOT NULL COMMENT '主键',
-    `pid`         bigint(16)    NOT NULL DEFAULT '0' COMMENT '父id',
+    `id`          bigint(20)    NOT NULL COMMENT '主键',
+    `pid`         bigint(20)    NOT NULL DEFAULT '0' COMMENT '父id',
     `path`        varchar(512)  NOT NULL DEFAULT '' COMMENT '路由地址',
     `component`   varchar(512)  NOT NULL COMMENT '组件',
     `type`        tinyint(4)    NOT NULL COMMENT '类型 1菜单 2按钮',
@@ -79,11 +79,11 @@ values (1, 0, '/system', 'Layout', 1, 0, '', '系统功能', 1, '', 1, '', '系�
 DROP TABLE IF EXISTS `mg_role`;
 CREATE TABLE `mg_role`
 (
-    `id`          bigint(16)   NOT NULL COMMENT '主键',
+    `id`          bigint(20)   NOT NULL COMMENT '主键',
     `name`        varchar(128) NOT NULL COMMENT '角色名',
     `remark`      varchar(1024) DEFAULT NULL COMMENT '备注',
-    `create_id`   bigint(16)   NOT NULL COMMENT '创建人',
-    `update_id`   bigint(16)    DEFAULT NULL COMMENT '更新人',
+    `create_id`   bigint(20)   NOT NULL COMMENT '创建人',
+    `update_id`   bigint(20)    DEFAULT NULL COMMENT '更新人',
     `create_time` datetime     NOT NULL COMMENT '创建时间',
     `update_time` datetime      DEFAULT NULL COMMENT '更新时间',
     PRIMARY KEY (`id`)
@@ -98,10 +98,10 @@ values (1207276640430780417, '一般管理员', '具备当前所有菜单', 1, N
 DROP TABLE IF EXISTS `mg_role_menu`;
 CREATE TABLE `mg_role_menu`
 (
-    `id`          bigint(16) NOT NULL COMMENT '主键',
-    `role_id`     bigint(16) NOT NULL COMMENT '角色id',
-    `menu_id`     bigint(16) NOT NULL COMMENT '菜单id',
-    `create_id`   bigint(16) NOT NULL COMMENT '创建人',
+    `id`          bigint(20) NOT NULL COMMENT '主键',
+    `role_id`     bigint(20) NOT NULL COMMENT '角色id',
+    `menu_id`     bigint(20) NOT NULL COMMENT '菜单id',
+    `create_id`   bigint(20) NOT NULL COMMENT '创建人',
     `create_time` datetime   NOT NULL COMMENT '创建时间',
     PRIMARY KEY (`id`),
     KEY `idx_role_id` (`role_id`),
@@ -129,15 +129,15 @@ values (1207479023077171201, 1207276640430780417, 1, 1, '2019-12-19 09:53:28'),
 DROP TABLE IF EXISTS `mg_user`;
 CREATE TABLE `mg_user`
 (
-    `id`            bigint(16)   NOT NULL COMMENT '主键',
+    `id`            bigint(20)   NOT NULL COMMENT '主键',
     `username`      varchar(128) NOT NULL COMMENT '用户名',
     `password`      varchar(128) NOT NULL COMMENT '密码',
     `gender`        tinyint(2)            DEFAULT NULL COMMENT '性别 1男 2女 3未知',
     `mobile`        varchar(64)           DEFAULT NULL COMMENT '手机号',
     `super_manager` tinyint(2)   NOT NULL DEFAULT '0' COMMENT '超级管理员 0不是 1是',
     `status`        tinyint(2)   NOT NULL DEFAULT '1' COMMENT '状态 0停用 1启用',
-    `create_id`     bigint(16)   NOT NULL COMMENT '创建人',
-    `update_id`     bigint(16)            DEFAULT NULL COMMENT '更新人',
+    `create_id`     bigint(20)   NOT NULL COMMENT '创建人',
+    `update_id`     bigint(20)            DEFAULT NULL COMMENT '更新人',
     `create_time`   datetime     NOT NULL COMMENT '创建时间',
     `update_time`   datetime              DEFAULT NULL COMMENT '更新时间',
     `rm_tag`        tinyint(2)   NOT NULL DEFAULT '0' COMMENT '删除标记 0正常 1删除',
@@ -158,10 +158,10 @@ values (1, 'admin', '$2a$10$Xo7.iYXJyC0hNIiB6lJdkunp/iH65qiB.OS0ot7xxQE2wjSavY1r
 DROP TABLE IF EXISTS `mg_user_role`;
 CREATE TABLE `mg_user_role`
 (
-    `id`          bigint(16) NOT NULL COMMENT '主键',
-    `user_id`     bigint(16) NOT NULL COMMENT '用户id',
-    `role_id`     bigint(16) NOT NULL COMMENT '角色id',
-    `create_id`   bigint(16) NOT NULL COMMENT '创建人',
+    `id`          bigint(20) NOT NULL COMMENT '主键',
+    `user_id`     bigint(20) NOT NULL COMMENT '用户id',
+    `role_id`     bigint(20) NOT NULL COMMENT '角色id',
+    `create_id`   bigint(20) NOT NULL COMMENT '创建人',
     `create_time` datetime   NOT NULL COMMENT '创建时间',
     PRIMARY KEY (`id`),
     INDEX `idx_role_id` (`role_id`),
@@ -175,8 +175,8 @@ values (1207484319900114945, 1207472422173884418, 1207484254867431425, 1, '2019-
 DROP TABLE IF EXISTS `mg_user_token`;
 CREATE TABLE `mg_user_token`
 (
-    `id`          bigint(16)   NOT NULL COMMENT '主键',
-    `user_id`     bigint(16)   NOT NULL COMMENT '用户id',
+    `id`          bigint(20)   NOT NULL COMMENT '主键',
+    `user_id`     bigint(20)   NOT NULL COMMENT '用户id',
     `token`       varchar(512) NOT NULL COMMENT 'token',
     `expire_time` datetime     NOT NULL COMMENT '过期时间',
     `create_time` datetime     NOT NULL COMMENT '创建时间',

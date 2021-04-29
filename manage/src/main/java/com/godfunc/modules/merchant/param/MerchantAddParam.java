@@ -20,6 +20,9 @@ public class MerchantAddParam {
     @NotBlank(message = "商户名不能为空")
     private String name;
 
+    @ApiModelProperty("商户公钥")
+    private String publicKey;
+
     @ApiModelProperty("状态")
     @NotNull(message = "商户状态不能为空")
     private Integer status;

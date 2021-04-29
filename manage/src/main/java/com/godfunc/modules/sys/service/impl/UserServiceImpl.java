@@ -23,6 +23,7 @@ import com.godfunc.modules.sys.service.RoleMenuService;
 import com.godfunc.modules.sys.service.UserRoleService;
 import com.godfunc.modules.sys.service.UserService;
 import com.godfunc.util.Assert;
+import com.godfunc.util.ConvertUtils;
 import com.godfunc.util.ValidatorUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -184,5 +185,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User user = getById(SecurityUser.getUserId());
         user.setPassword(passwordEncoder.encode(param.getNewPassword()));
         return updateById(user);
+    }
+
+    @Override
+    public List<UserDTO> getList() {
+        List<User> list = list();
+        return ConvertUtils.source2Target(list, UserDTO.class);
     }
 }

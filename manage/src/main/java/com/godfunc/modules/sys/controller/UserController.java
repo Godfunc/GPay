@@ -19,6 +19,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * <p>
  * 系统用户 前端控制器
@@ -56,6 +58,14 @@ public class UserController {
                                     @RequestParam(required = false) String username,
                                     @RequestParam(required = false) Integer status) {
         return R.ok(userService.getPage(page, limit, status, username));
+    }
+
+    @GetMapping("list")
+    @LogRecord(LogRecordConstant.LIST)
+    @ApiOperation(LogRecordConstant.LIST)
+    @PreAuthorize("hasAuthority('mg:user:list')")
+    public R<List<UserDTO>> list() {
+        return R.ok(userService.getList());
     }
 
     @PostMapping("add")

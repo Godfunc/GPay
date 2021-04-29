@@ -11,6 +11,8 @@ import com.godfunc.modules.sys.param.UserPasswordParam;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import java.util.List;
+
 /**
  * <p>
  * 系统用户 服务类
@@ -36,4 +38,6 @@ public interface UserService extends IService<User>, UserDetailsService {
     boolean removeData(Long id);
 
     boolean password(UserPasswordParam param);
+
+    List<UserDTO> getList();
 }

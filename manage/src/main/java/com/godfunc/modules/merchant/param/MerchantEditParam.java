@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 
 
 @Data
-@ApiModel("新增商户")
+@ApiModel("修改商户")
 public class MerchantEditParam {
 
     @ApiModelProperty("商户id")
@@ -19,10 +19,6 @@ public class MerchantEditParam {
     @ApiModelProperty("商户名")
     @NotBlank(message = "商户名不能为空")
     private String name;
-
-    @ApiModelProperty("商户号")
-    @NotBlank(message = "商户号不能为空")
-    private String code;
 
     @ApiModelProperty("商户公钥")
     @NotBlank(message = "商户公钥不能为空")

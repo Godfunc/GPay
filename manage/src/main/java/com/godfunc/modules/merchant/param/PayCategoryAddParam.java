@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 
 
 @Data
-@ApiModel("新增商户")
+@ApiModel("新增渠道主类")
 public class PayCategoryAddParam {
 
     @ApiModelProperty("名称")

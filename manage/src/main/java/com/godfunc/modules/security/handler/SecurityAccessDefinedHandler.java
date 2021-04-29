@@ -1,5 +1,6 @@
 package com.godfunc.modules.security.handler;
 
+import com.godfunc.result.ApiCodeMsg;
 import com.godfunc.result.R;
 import com.godfunc.util.ResponseUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,6 @@ public class SecurityAccessDefinedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         log.info("资源访问受限", accessDeniedException);
-        ResponseUtils.out(response, R.fail("没有访问权限"));
+        ResponseUtils.out(response, R.fail(ApiCodeMsg.NOPERMISSION));
     }
 }

@@ -28,7 +28,6 @@ import com.godfunc.util.ValidatorUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.GrantedAuthority;
@@ -82,8 +81,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (user == null) {
             throw new UsernameNotFoundException("用户不存在");
         }
-        UserDetail userDetail = new UserDetail();
-        BeanUtils.copyProperties(user, userDetail);
+        UserDetail userDetail = ConvertUtils.source2Target(user, UserDetail.class);
         List<RoleMenuModel> roleMenus = null;
         if (SuperManagerEnum.SUPER_MANAGER.getValue() == user.getSuperManager()) {
             List<UserRole> userRoles = userRoleService.getUserRoles(null);
@@ -134,8 +132,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Assert.isNotNull(user, "用户名已存在");
         Assert.isTrue(!param.getPassword().equals(param.getConfirmPassword()), "两次输入密码不一样，请重新输入");
         param.setPassword(passwordEncoder.encode(param.getPassword()));
-        user = new User();
-        BeanUtils.copyProperties(param, user);
+        user = ConvertUtils.source2Target(param, User.class);
         save(user);
         userRoleService.saveRoles(user.getId(), param.getRoles());
         return user.getId();

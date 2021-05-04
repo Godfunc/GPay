@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.godfunc.modules.merchant.mapper.PayChannelMapper">
+
+    <select id="selectCustomPage" resultType="com.godfunc.entity.PayChannel">
+        select id,
+        name,
+        code,
+        create_url,
+        query_url,
+        notify_url,
+        pay_type_info,
+        logical_tag,
+        cost_rate,
+        create_id,
+        update_id,
+        create_time,
+        update_time from pay_channel where rm_tag = 0
+        <if test="status!=null">and status = #{status}</if>
+        <if test="name!=null and name!=''">and name = #{name}</if>
+        <if test="code!=null and code!=''">and code = #{code}</if>
+    </select>
+</mapper>

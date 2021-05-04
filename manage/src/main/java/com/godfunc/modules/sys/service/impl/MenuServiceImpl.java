@@ -93,8 +93,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
             Assert.isBlank(param.getPermissions(), "名称不能为空");
             Assert.isNull(param.getPid(), "父菜单不能为空");
         }
-        Menu menu = new Menu();
-        BeanUtils.copyProperties(param, menu);
+        Menu menu = ConvertUtils.source2Target(param, Menu.class);
         save(menu);
         return menu.getId();
     }

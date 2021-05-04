@@ -59,7 +59,7 @@ public class PayChannel implements Serializable {
     /**
      * 成本费率
      */
-    private Double costRate;
+    private Float costRate;
 
     /**
      * 状态 0禁用 1启用

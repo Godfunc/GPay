@@ -22,7 +22,6 @@ import com.godfunc.util.ConvertUtils;
 import com.godfunc.util.RSAUtils;
 import com.godfunc.util.ValidatorUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
@@ -60,8 +59,7 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantMapper, Merchant> i
         Assert.isTrue(checkExistByUserId(param.getUserId()), "当前用户已创建过商户信息");
         User user = userService.getById(param.getUserId());
         Assert.isNull(user, "选择的用户不存在或已被删除");
-        Merchant merchant = new Merchant();
-        BeanUtils.copyProperties(param, merchant);
+        Merchant merchant = ConvertUtils.source2Target(param, Merchant.class);
         RSAUtils.KeyPairModel keyPairModel = null;
         try {
             keyPairModel = RSAUtils.generateKeyPair();

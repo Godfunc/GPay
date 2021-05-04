@@ -21,7 +21,6 @@ import com.godfunc.util.ConvertUtils;
 import com.godfunc.util.ValidatorUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,8 +58,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         ValidatorUtils.validate(param);
         Role role = getOne(Wrappers.<Role>lambdaQuery().eq(Role::getName, param.getName()));
         Assert.isNotNull(role, "角色名[{}]已存在", param.getName());
-        role = new Role();
-        BeanUtils.copyProperties(param, role);
+        role = ConvertUtils.source2Target(param, Role.class);
         save(role);
         roleMenuService.saveRoleMenus(role.getId(), param.getMenus());
         return role.getId();

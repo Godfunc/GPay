@@ -5,4 +5,6 @@ import com.godfunc.entity.PayCategoryChannel;
 
 public interface PayCategoryChannelService extends IService<PayCategoryChannel> {
     boolean removeByCategory(Long categoryId);
+
+    boolean removeByChannel(Long channelId);
 }

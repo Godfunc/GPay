@@ -37,7 +37,7 @@ public class MerchantChannelRate implements Serializable {
     /**
      * 费率
      */
-    private Double rate;
+    private Float rate;
 
     /**
      * 创建人id

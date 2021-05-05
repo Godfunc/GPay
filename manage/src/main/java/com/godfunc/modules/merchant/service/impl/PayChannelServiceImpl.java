@@ -40,6 +40,7 @@ public class PayChannelServiceImpl extends ServiceImpl<PayChannelMapper, PayChan
         ValidatorUtils.validate(param);
         Assert.isTrue(checkCode(param.getCode(), null), "编号已存在");
         PayChannel payChannel = ConvertUtils.source2Target(param, PayChannel.class);
+        payChannel.setCostRate(Float.parseFloat(param.getCostRate()));
         save(payChannel);
         return payChannel.getId();
     }

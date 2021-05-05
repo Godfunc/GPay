@@ -29,8 +29,8 @@ public class PayChannelEditParam {
     @NotNull(message = "状态不能为空")
     private Integer status;
 
-    @ApiModelProperty("订单创建网关")
-    @NotBlank(message = "订单创建网关不能为空")
+    @ApiModelProperty("下单网关")
+    @NotBlank(message = "下单网关不能为空")
     private String createUrl;
 
     @ApiModelProperty("订单查询网关")
@@ -43,6 +43,7 @@ public class PayChannelEditParam {
     private String payTypeInfo;
 
     @ApiModelProperty("逻辑标识")
+    @NotBlank(message = "逻辑标识不能为空")
     private String logicalTag;
 
     @ApiModelProperty("费率")

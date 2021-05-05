@@ -20,7 +20,10 @@ public class PayChannelDTO implements Serializable {
     @ApiModelProperty("编号")
     private String code;
 
-    @ApiModelProperty("订单创建网关")
+    @ApiModelProperty("状态")
+    private Integer status;
+
+    @ApiModelProperty("下单网关")
     private String createUrl;
 
     @ApiModelProperty("订单查询网关")

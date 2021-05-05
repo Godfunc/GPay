@@ -6,6 +6,7 @@
         select id,
         name,
         code,
+        status,
         create_url,
         query_url,
         notify_url,

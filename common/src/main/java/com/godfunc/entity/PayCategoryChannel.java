@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 渠道关联
@@ -12,7 +14,14 @@ import lombok.Data;
  */
 @TableName("pay_category_channel")
 @Data
+@NoArgsConstructor
 public class PayCategoryChannel implements Serializable {
+
+    public PayCategoryChannel(Long categoryId, Long channelId) {
+        this.categoryId = categoryId;
+        this.channelId = channelId;
+    }
+
     /**
      * 
      */

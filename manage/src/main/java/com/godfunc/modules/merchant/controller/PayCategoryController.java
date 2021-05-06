@@ -4,6 +4,7 @@ import com.godfunc.constant.LogRecordConstant;
 import com.godfunc.dto.PageDTO;
 import com.godfunc.modules.log.annotation.LogRecord;
 import com.godfunc.modules.merchant.dto.PayCategoryDTO;
+import com.godfunc.modules.merchant.dto.PayCategorySimpleDTO;
 import com.godfunc.modules.merchant.param.PayCategoryAddParam;
 import com.godfunc.modules.merchant.param.PayCategoryEditParam;
 import com.godfunc.modules.merchant.service.PayCategoryService;
@@ -15,6 +16,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @LogRecord("渠道主类")
@@ -42,6 +45,14 @@ public class PayCategoryController {
                                            @RequestParam(required = false) String code,
                                            @RequestParam(required = false) String name) {
         return R.ok(payCategoryService.getPage(page, limit, status, code, name));
+    }
+
+    @GetMapping("list")
+    @LogRecord(LogRecordConstant.LIST)
+    @ApiOperation(LogRecordConstant.LIST)
+    @PreAuthorize("hasAuthority('merchant:payCategory:list')")
+    public R<List<PayCategorySimpleDTO>> list() {
+        return R.ok(payCategoryService.getList());
     }
 
     @PostMapping("add")

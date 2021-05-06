@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.godfunc.dto.PageDTO;
 import com.godfunc.entity.PayCategory;
 import com.godfunc.modules.merchant.dto.PayCategoryDTO;
+import com.godfunc.modules.merchant.dto.PayCategorySimpleDTO;
+import com.godfunc.modules.merchant.enums.PayCategoryStatusEnum;
 import com.godfunc.modules.merchant.mapper.PayCategoryMapper;
 import com.godfunc.modules.merchant.param.PayCategoryAddParam;
 import com.godfunc.modules.merchant.param.PayCategoryEditParam;
@@ -32,6 +34,11 @@ public class PayCategoryServiceImpl extends ServiceImpl<PayCategoryMapper, PayCa
         List<PayCategory> list = this.baseMapper.selectCustomPage(resultPage, status, code, name);
         resultPage.setRecords(ConvertUtils.source2Target(list, PayCategoryDTO.class));
         return new PageDTO<PayCategoryDTO>(resultPage);
+    }
+
+    @Override
+    public List<PayCategorySimpleDTO> getList() {
+        return this.baseMapper.selectListByStatus(PayCategoryStatusEnum.ENABLE.getValue());
     }
 
     @Override

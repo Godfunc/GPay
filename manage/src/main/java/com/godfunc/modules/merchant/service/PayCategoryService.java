@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.godfunc.dto.PageDTO;
 import com.godfunc.entity.PayCategory;
 import com.godfunc.modules.merchant.dto.PayCategoryDTO;
+import com.godfunc.modules.merchant.dto.PayCategorySimpleDTO;
 import com.godfunc.modules.merchant.param.PayCategoryAddParam;
 import com.godfunc.modules.merchant.param.PayCategoryEditParam;
+
+import java.util.List;
 
 public interface PayCategoryService extends IService<PayCategory> {
     PageDTO<PayCategoryDTO> getPage(Integer page, Integer limit, Integer status, String code, String name);
@@ -15,4 +18,6 @@ public interface PayCategoryService extends IService<PayCategory> {
     Long edit(PayCategoryEditParam param);
 
     boolean removeData(Long id);
+
+    List<PayCategorySimpleDTO> getList();
 }

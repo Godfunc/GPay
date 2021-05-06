@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.godfunc.modules.merchant.mapper.PayCategoryMapper">
-
-
     <select id="selectCustomPage" resultType="com.godfunc.entity.PayCategory">
         select id,
         name,
@@ -17,5 +15,10 @@
         <if test="status!=null">and status = #{status}</if>
         <if test="code!=null and code!=''">and code = #{code}</if>
         <if test="name!=null and name!=''">and name = #{name}</if>
+    </select>
+    <select id="selectListByStatus" resultType="com.godfunc.modules.merchant.dto.PayCategorySimpleDTO">
+        select id, name
+        from pay_category
+        where status = #{status}
     </select>
 </mapper>

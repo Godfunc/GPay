@@ -46,4 +46,7 @@ public class PayChannelAddParam {
     @NotBlank(message = "费率不能为空")
     @Pattern(regexp = "^\\d{1,2}\\.\\d{0,6}$", message = "费率设置不正确")
     private String costRate;
+    
+    @ApiModelProperty("渠道主类id集合")
+    public Long[] categoryIds;
 }

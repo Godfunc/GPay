@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.godfunc.dto.PageDTO;
+import com.godfunc.entity.PayCategory;
+import com.godfunc.entity.PayCategoryChannel;
 import com.godfunc.entity.PayChannel;
 import com.godfunc.modules.merchant.dto.PayChannelDTO;
 import com.godfunc.modules.merchant.mapper.PayChannelMapper;
@@ -15,17 +17,18 @@ import com.godfunc.modules.merchant.service.PayChannelService;
 import com.godfunc.util.Assert;
 import com.godfunc.util.ConvertUtils;
 import com.godfunc.util.ValidatorUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class PayChannelServiceImpl extends ServiceImpl<PayChannelMapper, PayChannel> implements PayChannelService {
 
-    @Autowired
-    private PayCategoryChannelService payCategoryChannelService;
+    private final PayCategoryChannelService payCategoryChannelService;
 
     @Override
     public PageDTO<PayChannelDTO> getPage(Integer page, Integer limit, Integer status, String code, String name) {
@@ -42,6 +45,7 @@ public class PayChannelServiceImpl extends ServiceImpl<PayChannelMapper, PayChan
         PayChannel payChannel = ConvertUtils.source2Target(param, PayChannel.class);
         payChannel.setCostRate(Float.parseFloat(param.getCostRate()));
         save(payChannel);
+        saveCategoryChannelBatch(param.getCategoryIds(), payChannel.getId());
         return payChannel.getId();
     }
 
@@ -53,7 +57,20 @@ public class PayChannelServiceImpl extends ServiceImpl<PayChannelMapper, PayChan
         Assert.isTrue(checkCode(param.getCode(), payChannel.getId()), "编号已存在");
         BeanUtils.copyProperties(param, payChannel);
         updateById(payChannel);
+        payCategoryChannelService.removeByChannel(payChannel.getId());
+        saveCategoryChannelBatch(param.getCategoryIds(), payChannel.getId());
         return payChannel.getId();
+    }
+
+    private boolean saveCategoryChannelBatch(Long[] categoryIds, Long payChannelId) {
+        if (categoryIds != null) {
+            List<PayCategoryChannel> categoryChannels = new ArrayList<>();
+            for (Long categoryId : categoryIds) {
+                categoryChannels.add(new PayCategoryChannel(categoryId, payChannelId));
+            }
+            return payCategoryChannelService.saveBatch(categoryChannels);
+        }
+        return false;
     }
 
     @Override

@@ -20,5 +20,12 @@
         <if test="status!=null">and status = #{status}</if>
         <if test="name!=null and name!=''">and name = #{name}</if>
         <if test="code!=null and code!=''">and code = #{code}</if>
+        order by create_time desc
+    </select>
+    <select id="selectByStatus" resultType="com.godfunc.modules.merchant.dto.PayChannelSimpleDTO">
+        select id, name, code
+        from pay_channel
+        where rm_tag = 0
+          and status = #{status}
     </select>
 </mapper>

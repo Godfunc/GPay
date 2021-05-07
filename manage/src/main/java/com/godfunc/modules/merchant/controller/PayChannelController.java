@@ -3,7 +3,9 @@ package com.godfunc.modules.merchant.controller;
 import com.godfunc.constant.LogRecordConstant;
 import com.godfunc.dto.PageDTO;
 import com.godfunc.modules.log.annotation.LogRecord;
+import com.godfunc.modules.merchant.dto.PayCategorySimpleDTO;
 import com.godfunc.modules.merchant.dto.PayChannelDTO;
+import com.godfunc.modules.merchant.dto.PayChannelSimpleDTO;
 import com.godfunc.modules.merchant.param.PayChannelAddParam;
 import com.godfunc.modules.merchant.param.PayChannelEditParam;
 import com.godfunc.modules.merchant.service.PayChannelService;
@@ -15,6 +17,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @LogRecord("渠道子类")
@@ -42,6 +46,14 @@ public class PayChannelController {
                                           @RequestParam(required = false) String code,
                                           @RequestParam(required = false) String name) {
         return R.ok(payChannelService.getPage(page, limit, status, code, name));
+    }
+
+    @GetMapping("list")
+    @LogRecord(LogRecordConstant.LIST)
+    @ApiOperation(LogRecordConstant.LIST)
+    @PreAuthorize("hasAuthority('merchant:payChannel:list')")
+    public R<List<PayChannelSimpleDTO>> list() {
+        return R.ok(payChannelService.getList());
     }
 
     @PostMapping("add")

@@ -15,10 +15,12 @@
         <if test="status!=null">and status = #{status}</if>
         <if test="code!=null and code!=''">and code = #{code}</if>
         <if test="name!=null and name!=''">and name = #{name}</if>
+        order by create_time desc
     </select>
     <select id="selectListByStatus" resultType="com.godfunc.modules.merchant.dto.PayCategorySimpleDTO">
-        select id, name
+        select id, name, code
         from pay_category
         where status = #{status}
+        order by create_time desc
     </select>
 </mapper>

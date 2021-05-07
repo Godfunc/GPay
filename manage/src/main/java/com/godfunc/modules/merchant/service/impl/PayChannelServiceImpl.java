@@ -5,10 +5,11 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.godfunc.dto.PageDTO;
-import com.godfunc.entity.PayCategory;
 import com.godfunc.entity.PayCategoryChannel;
 import com.godfunc.entity.PayChannel;
 import com.godfunc.modules.merchant.dto.PayChannelDTO;
+import com.godfunc.modules.merchant.dto.PayChannelSimpleDTO;
+import com.godfunc.modules.merchant.enums.PayChannelStatusEnum;
 import com.godfunc.modules.merchant.mapper.PayChannelMapper;
 import com.godfunc.modules.merchant.param.PayChannelAddParam;
 import com.godfunc.modules.merchant.param.PayChannelEditParam;
@@ -36,6 +37,11 @@ public class PayChannelServiceImpl extends ServiceImpl<PayChannelMapper, PayChan
         List<PayChannel> list = this.baseMapper.selectCustomPage(resultPage, status, code, name);
         resultPage.setRecords(ConvertUtils.source2Target(list, PayChannelDTO.class));
         return new PageDTO<PayChannelDTO>(resultPage);
+    }
+
+    @Override
+    public List<PayChannelSimpleDTO> getList() {
+        return this.baseMapper.selectByStatus(PayChannelStatusEnum.ENABLE.getValue());
     }
 
     @Override

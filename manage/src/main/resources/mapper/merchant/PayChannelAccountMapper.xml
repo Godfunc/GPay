@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.godfunc.modules.merchant.mapper.PayChannelAccountMapper">
+
+
+    <select id="selectCustomPage" resultType="com.godfunc.modules.merchant.dto.PayChannelAccountDTO">
+        select ca.id,
+        ca.name,
+        ca.channel_id,
+        c.code channel_code,
+        ca.account_code,
+        ca.key_info,
+        ca.risk_type,
+        ca.weight,
+        ca.status,
+        ca.create_time,
+        ca.update_time
+        from pay_channel_account ca
+        left join pay_channel c on c.id = ca.channel_id and c.rm_tag = 0
+        where ca.rm_tag = 0
+        <if test="status!=null">and ca.status = #{status}</if>
+        <if test="name!=null and name!=''">and ca.name = #{name}</if>
+        <if test="channelCode!=null and channelCode!=''">and c.code = #{channelCode}</if>
+        <if test="accountCode!=null and accountCode!=''">and ca.account_code = #{accountCode}</if>
+        order by create_time desc
+    </select>
+</mapper>

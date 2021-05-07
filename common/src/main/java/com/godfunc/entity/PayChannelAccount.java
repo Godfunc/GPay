@@ -32,7 +32,7 @@ public class PayChannelAccount implements Serializable {
     /**
      * 渠道子类账号商户号
      */
-    private String merchantCode;
+    private String accountCode;
 
     /**
      * 渠道子类商户密钥

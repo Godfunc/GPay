@@ -38,11 +38,6 @@ public class ChannelRisk implements Serializable {
     private Long dayAmountMax;
 
     /**
-     * 每日最小限额 -1标识不限制
-     */
-    private Long dayAmountMin;
-
-    /**
      * 单笔最大限额 -1标识不限制
      */
     private Long oneAmountMax;

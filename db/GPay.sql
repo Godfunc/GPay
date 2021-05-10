@@ -189,7 +189,6 @@ create table channel_risk
     channel_id         bigint(64) not null comment '渠道子类id',
     channel_account_id bigint(20) null comment '渠道子类商户id',
     day_amount_max     bigint(20) not null default -1 comment '每日最大限额 -1标识不限制',
-    day_amount_min     bigint(20) not null default -1 comment '每日最小限额 -1标识不限制',
     one_amount_max     bigint(20) not null default -1 comment '单笔最大限额 -1标识不限制',
     one_amount_min     bigint(20) not null default -1 comment '单笔最小限额 -1标识不限制',
     one_amount         text       null comment '指定单笔金额，多个用,分割',

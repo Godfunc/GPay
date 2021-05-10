@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.godfunc.modules.merchant.mapper.ChannelRiskMapper">
+
+
+    <select id="selectCustomPage" resultType="com.godfunc.modules.merchant.dto.ChannelRiskDTO">
+        select cr.id,
+        cr.channel_id,
+        pc.code channel_code,
+        cr.channel_account_id,
+        pca.account_code,
+        cr.day_amount_max,
+        cr.one_amount_min,
+        cr.one_amount_max,
+        cr.day_start_time,
+        cr.day_end_time,
+        cr.one_amount,
+        cr.status,
+        cr.create_id,
+        cr.update_id,
+        cr.create_time,
+        cr.update_time
+        from channel_risk cr left join pay_channel
+        pc on pc.id = cr.channel_id and pc.rm_tag = 0
+        left join pay_channel_account pca on pca.id = cr.channel_account_id and pca.rm_tag = 0
+        where cr.rm_tag = 0
+        <if test="channelCode!=null and channelCode!=''">and pc.code = #{channelCode}</if>
+        <if test="accountCode!=null and accountCode!=''">and pca.account_code = #{accountCode}</if>
+        order by cr.create_time desc
+    </select>
+    <select id="selectByAccount" resultType="com.godfunc.modules.merchant.dto.ChannelRiskSimpleDTO">
+        select id,
+               day_amount_max,
+               one_amount_min,
+               one_amount_max,
+               day_start_time,
+               day_end_time,
+               one_amount,
+               status,
+               create_time
+        from channel_risk
+        where channel_account_id = #{channelAccountId}
+          and rm_tag = 0
+    </select>
+    <select id="selectByChannel" resultType="com.godfunc.modules.merchant.dto.ChannelRiskSimpleDTO">
+        select id,
+               day_amount_max,
+               one_amount_min,
+               one_amount_max,
+               day_start_time,
+               day_end_time,
+               one_amount,
+               status,
+               create_time
+        from channel_risk
+        where channel_account_id is null
+          and channel_id = #{channelId}
+          and rm_tag = 0
+    </select>
+</mapper>

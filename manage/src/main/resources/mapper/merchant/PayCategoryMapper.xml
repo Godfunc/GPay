@@ -20,7 +20,7 @@
     <select id="selectListByStatus" resultType="com.godfunc.modules.merchant.dto.PayCategorySimpleDTO">
         select id, name, code
         from pay_category
-        where status = #{status}
+        where status = #{status} and rm_tag = 0
         order by create_time desc
     </select>
 </mapper>

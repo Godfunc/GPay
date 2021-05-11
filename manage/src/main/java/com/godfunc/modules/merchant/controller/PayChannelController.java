@@ -3,7 +3,6 @@ package com.godfunc.modules.merchant.controller;
 import com.godfunc.constant.LogRecordConstant;
 import com.godfunc.dto.PageDTO;
 import com.godfunc.modules.log.annotation.LogRecord;
-import com.godfunc.modules.merchant.dto.PayCategorySimpleDTO;
 import com.godfunc.modules.merchant.dto.PayChannelDTO;
 import com.godfunc.modules.merchant.dto.PayChannelSimpleDTO;
 import com.godfunc.modules.merchant.param.PayChannelAddParam;

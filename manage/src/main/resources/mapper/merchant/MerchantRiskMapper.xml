@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.godfunc.modules.merchant.mapper.MerchantRiskMapper">
+
+
+    <select id="selectMerchantList" resultType="com.godfunc.modules.merchant.dto.MerchantRiskDTO">
+        select id,
+               truncate(one_amount_max/100, 2) one_amount_max,
+               truncate(one_amount_min/100, 2) one_amount_min,
+               status,
+               day_end_time,
+               day_start_time,
+               create_time
+        from merchant_risk
+        where rm_tag = 0
+          and merchant_code = #{merchantCode}
+    </select>
+</mapper>

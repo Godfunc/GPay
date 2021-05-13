@@ -33,18 +33,21 @@ public class ChannelRisk implements Serializable {
     private Long channelAccountId;
 
     /**
-     * 每日最大限额 -1标识不限制
+     * 每日最大限额
      */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private Long dayAmountMax;
 
     /**
-     * 单笔最大限额 -1标识不限制
+     * 单笔最大限额
      */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private Long oneAmountMax;
 
     /**
-     * 单笔最小限额 -1标识不限制
+     * 单笔最小限额
      */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private Long oneAmountMin;
 
     /**

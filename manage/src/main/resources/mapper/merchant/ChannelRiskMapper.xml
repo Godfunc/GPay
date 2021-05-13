@@ -9,9 +9,9 @@
         pc.code channel_code,
         cr.channel_account_id,
         pca.account_code,
-        cr.day_amount_max,
-        cr.one_amount_min,
-        cr.one_amount_max,
+        truncate(cr.day_amount_max/100, 2) day_amount_max,
+        truncate(cr.one_amount_min/100, 2) one_amount_min,
+        truncate(cr.one_amount_max/100, 2) one_amount_max,
         cr.day_start_time,
         cr.day_end_time,
         cr.one_amount,
@@ -30,9 +30,9 @@
     </select>
     <select id="selectByAccount" resultType="com.godfunc.modules.merchant.dto.ChannelRiskSimpleDTO">
         select id,
-               day_amount_max,
-               one_amount_min,
-               one_amount_max,
+               truncate(day_amount_max/100, 2) day_amount_max,
+               truncate(one_amount_min/100, 2) one_amount_min,
+               truncate(one_amount_max/100, 2) one_amount_max,
                day_start_time,
                day_end_time,
                one_amount,
@@ -44,9 +44,9 @@
     </select>
     <select id="selectByChannel" resultType="com.godfunc.modules.merchant.dto.ChannelRiskSimpleDTO">
         select id,
-               day_amount_max,
-               one_amount_min,
-               one_amount_max,
+               truncate(day_amount_max/100, 2) day_amount_max,
+               truncate(one_amount_min/100, 2) one_amount_min,
+               truncate(one_amount_max/100, 2) one_amount_max,
                day_start_time,
                day_end_time,
                one_amount,

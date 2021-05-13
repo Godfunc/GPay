@@ -31,7 +31,7 @@ public class ValidatorUtils {
         if (!constraintViolations.isEmpty()) {
             StringBuilder msg = new StringBuilder();
             for(ConstraintViolation<Object> constraint:  constraintViolations){
-                msg.append(constraint.getMessage()).append("\n");
+                msg.append(constraint.getMessage()).append("<br>");
             }
             throw new GException(msg.toString(), ApiCode.PARAM_ERROR);
         }

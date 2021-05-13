@@ -51,6 +51,9 @@ public class ChannelRiskController {
     @LogRecord("listByAccount")
     @ApiOperation("listByAccount")
     @PreAuthorize("hasAuthority('merchant:channelRisk:listByAccount')")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "channelAccountId", value = "渠道账号id", paramType = "query", dataType = "Long", dataTypeClass = Long.class)
+    })
     public R<List<ChannelRiskSimpleDTO>> listByAccount(@PathVariable Long channelAccountId) {
         return R.ok(channelRiskService.getByAccount(channelAccountId));
     }
@@ -59,6 +62,9 @@ public class ChannelRiskController {
     @LogRecord("listByChannel")
     @ApiOperation("listByChannel")
     @PreAuthorize("hasAuthority('merchant:channelRisk:listByChannel')")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "channelId", value = "渠道子类id", paramType = "query", dataType = "Long", dataTypeClass = Long.class)
+    })
     public R<List<ChannelRiskSimpleDTO>> listByChannel(@PathVariable Long channelId) {
         return R.ok(channelRiskService.getByChannel(channelId));
     }

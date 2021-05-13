@@ -27,14 +27,14 @@ public class ChannelRiskDTO implements Serializable {
     @ApiModelProperty("账号商户号")
     private Long accountCode;
 
-    @ApiModelProperty("每日最大限额 -1标识不限制")
-    private Long dayAmountMax;
+    @ApiModelProperty("每日最大限额")
+    private String dayAmountMax;
 
-    @ApiModelProperty("单笔最大限额 -1标识不限制")
-    private Long oneAmountMax;
+    @ApiModelProperty("单笔最大限额")
+    private String oneAmountMax;
 
-    @ApiModelProperty("单笔最小限额 -1标识不限制")
-    private Long oneAmountMin;
+    @ApiModelProperty("单笔最小限额")
+    private String oneAmountMin;
 
     @ApiModelProperty("指定单笔金额，多个用,分割")
     private String oneAmount;

@@ -26,13 +26,15 @@ public class MerchantRisk implements Serializable {
     private String merchantCode;
 
     /**
-     * 单笔最小 -1标识不限制
+     * 单笔最小
      */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private Long oneAmountMin;
 
     /**
-     * 单笔最大 -1标识不限制
+     * 单笔最大
      */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private Long oneAmountMax;
 
     /**

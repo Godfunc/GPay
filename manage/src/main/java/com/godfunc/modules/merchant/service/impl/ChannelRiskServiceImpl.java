@@ -12,10 +12,9 @@ import com.godfunc.modules.merchant.mapper.ChannelRiskMapper;
 import com.godfunc.modules.merchant.param.ChannelRiskAddParam;
 import com.godfunc.modules.merchant.param.ChannelRiskEditParam;
 import com.godfunc.modules.merchant.service.ChannelRiskService;
+import com.godfunc.util.AmountUtil;
 import com.godfunc.util.Assert;
-import com.godfunc.util.ConvertUtils;
 import com.godfunc.util.ValidatorUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,7 +44,13 @@ public class ChannelRiskServiceImpl extends ServiceImpl<ChannelRiskMapper, Chann
         ValidatorUtils.validate(param);
         ChannelRisk channelRisk = getById(param.getId());
         Assert.isNull(channelRisk, "数据不存在或已被删除");
-        BeanUtils.copyProperties(param, channelRisk);
+        channelRisk.setDayEndTime(param.getDayEndTime());
+        channelRisk.setDayStartTime(param.getDayStartTime());
+        channelRisk.setStatus(param.getStatus());
+        channelRisk.setDayAmountMax(AmountUtil.convertDollar2Cent(param.getDayAmountMax()));
+        channelRisk.setOneAmountMax(AmountUtil.convertDollar2Cent(param.getOneAmountMax()));
+        channelRisk.setOneAmountMin(AmountUtil.convertDollar2Cent(param.getOneAmountMin()));
+        channelRisk.setOneAmount(param.getOneAmount());
         updateById(channelRisk);
         return channelRisk.getId();
     }
@@ -62,8 +67,16 @@ public class ChannelRiskServiceImpl extends ServiceImpl<ChannelRiskMapper, Chann
 
     @Override
     public Long add(ChannelRiskAddParam param) {
-        ValidatorUtils.validate(param);
-        ChannelRisk channelRisk = ConvertUtils.source2Target(param, ChannelRisk.class);
+        ChannelRisk channelRisk = new ChannelRisk();
+        channelRisk.setChannelId(param.getChannelId());
+        channelRisk.setChannelAccountId(param.getChannelAccountId());
+        channelRisk.setDayEndTime(param.getDayEndTime());
+        channelRisk.setDayStartTime(param.getDayStartTime());
+        channelRisk.setStatus(param.getStatus());
+        channelRisk.setDayAmountMax(AmountUtil.convertDollar2Cent(param.getDayAmountMax()));
+        channelRisk.setOneAmountMax(AmountUtil.convertDollar2Cent(param.getOneAmountMax()));
+        channelRisk.setOneAmountMin(AmountUtil.convertDollar2Cent(param.getOneAmountMin()));
+        channelRisk.setOneAmount(param.getOneAmount());
         save(channelRisk);
         return channelRisk.getId();
     }

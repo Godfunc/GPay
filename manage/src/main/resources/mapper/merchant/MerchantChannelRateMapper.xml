@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.godfunc.modules.merchant.mapper.MerchantChannelRateMapper">
+
+    <select id="selectCustomPage" resultType="com.godfunc.modules.merchant.dto.MerchantChannelRateDTO">
+        select mcr.id,
+        mcr.merchant_code,
+        mcr.category_channel_id,
+        m.name merchant_name,
+        cate.name pay_category_name,
+        cate.code pay_category_code,
+        channel.name pay_channel_name,
+        channel.code pay_channel_code,
+        mcr.rate,
+        mcr.create_time
+        from merchant_channel_rate mcr
+        left join pay_category_channel cc on cc.id = mcr.category_channel_id
+        left join pay_channel channel on channel.id = cc.channel_id and channel.rm_tag = 0
+        left join pay_category cate on cate.id = cc.category_id and cate.rm_tag = 0
+        left join merchant m on m.code = mcr.merchant_code and m.rm_tag = 0
+        where channel.id is not null and cate.id is not null
+        <if test="merchantCode!=null and merchantCode!=''">and mcr.merchant_code = #{merchantCode}</if>
+        <if test="categoryCode!=null and categoryCode!=''">and cate.code = #{categoryCode}</if>
+        <if test="channelCode!=null and channelCode!=''">and channel.code = #{channelCode}</if>
+        order by mcr.create_time desc
+    </select>
+</mapper>

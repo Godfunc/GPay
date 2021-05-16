@@ -20,4 +20,6 @@ public interface PayCategoryService extends IService<PayCategory> {
     boolean removeData(Long id);
 
     List<PayCategorySimpleDTO> getList();
+
+    boolean checkExistsById(Long id);
 }

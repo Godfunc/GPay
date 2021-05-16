@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.godfunc.modules.merchant.mapper.PayCategoryChannelMapper">
+
+    <select id="selectListInfo" resultType="com.godfunc.modules.merchant.dto.PayCategoryChannelDTO">
+        select cc.id,
+               cate.name    pay_category_name,
+               cate.code    pay_category_code,
+               channel.code pay_channel_code,
+               channel.name pay_channel_name
+        from pay_category_channel cc
+                 left join pay_category cate on cate.id = cc.category_id and cate.rm_tag = 0
+                 left join pay_channel channel on channel.id = cc.channel_id and channel.rm_tag = 0
+    </select>
+</mapper>

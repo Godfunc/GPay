@@ -41,14 +41,14 @@ public class UsernamePasswordJsonAuthenticationFilter extends UsernamePasswordAu
         LoginParam param = null;
         try {
             param = new ObjectMapper().readValue(request.getInputStream(), LoginParam.class);
-            ValidatorUtils.validate(param);
-            if (!captchaService.validate(param.getUuid(), param.getCaptcha())) {
-                throw new AuthenticationServiceException("验证码不正确，请重新输入");
-            }
-            return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(param.getUsername(), param.getPassword()));
         } catch (IOException e) {
             throw new AuthenticationServiceException("用户名和密码不能为空");
         }
+        ValidatorUtils.validate(param);
+        if (!captchaService.validate(param.getUuid(), param.getCaptcha())) {
+            throw new AuthenticationServiceException("验证码不正确，请重新输入");
+        }
+        return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(param.getUsername(), param.getPassword()));
     }
 
     @Override
@@ -63,7 +63,7 @@ public class UsernamePasswordJsonAuthenticationFilter extends UsernamePasswordAu
         if (failed instanceof BadCredentialsException) {
             ResponseUtils.out(response, R.fail("用户名或密码错误"));
         } else if (failed instanceof InternalAuthenticationServiceException) {
-            ResponseUtils.out(response, R.fail(failed.getMessage()));
+            ResponseUtils.out(response, R.fail("登录异常"));
         } else if (failed instanceof AuthenticationServiceException) {
             ResponseUtils.out(response, R.fail(failed.getMessage()));
         } else if (failed instanceof DisabledException) {

@@ -20,4 +20,6 @@ public interface MerchantService extends IService<Merchant> {
     MerchantKeysDTO getKeys(Long id);
 
     boolean refreshKeys(Long id);
+
+    boolean checkExistsById(String code);
 }

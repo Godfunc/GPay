@@ -42,6 +42,11 @@ public class PayCategoryServiceImpl extends ServiceImpl<PayCategoryMapper, PayCa
     }
 
     @Override
+    public boolean checkExistsById(Long id) {
+        return count(Wrappers.<PayCategory>lambdaQuery().eq(PayCategory::getId, id)) > 0;
+    }
+
+    @Override
     public Long add(PayCategoryAddParam param) {
         ValidatorUtils.validate(param);
         Assert.isTrue(checkCodeExist(param.getCode(), null), "编号已存在，请重新设置");

@@ -25,14 +25,9 @@ public class MerchantChannelRate implements Serializable {
     private String merchantCode;
 
     /**
-     * 渠道主类
+     * 渠道主类子类关联id
      */
-    private Long payCategoryId;
-
-    /**
-     * 渠道子类
-     */
-    private Long payChannelId;
+    private Long categoryChannelId;
 
     /**
      * 费率
@@ -62,12 +57,6 @@ public class MerchantChannelRate implements Serializable {
      */
     @TableField(fill = FieldFill.UPDATE)
     private LocalDateTime updateTime;
-
-    /**
-     * 删除标识 0正常 1删除
-     */
-    @TableLogic
-    private Integer rmTag;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

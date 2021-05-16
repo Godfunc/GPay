@@ -149,18 +149,16 @@ create table pay_category_channel
 
 create table merchant_channel_rate
 (
-    id              bigint(20)  not null,
-    merchant_code   varchar(64) not null comment '商户code',
-    pay_category_id bigint(20)  not null comment '渠道主类',
-    pay_channel_id  bigint(20)  not null comment '渠道子类',
-    rate            float(8, 6) not null comment '费率',
-    create_id       bigint(20)  not null comment '创建人id',
-    update_id       bigint(20) comment '更新人id',
-    create_time     datetime    not null comment '创建时间',
-    update_time     datetime    null comment '更新时间',
-    rm_tag          tinyint(2)  not null default 0 comment '删除标识 0正常 1删除',
+    id                      bigint(20)  not null,
+    merchant_code           varchar(64) not null comment '商户code',
+    pay_category_channel_id bigint(20)  not null comment '渠道关联id',
+    rate                    float(8, 6) not null comment '费率',
+    create_id               bigint(20)  not null comment '创建人id',
+    update_id               bigint(20) comment '更新人id',
+    create_time             datetime    not null comment '创建时间',
+    update_time             datetime    null comment '更新时间',
     primary key (id),
-    index idx_merchant_code_category_code_channel_code (merchant_code, pay_category_id, pay_channel_id),
+    index idx_merchant_code_category_code_channel_code (merchant_code, pay_category_channel_id),
     index idx_create_time (create_time)
 ) comment '商户渠道费率';
 

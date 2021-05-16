@@ -73,7 +73,7 @@ public class ChannelRiskController {
     @LogRecord(LogRecordConstant.ADD)
     @ApiOperation(LogRecordConstant.ADD)
     @PreAuthorize("hasAuthority('merchant:channelRisk:add')")
-    public R<Long> edit(@RequestBody ChannelRiskAddParam param) {
+    public R<Long> add(@RequestBody ChannelRiskAddParam param) {
         return R.ok(channelRiskService.add(param));
     }
 

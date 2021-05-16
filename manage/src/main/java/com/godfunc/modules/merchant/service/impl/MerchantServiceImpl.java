@@ -111,6 +111,11 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantMapper, Merchant> i
                 .update();
     }
 
+    @Override
+    public boolean checkExistsById(String code) {
+        return count(Wrappers.<Merchant>lambdaQuery().eq(Merchant::getCode, code)) > 0;
+    }
+
     private boolean checkExistByUserId(Long userId) {
         return count(Wrappers.<Merchant>lambdaQuery().eq(Merchant::getUserId, userId)) > 0;
     }

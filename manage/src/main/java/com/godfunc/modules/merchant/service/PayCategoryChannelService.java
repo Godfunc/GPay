@@ -2,7 +2,9 @@ package com.godfunc.modules.merchant.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.godfunc.entity.PayCategoryChannel;
+import com.godfunc.modules.merchant.dto.PayCategoryChannelDTO;
 
+import java.util.List;
 import java.util.Set;
 
 public interface PayCategoryChannelService extends IService<PayCategoryChannel> {
@@ -11,4 +13,8 @@ public interface PayCategoryChannelService extends IService<PayCategoryChannel> 
     boolean removeByChannel(Long channelId);
 
     Set<Long> getByChannel(Long channelId);
+
+    boolean checkExistsById(Long id);
+
+    List<PayCategoryChannelDTO> getList();
 }

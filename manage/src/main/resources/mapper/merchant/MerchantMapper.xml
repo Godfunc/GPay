@@ -5,6 +5,7 @@
     <select id="selectCustomPage" resultType="com.godfunc.entity.Merchant">
         select id,
         user_id,
+        agent_id,
         name,
         code,
         type,
@@ -21,6 +22,17 @@
         <if test="status!=null">and status = #{status}</if>
         <if test="code!=null and code!=''">and code = #{code}</if>
         <if test="name!=null and name!=''">and name = #{name}</if>
+        <if test="id!=null">and id = #{id}</if>
+        <if test="agentId!=null">and agent_id = #{agentId}</if>
+        order by create_time desc
+    </select>
+    <select id="selectListByType" resultType="com.godfunc.modules.merchant.dto.MerchantSimpleDTO">
+        select id, name, code
+        from merchant
+        where status = 1
+        and rm_tag = 0
+        <if test="id!=null">and id = #{id}</if>
+        and type = #{type}
         order by create_time desc
     </select>
 </mapper>

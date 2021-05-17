@@ -3,6 +3,7 @@ package com.godfunc.modules.sys.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.godfunc.modules.sys.dto.UserDTO;
+import com.godfunc.modules.sys.dto.UserSimpleDTO;
 import com.godfunc.modules.sys.entity.User;
 import org.apache.ibatis.annotations.Param;
 
@@ -19,5 +20,7 @@ import java.util.List;
 public interface UserMapper extends BaseMapper<User> {
 
     List<UserDTO> selectCustomPage(IPage page, @Param("username") String username, @Param("status") Integer status, @Param("superManager") Integer superManager);
+
+    List<UserSimpleDTO> selectWithoutMerchant();
 
 }

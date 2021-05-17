@@ -5,6 +5,7 @@ create table merchant
     name             varchar(512) not null comment '商户名',
     code             varchar(64)  not null comment '商户code',
     type             tinyint(2)   not null comment '商户类型 1商户 2代理',
+    agent_id         bigint(20)   null comment '代理id',
     plat_private_key text comment '平台私钥',
     plat_public_key  text comment '平台公钥',
     public_key       text comment '商户公钥',
@@ -56,22 +57,6 @@ create table merchant_balance_record
     index idx_merchant_id (merchant_id),
     index idx_create_time (create_time)
 ) comment '商户余额变更记录';
-
-create table merchant_agent_info
-(
-    id             bigint(20) not null,
-    merchant_id    bigint(20) not null comment '商户id',
-    agent_one_id   bigint(20) not null comment '一级代理',
-    agent_two_id   bigint(20) null comment '二级代理',
-    agent_three_id bigint(20) null comment '三级代理',
-    create_id      bigint(20) not null comment '创建人id',
-    update_id      bigint(20) comment '更新人id',
-    create_time    datetime   not null comment '创建时间',
-    update_time    datetime   null comment '更新时间',
-    rm_tag         tinyint(2) not null default 0 comment '删除标识 0正常 1删除',
-    primary key (id),
-    unique uq_merchant_id (merchant_id)
-) comment '商户代理信息';
 
 create table pay_category
 (

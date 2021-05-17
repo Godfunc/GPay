@@ -6,6 +6,7 @@ import com.godfunc.dto.PageDTO;
 import com.godfunc.modules.log.annotation.LogRecord;
 import com.godfunc.modules.sys.dto.UserDTO;
 import com.godfunc.modules.sys.dto.UserInfoDTO;
+import com.godfunc.modules.sys.dto.UserSimpleDTO;
 import com.godfunc.modules.sys.param.UserAddParam;
 import com.godfunc.modules.sys.param.UserEditParam;
 import com.godfunc.modules.sys.param.UserPasswordParam;
@@ -64,7 +65,7 @@ public class UserController {
     @LogRecord(LogRecordConstant.LIST)
     @ApiOperation(LogRecordConstant.LIST)
     @PreAuthorize("hasAuthority('mg:user:list')")
-    public R<List<UserDTO>> list() {
+    public R<List<UserSimpleDTO>> list() {
         return R.ok(userService.getList());
     }
 

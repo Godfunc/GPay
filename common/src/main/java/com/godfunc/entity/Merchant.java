@@ -4,17 +4,19 @@ import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
 import lombok.Data;
 
 /**
  * 商户信息
+ *
  * @TableName merchant
  */
 @TableName("merchant")
 @Data
 public class Merchant implements Serializable {
     /**
-     * 
+     *
      */
     @TableId
     private Long id;
@@ -38,6 +40,11 @@ public class Merchant implements Serializable {
      * 商户类型 1商户 2代理
      */
     private Integer type;
+
+    /**
+     * 代理id
+     */
+    private Long agentId;
 
     /**
      * 平台私钥

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.godfunc.dto.PageDTO;
 import com.godfunc.modules.sys.dto.UserDTO;
 import com.godfunc.modules.sys.dto.UserInfoDTO;
+import com.godfunc.modules.sys.dto.UserSimpleDTO;
 import com.godfunc.modules.sys.entity.User;
 import com.godfunc.modules.sys.param.UserAddParam;
 import com.godfunc.modules.sys.param.UserEditParam;
@@ -39,5 +40,5 @@ public interface UserService extends IService<User>, UserDetailsService {
 
     boolean password(UserPasswordParam param);
 
-    List<UserDTO> getList();
+    List<UserSimpleDTO> getList();
 }

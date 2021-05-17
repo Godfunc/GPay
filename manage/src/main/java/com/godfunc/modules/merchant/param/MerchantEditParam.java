@@ -21,7 +21,6 @@ public class MerchantEditParam {
     private String name;
 
     @ApiModelProperty("商户公钥")
-    @NotBlank(message = "商户公钥不能为空")
     private String publicKey;
 
     @ApiModelProperty("状态")

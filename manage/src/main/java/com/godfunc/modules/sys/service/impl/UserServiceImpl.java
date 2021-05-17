@@ -9,6 +9,7 @@ import com.godfunc.modules.security.service.UserTokenService;
 import com.godfunc.modules.security.util.SecurityUser;
 import com.godfunc.modules.sys.dto.UserDTO;
 import com.godfunc.modules.sys.dto.UserInfoDTO;
+import com.godfunc.modules.sys.dto.UserSimpleDTO;
 import com.godfunc.modules.sys.entity.User;
 import com.godfunc.modules.sys.entity.UserRole;
 import com.godfunc.modules.sys.enums.SuperManagerEnum;
@@ -185,8 +186,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public List<UserDTO> getList() {
-        List<User> list = list();
-        return ConvertUtils.source2Target(list, UserDTO.class);
+    public List<UserSimpleDTO> getList() {
+        return this.baseMapper.selectWithoutMerchant();
     }
 }

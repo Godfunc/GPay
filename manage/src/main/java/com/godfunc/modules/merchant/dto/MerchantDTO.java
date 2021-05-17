@@ -23,6 +23,9 @@ public class MerchantDTO implements Serializable {
     @ApiModelProperty("商户号")
     private String code;
 
+    @ApiModelProperty("代理id")
+    private Long agentId;
+
     @ApiModelProperty("商户类型")
     private Integer type;
 

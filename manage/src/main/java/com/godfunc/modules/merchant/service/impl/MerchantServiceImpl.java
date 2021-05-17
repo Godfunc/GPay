@@ -10,11 +10,13 @@ import com.godfunc.entity.Merchant;
 import com.godfunc.exception.GException;
 import com.godfunc.modules.merchant.dto.MerchantDTO;
 import com.godfunc.modules.merchant.dto.MerchantKeysDTO;
+import com.godfunc.modules.merchant.dto.MerchantSimpleDTO;
 import com.godfunc.modules.merchant.enums.MerchantTypeEnum;
 import com.godfunc.modules.merchant.mapper.MerchantMapper;
 import com.godfunc.modules.merchant.param.MerchantAddParam;
 import com.godfunc.modules.merchant.param.MerchantEditParam;
 import com.godfunc.modules.merchant.service.MerchantService;
+import com.godfunc.modules.security.util.SecurityUser;
 import com.godfunc.modules.sys.entity.User;
 import com.godfunc.modules.sys.service.UserService;
 import com.godfunc.util.Assert;
@@ -35,8 +37,20 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantMapper, Merchant> i
 
     @Override
     public PageDTO<MerchantDTO> getPage(Integer page, Integer limit, Integer type, Integer status, String code, String name) {
+        Long userId = SecurityUser.getUserId();
+        Merchant merchant = getByUserId(userId);
+        Long agentId = null;
+        Long id = null;
+        if (merchant != null) {
+            if (merchant.getType() == MerchantTypeEnum.MERCHANT.getValue()) {
+                id = merchant.getId();
+            } else if (merchant.getType() == MerchantTypeEnum.AGENT.getValue()) {
+                agentId = merchant.getId();
+
+            }
+        }
         IPage<MerchantDTO> resultPage = new Page<>(page, limit);
-        List<Merchant> list = this.baseMapper.selectCustomPage(resultPage, type, status, code, name);
+        List<Merchant> list = this.baseMapper.selectCustomPage(resultPage, type, status, code, name, id, agentId);
         resultPage.setRecords(ConvertUtils.source2Target(list, MerchantDTO.class));
         return new PageDTO<MerchantDTO>(resultPage);
     }
@@ -59,6 +73,7 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantMapper, Merchant> i
         Assert.isTrue(checkExistByUserId(param.getUserId()), "当前用户已创建过商户信息");
         User user = userService.getById(param.getUserId());
         Assert.isNull(user, "选择的用户不存在或已被删除");
+        Assert.isNull(getById(param.getAgentId()), "选择的代理商户不存在或已被删除");
         Merchant merchant = ConvertUtils.source2Target(param, Merchant.class);
         RSAUtils.KeyPairModel keyPairModel = null;
         try {
@@ -114,6 +129,20 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantMapper, Merchant> i
     @Override
     public boolean checkExistsById(String code) {
         return count(Wrappers.<Merchant>lambdaQuery().eq(Merchant::getCode, code)) > 0;
+    }
+
+    @Override
+    public List<MerchantSimpleDTO> getList(Integer type) {
+        Merchant merchant = getByUserId(SecurityUser.getUserId());
+        Long id = null;
+        if (merchant != null && merchant.getType() == MerchantTypeEnum.AGENT.getValue()) {
+            id = merchant.getId();
+        }
+        return this.baseMapper.selectListByType(type, id);
+    }
+
+    private Merchant getByUserId(Long userId) {
+        return getOne(Wrappers.<Merchant>lambdaQuery().eq(Merchant::getUserId, userId));
     }
 
     private boolean checkExistByUserId(Long userId) {

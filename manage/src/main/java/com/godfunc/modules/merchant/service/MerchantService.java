@@ -5,8 +5,11 @@ import com.godfunc.dto.PageDTO;
 import com.godfunc.entity.Merchant;
 import com.godfunc.modules.merchant.dto.MerchantDTO;
 import com.godfunc.modules.merchant.dto.MerchantKeysDTO;
+import com.godfunc.modules.merchant.dto.MerchantSimpleDTO;
 import com.godfunc.modules.merchant.param.MerchantAddParam;
 import com.godfunc.modules.merchant.param.MerchantEditParam;
+
+import java.util.List;
 
 public interface MerchantService extends IService<Merchant> {
     PageDTO<MerchantDTO> getPage(Integer page, Integer limit, Integer type, Integer status, String code, String name);
@@ -22,4 +25,6 @@ public interface MerchantService extends IService<Merchant> {
     boolean refreshKeys(Long id);
 
     boolean checkExistsById(String code);
+
+    List<MerchantSimpleDTO> getList(Integer type);
 }

@@ -5,6 +5,7 @@ import com.godfunc.dto.PageDTO;
 import com.godfunc.modules.log.annotation.LogRecord;
 import com.godfunc.modules.merchant.dto.MerchantDTO;
 import com.godfunc.modules.merchant.dto.MerchantKeysDTO;
+import com.godfunc.modules.merchant.dto.MerchantSimpleDTO;
 import com.godfunc.modules.merchant.param.MerchantAddParam;
 import com.godfunc.modules.merchant.param.MerchantEditParam;
 import com.godfunc.modules.merchant.service.MerchantService;
@@ -16,6 +17,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @LogRecord("商户")
@@ -45,6 +48,17 @@ public class MerchantController {
                                         @RequestParam(required = false) String code,
                                         @RequestParam(required = false) String name) {
         return R.ok(merchantService.getPage(page, limit, type, status, code, name));
+    }
+
+    @GetMapping("list/{type}")
+    @LogRecord(LogRecordConstant.LIST)
+    @ApiOperation(LogRecordConstant.LIST)
+    @PreAuthorize("hasAuthority('merchant:merchant:list')")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "type", value = "类型", paramType = "path", dataType = "Integer", dataTypeClass = Integer.class)
+    })
+    public R<List<MerchantSimpleDTO>> list(@PathVariable Integer type) {
+        return R.ok(merchantService.getList(type));
     }
 
     @PostMapping("add")

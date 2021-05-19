@@ -1,6 +1,5 @@
 package com.godfunc.modules.security.controller;
 
-import com.godfunc.modules.log.annotation.LogRecord;
 import com.godfunc.modules.security.service.CaptchaService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -27,7 +26,6 @@ public class LoginController {
     private final CaptchaService captchaService;
 
     @GetMapping("captcha")
-    @LogRecord("验证码")
     @ApiOperation("验证码")
     @ApiImplicitParam(name = "uuid", value = "uuid", paramType = "query", dataType = "String", dataTypeClass = String.class)
     public void captcha(@ApiIgnore HttpServletResponse response, String uuid) throws IOException {

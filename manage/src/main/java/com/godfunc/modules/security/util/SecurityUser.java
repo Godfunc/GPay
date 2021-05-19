@@ -1,8 +1,13 @@
 package com.godfunc.modules.security.util;
 
+import com.godfunc.exception.GException;
 import com.godfunc.modules.sys.model.UserDetail;
+import com.godfunc.result.ApiCodeMsg;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * @author godfunc
@@ -24,13 +29,10 @@ public class SecurityUser {
     public static UserDetail getUser() {
         Authentication authentication = getSubject();
         if (authentication == null || authentication.getPrincipal() == null) {
-            return new UserDetail();
+            throw new GException(ApiCodeMsg.UNAUTHORIZED);
         }
-
         UserDetail user = (UserDetail) authentication.getPrincipal();
-        if (user == null) {
-            return new UserDetail();
-        }
+        if (Objects.isNull(user)) throw new GException(ApiCodeMsg.UNAUTHORIZED);
         return user;
     }
 
@@ -38,7 +40,21 @@ public class SecurityUser {
      * 获取用户ID
      */
     public static Long getUserId() {
-        return getUser().getId();
+        UserDetail user = getUser();
+        if (Objects.isNull(user)) {
+            throw new GException(ApiCodeMsg.UNAUTHORIZED);
+        } else {
+            return user.getId();
+        }
     }
 
+    public static boolean checkRole(String... roleName) {
+        UserDetail user = getUser();
+        if (!Objects.isNull(user) && user.getRoles().containsAll(Arrays.asList(roleName))) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
 }

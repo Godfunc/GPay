@@ -17,7 +17,7 @@ import java.util.Set;
  */
 public interface MenuMapper extends BaseMapper<Menu> {
 
-    List<Menu> selectUserMenu(@Param("roles") Set<Long> roles, @Param("type") Integer type);
+    List<Menu> selectUserMenu(@Param("roles") Set<String> roles, @Param("type") Integer type);
 
     List<Menu> selectEnable(Integer type);
 }

@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 
 /**
  * 日志切面类
+ *
  * @author godfunc
  * @email godfunc@outlook.com
  */
@@ -79,7 +80,6 @@ public class LogOperationAspect {
         //登录用户信息
         UserDetail user = SecurityUser.getUser();
         log.setCreateUser(user.getUsername());
-
         log.setStatus(status);
         log.setRequestTime((int) time);
 

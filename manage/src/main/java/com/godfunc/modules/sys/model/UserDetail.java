@@ -20,19 +20,6 @@ public class UserDetail implements Serializable, UserDetails {
     public UserDetail() {
     }
 
-    public UserDetail(Long id, String username, String password, String mobile, Integer superManager, Integer status, Long createId, LocalDateTime createTime, Collection<? extends GrantedAuthority> authorities, Set<Long> roles) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.mobile = mobile;
-        this.superManager = superManager;
-        this.status = status;
-        this.createId = createId;
-        this.createTime = createTime;
-        this.authorities = authorities;
-        this.roles = roles;
-    }
-
     private Long id;
     /**
      * 用户名
@@ -68,7 +55,7 @@ public class UserDetail implements Serializable, UserDetails {
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    private Set<Long> roles;
+    private Set<String> roles;
 
 
     @Override

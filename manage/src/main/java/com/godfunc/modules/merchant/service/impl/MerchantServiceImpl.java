@@ -12,13 +12,16 @@ import com.godfunc.modules.merchant.dto.MerchantDTO;
 import com.godfunc.modules.merchant.dto.MerchantKeysDTO;
 import com.godfunc.modules.merchant.dto.MerchantSimpleDTO;
 import com.godfunc.modules.merchant.enums.MerchantTypeEnum;
+import com.godfunc.modules.merchant.enums.RoleNameEnum;
 import com.godfunc.modules.merchant.mapper.MerchantMapper;
 import com.godfunc.modules.merchant.param.MerchantAddParam;
 import com.godfunc.modules.merchant.param.MerchantEditParam;
 import com.godfunc.modules.merchant.service.MerchantService;
 import com.godfunc.modules.security.util.SecurityUser;
 import com.godfunc.modules.sys.entity.User;
+import com.godfunc.modules.sys.enums.SuperManagerEnum;
 import com.godfunc.modules.sys.service.UserService;
+import com.godfunc.result.ApiCodeMsg;
 import com.godfunc.util.Assert;
 import com.godfunc.util.ConvertUtils;
 import com.godfunc.util.RSAUtils;
@@ -37,17 +40,17 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantMapper, Merchant> i
 
     @Override
     public PageDTO<MerchantDTO> getPage(Integer page, Integer limit, Integer type, Integer status, String code, String name) {
-        Long userId = SecurityUser.getUserId();
-        Merchant merchant = getByUserId(userId);
         Long agentId = null;
         Long id = null;
-        if (merchant != null) {
-            if (merchant.getType() == MerchantTypeEnum.MERCHANT.getValue()) {
-                id = merchant.getId();
-            } else if (merchant.getType() == MerchantTypeEnum.AGENT.getValue()) {
-                agentId = merchant.getId();
+        Merchant merchant = getByUserId(SecurityUser.getUserId());
+        if (SecurityUser.getUser().getSuperManager() == SuperManagerEnum.SUPER_MANAGER.getValue() || SecurityUser.checkRole(RoleNameEnum.MANAGE.getValue())) {
 
-            }
+        } else if (SecurityUser.checkRole(RoleNameEnum.AGENT.getValue())) {
+            agentId = merchant.getId();
+        } else if (SecurityUser.checkRole(RoleNameEnum.MERCHANT.getValue())) {
+            id = merchant.getId();
+        } else {
+            throw new GException(ApiCodeMsg.NOPERMISSION);
         }
         IPage<MerchantDTO> resultPage = new Page<>(page, limit);
         List<Merchant> list = this.baseMapper.selectCustomPage(resultPage, type, status, code, name, id, agentId);

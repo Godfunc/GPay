@@ -10,6 +10,7 @@ import com.godfunc.modules.security.util.SecurityUser;
 import com.godfunc.modules.sys.dto.UserDTO;
 import com.godfunc.modules.sys.dto.UserInfoDTO;
 import com.godfunc.modules.sys.dto.UserSimpleDTO;
+import com.godfunc.modules.sys.entity.Role;
 import com.godfunc.modules.sys.entity.User;
 import com.godfunc.modules.sys.entity.UserRole;
 import com.godfunc.modules.sys.enums.SuperManagerEnum;
@@ -21,6 +22,7 @@ import com.godfunc.modules.sys.param.UserAddParam;
 import com.godfunc.modules.sys.param.UserEditParam;
 import com.godfunc.modules.sys.param.UserPasswordParam;
 import com.godfunc.modules.sys.service.RoleMenuService;
+import com.godfunc.modules.sys.service.RoleService;
 import com.godfunc.modules.sys.service.UserRoleService;
 import com.godfunc.modules.sys.service.UserService;
 import com.godfunc.util.Assert;
@@ -39,7 +41,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -58,6 +62,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private final RoleMenuService roleMenuService;
     private final UserTokenService userTokenService;
     private final PasswordEncoder passwordEncoder;
+    private final RoleService roleService;
+
+    private final Set<String> EMP_SET = new HashSet<>();
 
 
     @Override
@@ -84,17 +91,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         UserDetail userDetail = ConvertUtils.source2Target(user, UserDetail.class);
         List<RoleMenuModel> roleMenus = null;
+        List<UserRole> userRoles = null;
+        List<Role> roles = null;
         if (SuperManagerEnum.SUPER_MANAGER.getValue() == user.getSuperManager()) {
-            List<UserRole> userRoles = userRoleService.getUserRoles(null);
-            userDetail.setRoles(userRoles.stream().map(UserRole::getRoleId).collect(Collectors.toSet()));
+            userRoles = userRoleService.getUserRoles(null);
             roleMenus = roleMenuService.getAllRoleMenu();
-
         } else {
-            List<UserRole> userRoles = userRoleService.getUserRoles(user.getId());
+            userRoles = userRoleService.getUserRoles(user.getId());
             if (CollectionUtils.isNotEmpty(userRoles)) {
-                userDetail.setRoles(userRoles.stream().map(UserRole::getRoleId).collect(Collectors.toSet()));
                 roleMenus = roleMenuService.getRoleMenu(userRoles.stream().map(UserRole::getRoleId).collect(Collectors.toSet()));
             }
+        }
+        if (CollectionUtils.isNotEmpty(userRoles)) {
+            roles = roleService.listByIds(userRoles.stream().map(UserRole::getRoleId).collect(Collectors.toSet()));
+            userDetail.setRoles(CollectionUtils.isEmpty(roles) ? EMP_SET : roles.stream().map(Role::getName).collect(Collectors.toSet()));
         }
         if (CollectionUtils.isNotEmpty(roleMenus)) {
             userDetail.setAuthorities(AuthorityUtils.createAuthorityList(roleMenus.stream().map(x -> x.getPermissions().split(",")).flatMap(Arrays::stream).toArray(String[]::new)));

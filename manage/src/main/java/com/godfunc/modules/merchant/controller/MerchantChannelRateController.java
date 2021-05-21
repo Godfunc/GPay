@@ -1,12 +1,8 @@
 package com.godfunc.modules.merchant.controller;
 
 import com.godfunc.constant.LogRecordConstant;
-import com.godfunc.dto.PageDTO;
 import com.godfunc.modules.log.annotation.LogRecord;
-import com.godfunc.modules.merchant.dto.MerchantChannelRateDTO;
 import com.godfunc.modules.merchant.dto.MerchantChannelSimpleRateDTO;
-import com.godfunc.modules.merchant.param.MerchantChannelRateAddParam;
-import com.godfunc.modules.merchant.param.MerchantChannelRateEditParam;
 import com.godfunc.modules.merchant.param.MerchantChannelRateSaveParam;
 import com.godfunc.modules.merchant.service.MerchantChannelRateService;
 import com.godfunc.result.R;
@@ -30,25 +26,6 @@ public class MerchantChannelRateController {
 
     private final MerchantChannelRateService merchantChannelRateService;
 
-    @GetMapping("page/{page}/{limit}")
-    @LogRecord(LogRecordConstant.PAGE)
-    @ApiOperation(LogRecordConstant.PAGE)
-    @PreAuthorize("hasAuthority('merchant:merchantChannelRate:page')")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "page", value = "当前页码", paramType = "path", required = true, dataType = "int", dataTypeClass = Integer.class),
-            @ApiImplicitParam(name = "limit", value = "每页条数", paramType = "path", required = true, dataType = "int", dataTypeClass = Integer.class),
-            @ApiImplicitParam(name = "merchantCode", value = "商户号", paramType = "query", dataType = "String", dataTypeClass = String.class),
-            @ApiImplicitParam(name = "channelCode", value = "渠道子类编号", paramType = "query", dataType = "String", dataTypeClass = String.class),
-            @ApiImplicitParam(name = "categoryCode", value = "渠道主类编号", paramType = "query", dataType = "String", dataTypeClass = String.class)
-    })
-    public R<PageDTO<MerchantChannelRateDTO>> page(@PathVariable Integer page,
-                                                   @PathVariable Integer limit,
-                                                   @RequestParam(required = false) String merchantCode,
-                                                   @RequestParam(required = false) String channelCode,
-                                                   @RequestParam(required = false) String categoryCode) {
-        return R.ok(merchantChannelRateService.getPage(page, limit, merchantCode, channelCode, categoryCode));
-    }
-
     @GetMapping("list/{merchantCode}")
     @LogRecord(LogRecordConstant.LIST)
     @ApiOperation(LogRecordConstant.LIST)
@@ -66,22 +43,6 @@ public class MerchantChannelRateController {
     @PreAuthorize("hasAuthority('merchant:merchantChannelRate:save')")
     public R<Boolean> save(@RequestBody MerchantChannelRateSaveParam param) {
         return R.ok(merchantChannelRateService.saveData(param));
-    }
-
-    @PostMapping("add")
-    @LogRecord(LogRecordConstant.ADD)
-    @ApiOperation(LogRecordConstant.ADD)
-    @PreAuthorize("hasAuthority('merchant:merchantChannelRate:add')")
-    public R<Long> edit(@RequestBody MerchantChannelRateAddParam param) {
-        return R.ok(merchantChannelRateService.add(param));
-    }
-
-    @PostMapping("edit")
-    @LogRecord(LogRecordConstant.EDIT)
-    @ApiOperation(LogRecordConstant.EDIT)
-    @PreAuthorize("hasAuthority('merchant:merchantChannelRate:edit')")
-    public R<Long> edit(@RequestBody MerchantChannelRateEditParam param) {
-        return R.ok(merchantChannelRateService.edit(param));
     }
 
     @PostMapping("remove/{id}")

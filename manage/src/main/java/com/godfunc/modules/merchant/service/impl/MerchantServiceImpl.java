@@ -27,11 +27,14 @@ import com.godfunc.util.ConvertUtils;
 import com.godfunc.util.RSAUtils;
 import com.godfunc.util.ValidatorUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Objects;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MerchantServiceImpl extends ServiceImpl<MerchantMapper, Merchant> implements MerchantService {
@@ -100,6 +103,20 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantMapper, Merchant> i
 
     @Override
     public boolean removeData(Long id) {
+        if (SecurityUser.getUser().getSuperManager() == SuperManagerEnum.SUPER_MANAGER.getValue() || SecurityUser.checkRole(RoleNameEnum.MANAGE.getValue())) {
+
+        } else if (SecurityUser.checkRole(RoleNameEnum.AGENT.getValue())) {
+            Merchant merchant = getById(id);
+            Assert.isNull(merchant, "删除的商户不存在或已被删除");
+            Merchant agent = getByUserId(SecurityUser.getUserId());
+            if (Objects.isNull(agent) || !agent.getId().equals(merchant.getAgentId())) {
+                throw new GException(ApiCodeMsg.NOPERMISSION);
+            }
+        } else if (SecurityUser.checkRole(RoleNameEnum.MERCHANT.getValue())) {
+            throw new GException(ApiCodeMsg.NOPERMISSION);
+        } else {
+            throw new GException(ApiCodeMsg.NOPERMISSION);
+        }
         return removeById(id);
     }
 
@@ -119,7 +136,7 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantMapper, Merchant> i
         try {
             keyPairModel = RSAUtils.generateKeyPair();
         } catch (NoSuchAlgorithmException e) {
-            log.error("生成密钥对失败 {}", e);
+            log.error("生成密钥对失败", e);
             throw new GException("生成密钥对失败");
         }
         return lambdaUpdate().set(Merchant::getPlatPrivateKey, keyPairModel.getPrivateKey())

@@ -89,7 +89,7 @@ public class PayOrderServiceImpl implements PayOrderService {
         order.setPayType(param.getType());
         order.setAmount(centAmount);
 
-        // 商户风控（粗略的限额，后面请求支付时进行详细限额）
+        // 商户风控
         if (!merchantRiskService.riskMerchant(merchant.getId(), order)) {
             throw new GException("订单创建失败，请检查订单参数是否正确");
         }

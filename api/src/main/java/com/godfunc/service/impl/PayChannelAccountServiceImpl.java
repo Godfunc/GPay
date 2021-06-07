@@ -44,6 +44,7 @@ public class PayChannelAccountServiceImpl extends ServiceImpl<PayChannelAccountM
 
     @Override
     public PayChannelAccountJoint getEnableByWeight(List<PayChannel> payChannelList, Order order) {
+        // TODO 根据根据客户端类型进行渠道选择
         List<PayChannelAccount> payChannelAccountList = getEnableByRisk(payChannelList, order);
         if (CollectionUtils.isEmpty(payChannelList)) {
             log.error("渠道中的权重为0或者没有渠道账号 {}", payChannelList);

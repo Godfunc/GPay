@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.godfunc.mapper.PayChannelMapper">
+
+    <select id="selectEnableByCategory" resultType="com.godfunc.entity.PayChannel">
+        select channel.*, cc.weight, cc.id category_channel_id
+        from pay_channel channel
+                 left join pay_category_channel cc on cc.channel_id = channel.id
+        where channel.rm_tag = 0
+          and channel.status = 1
+          and channel.create_url is not null
+          and cc.category_id = #{payCategoryId}
+    </select>
+</mapper>

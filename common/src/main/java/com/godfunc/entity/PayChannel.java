@@ -14,7 +14,7 @@ import lombok.Data;
  */
 @TableName("pay_channel")
 @Data
-public class PayChannel implements Serializable {
+public class PayChannel implements Serializable, WeightEntity {
     /**
      *
      */
@@ -98,4 +98,10 @@ public class PayChannel implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
+
+    @TableField(exist = false)
+    private Integer weight;
+
+    @TableField(exist = false)
+    private Long categoryChannelId;
 }

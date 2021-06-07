@@ -8,17 +8,22 @@ import lombok.Data;
 
 /**
  * 商户渠道费率
+ *
  * @TableName merchant_channel_rate
  */
 @TableName("merchant_channel_rate")
 @Data
 public class MerchantChannelRate implements Serializable {
     /**
-     * 
+     *
      */
     @TableId
     private Long id;
 
+    /**
+     * 商户id
+     */
+    private Long merchantId;
     /**
      * 商户code
      */

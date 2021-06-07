@@ -11,7 +11,7 @@ import com.godfunc.exception.GException;
 import com.godfunc.modules.merchant.dto.MerchantDTO;
 import com.godfunc.modules.merchant.dto.MerchantKeysDTO;
 import com.godfunc.modules.merchant.dto.MerchantSimpleDTO;
-import com.godfunc.modules.merchant.enums.MerchantTypeEnum;
+import com.godfunc.enums.MerchantTypeEnum;
 import com.godfunc.modules.merchant.enums.RoleNameEnum;
 import com.godfunc.modules.merchant.mapper.MerchantMapper;
 import com.godfunc.modules.merchant.param.MerchantAddParam;
@@ -147,11 +147,6 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantMapper, Merchant> i
     }
 
     @Override
-    public boolean checkExistsById(String code) {
-        return count(Wrappers.<Merchant>lambdaQuery().eq(Merchant::getCode, code)) > 0;
-    }
-
-    @Override
     public List<MerchantSimpleDTO> getList(Integer type) {
         Merchant merchant = getByUserId(SecurityUser.getUserId());
         Long id = null;
@@ -159,6 +154,11 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantMapper, Merchant> i
             id = merchant.getId();
         }
         return this.baseMapper.selectListByType(type, id);
+    }
+
+    @Override
+    public Merchant getByCode(String code) {
+        return getOne(Wrappers.<Merchant>lambdaQuery().eq(Merchant::getCode, code));
     }
 
     private Merchant getByUserId(Long userId) {

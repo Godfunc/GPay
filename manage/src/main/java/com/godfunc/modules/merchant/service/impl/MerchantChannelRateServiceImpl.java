@@ -1,6 +1,7 @@
 package com.godfunc.modules.merchant.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.godfunc.entity.Merchant;
 import com.godfunc.entity.MerchantChannelRate;
 import com.godfunc.modules.merchant.dto.MerchantChannelSimpleRateDTO;
 import com.godfunc.modules.merchant.mapper.MerchantChannelRateMapper;
@@ -18,6 +19,8 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class MerchantChannelRateServiceImpl extends ServiceImpl<MerchantChannelRateMapper, MerchantChannelRate> implements MerchantChannelRateService {
 
+    private final MerchantService merchantService;
+
     @Override
     public boolean removeData(Long id) {
         return removeById(id);
@@ -31,9 +34,12 @@ public class MerchantChannelRateServiceImpl extends ServiceImpl<MerchantChannelR
     @Override
     public boolean saveData(MerchantChannelRateSaveParam param) {
         ValidatorUtils.validate(param);
+        Merchant merchant = merchantService.getByCode(param.getMerchantCode());
+        Assert.isNull(merchant, "商户不存在或已被删除");
         if (Objects.isNull(param.getId())) {
             MerchantChannelRate merchantChannelRate = new MerchantChannelRate();
             merchantChannelRate.setMerchantCode(param.getMerchantCode());
+            merchantChannelRate.setMerchantId(merchant.getId());
             merchantChannelRate.setCategoryChannelId(param.getCategoryChannelId());
             merchantChannelRate.setRate(Float.parseFloat(param.getRate()));
             return save(merchantChannelRate);

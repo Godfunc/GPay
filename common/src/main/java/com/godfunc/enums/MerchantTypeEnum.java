@@ -1,4 +1,4 @@
-package com.godfunc.modules.merchant.enums;
+package com.godfunc.enums;
 
 /**
  * @author godfunc

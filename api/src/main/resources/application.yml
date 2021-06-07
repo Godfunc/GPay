@@ -47,6 +47,20 @@ spring:
     url: jdbc:mysql://localhost:3306/gpay?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
     password: root
+  redis:
+    cluster:
+      nodes:
+        - loaclhost:6379
+      max-redirects:
+    password:
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+host: http://localhost:${server.port}/
+gopay: ${host}gopay/
 log:
   path: /tmp
 
@@ -62,6 +76,22 @@ spring:
     url: jdbc:mysql://localhost:3306/gpay?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
     password: root
+  redis:
+    cluster:
+      nodes:
+        - 127.0.0.1:6379
+        - 127.0.0.2:6379
+        - 127.0.0.3:6379
+      max-redirects:
+    password:
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+host: http://localhost/
+gopay: ${host}gopay/
 log:
   path: /tmp
 
@@ -77,5 +107,19 @@ spring:
     url: jdbc:mysql://localhost:3306/gpay?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
     password: root
+  redis:
+    cluster:
+      nodes:
+        - localhost:6379
+      max-redirects:
+    password:
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+host: http://localhost/
+gopay: ${host}gopay/
 log:
   path: /tmp

@@ -113,7 +113,7 @@ create table pay_channel_account
     rm_tag       tinyint(2)   not null default 0 comment '删除标识 0正常 1删除',
     primary key (id),
     index idx_account_code (account_code),
-    index idx_channel_code (channel_id),
+    index idx_channel_id (channel_id),
     index idx_create_time (create_time)
 ) comment '渠道子类账号';
 
@@ -122,19 +122,21 @@ create table pay_category_channel
     id          bigint(20) not null,
     category_id bigint(20) not null comment '渠道主类id',
     channel_id  bigint(20) not null comment '渠道子类id',
+    weight      int(4)     not null default 1 comment '权重',
     create_id   bigint(20) not null comment '创建人id',
     update_id   bigint(20) comment '更新人id',
     create_time datetime   not null,
     update_time datetime   null,
     primary key (id),
-    unique uq_category_code_channel_code (category_id, channel_id),
-    index idx_category_code (category_id),
-    index idx_channel_code (channel_id)
+    unique uq_category_id_channel_id (category_id, channel_id),
+    index idx_category_id (category_id),
+    index idx_channel_id (channel_id)
 ) comment '渠道关联';
 
 create table merchant_channel_rate
 (
     id                      bigint(20)  not null,
+    merchant_id             bigint(20)  not null comment '商户id',
     merchant_code           varchar(64) not null comment '商户code',
     pay_category_channel_id bigint(20)  not null comment '渠道关联id',
     rate                    float(8, 6) not null comment '费率',
@@ -143,13 +145,14 @@ create table merchant_channel_rate
     create_time             datetime    not null comment '创建时间',
     update_time             datetime    null comment '更新时间',
     primary key (id),
-    index idx_merchant_code_category_code_channel_code (merchant_code, pay_category_channel_id),
+    index idx_merchant_code_category_id_channel_id (merchant_code, pay_category_channel_id),
     index idx_create_time (create_time)
 ) comment '商户渠道费率';
 
 create table merchant_risk
 (
     id             bigint(20)  not null,
+    merchant_id    bigint(20)  not null comment '商户id',
     merchant_code  varchar(64) not null comment '商户code',
     one_amount_min bigint(20)  null comment '单笔最小',
     one_amount_max bigint(20)  null comment '单笔最大 ',
@@ -163,7 +166,8 @@ create table merchant_risk
     rm_tag         tinyint(2)  not null default 0 comment '删除标识 0正常 1删除',
     primary key (id),
     index idx_create_time (create_time),
-    index idx_merchant_code (merchant_code)
+    index idx_merchant_code (merchant_code),
+    index idx_merchant_id (merchant_id)
 ) comment '商户风控';
 
 create table channel_risk
@@ -185,5 +189,96 @@ create table channel_risk
     rm_tag             tinyint(2) not null default 0 comment '删除标识 0正常 1删除',
     primary key (id),
     index idx_create_time (create_time),
-    index channel_code (channel_id)
+    index channel_id (channel_id)
 ) comment '渠道子类风控';
+
+create table pay_order
+(
+    id                   bigint(20)   not null,
+    merchant_id          bigint(20)   not null comment '商户id',
+    merchant_code        varchar(64)  not null comment '商户号',
+    merchant_name        varchar(512) not null comment '商户名',
+    out_trade_no         varchar(64)  not null comment '商户单号',
+    order_no             varchar(64)  not null comment '平台单号',
+    trade_no             varchar(64)  null comment '上游单号',
+    channel_account_code varchar(64)  not null comment '渠道账号商户号',
+    amount               bigint(20)   not null comment '订单金额',
+    real_amount          bigint(20)   not null comment '实际支付金额',
+    client_create_time   datetime     not null comment '客户端创建时间',
+    create_time          datetime     not null comment '订单创建时间',
+    pay_time             datetime     null comment '订单支付时间',
+    pay_type             varchar(64)  null comment '支付类型信息',
+    notify_time          datetime     null comment '回调时间',
+    notify_url           text         null comment '回调地址',
+    status               tinyint(4)   not null default 1 comment '订单状态 1.已下单 2.已扫码 3.已支付 4.已回调',
+    client_ip            varchar(128) not null comment '下单客户ip',
+    update_time          datetime     null comment '更新时间',
+    primary key (id),
+    unique uq_out_trade_no_merchant_code (merchant_code, out_trade_no),
+    unique uq_channel_account_code_trade_no (channel_account_code, trade_no),
+    index idx_create_time (create_time),
+    index idx_pay_time (pay_time),
+    index idx_notify_time (notify_time)
+) comment '订单表';
+
+create table pay_order_detail
+(
+    id                       bigint(20)   not null,
+    order_id                 bigint(20)   not null comment '订单id',
+    merchant_id              bigint(20)   not null comment '商户id',
+    merchant_code            varchar(64)  not null comment '商户号',
+    merchant_name            varchar(512) not null comment '商户名',
+    pay_category_id          bigint(20)   not null comment '渠道主类id',
+    pay_channel_id           bigint(20)   not null comment '渠道子类id',
+    pay_category_channel_id  bigint(20)   not null comment '渠道关联id',
+    pay_channel_account_id   bigint(20)   not null comment '渠道账号id',
+    pay_channel_account_code varchar(64)  not null comment '渠道账号商户号',
+    channel_create_url       varchar(64)  not null comment '渠道下单地址',
+    channel_query_url        varchar(64)  null comment '渠道查询订单地址',
+    channel_notify_url       varchar(64)  not null comment '渠道回调地址',
+    channel_pay_type_info    text comment '支付类型信息',
+    channel_cost_rate        float(8, 6)  not null comment '费率',
+    logical_tag              varchar(128) not null comment '逻辑标识',
+    create_time              datetime     not null comment '创建时间',
+    primary key (id),
+    unique uq_order_id (order_id),
+    index idx_pay_category_id (pay_category_id),
+    index idx_pay_channel_id (pay_channel_id),
+    index idx_pay_channel_account_id (pay_channel_account_id),
+    index idx_logical_tag (logical_tag),
+    index idx_create_time (create_time)
+) comment '订单详情表';
+
+create table pay_merchant_order_profit
+(
+    id                    bigint(20)  not null,
+    order_id              bigint(20)  not null comment '订单id',
+    order_amount          bigint(20)  not null comment '订单金额',
+    merchant_id           bigint(20)  not null comment '商户id',
+    merchant_code         varchar(64) not null comment '商户号',
+    merchant_channel_rate float(8, 6) not null comment '商户渠道费率',
+    profit_amount         bigint(20)  not null comment '收益',
+    create_time           datetime    not null comment '创建时间',
+    primary key (id),
+    unique uq_order_id_merchant_id (order_id, merchant_id),
+    index idx_merchant_code (merchant_code),
+    index idx_create_time (create_time)
+) comment '商户订单收益表';
+
+create table pay_platform_order_profit
+(
+    id                  bigint(20)  not null,
+    order_id            bigint(20)  not null comment '订单id',
+    order_amount        bigint(20)  not null comment '订单金额',
+    merchant_id         bigint(20)  not null comment '商户id',
+    merchant_code       varchar(64) not null comment '商户号',
+    channel_cost_rate   float(8, 6) not null comment '渠道成本费率',
+    profit_amount       bigint(20)  not null comment '收益',
+    channel_cast_amount bigint(20)  not null comment '通道成本',
+    create_time         datetime    not null comment '创建时间',
+    primary key (id),
+    unique uq_order_id (order_id),
+    index idx_merchant_code (merchant_code),
+    index idx_merchant_id (merchant_id),
+    index idx_create_time (create_time)
+) comment '平台订单收益表';

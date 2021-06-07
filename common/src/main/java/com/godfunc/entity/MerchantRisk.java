@@ -21,6 +21,11 @@ public class MerchantRisk implements Serializable {
     private Long id;
 
     /**
+     * 商户id
+     */
+    private Long merchantId;
+
+    /**
      * 商户code
      */
     private String merchantCode;

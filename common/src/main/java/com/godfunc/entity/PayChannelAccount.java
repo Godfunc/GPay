@@ -4,17 +4,19 @@ import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
 import lombok.Data;
 
 /**
  * 渠道子类账号
+ *
  * @TableName pay_channel_account
  */
 @TableName("pay_channel_account")
 @Data
-public class PayChannelAccount implements Serializable {
+public class PayChannelAccount implements Serializable, WeightEntity {
     /**
-     * 
+     *
      */
     @TableId
     private Long id;

@@ -10,12 +10,13 @@ import lombok.NoArgsConstructor;
 
 /**
  * 渠道关联
+ *
  * @TableName pay_category_channel
  */
 @TableName("pay_category_channel")
 @Data
 @NoArgsConstructor
-public class PayCategoryChannel implements Serializable {
+public class PayCategoryChannel implements Serializable, WeightEntity {
 
     public PayCategoryChannel(Long categoryId, Long channelId) {
         this.categoryId = categoryId;
@@ -23,7 +24,7 @@ public class PayCategoryChannel implements Serializable {
     }
 
     /**
-     * 
+     *
      */
     @TableId
     private Long id;
@@ -37,6 +38,11 @@ public class PayCategoryChannel implements Serializable {
      * 渠道子类id
      */
     private Long channelId;
+
+    /**
+     * 权重
+     */
+    private Integer weight;
 
     /**
      * 创建人id

@@ -20,6 +20,8 @@
         <commons.lang.version>3.10</commons.lang.version>
         <commons.io.version>2.7</commons.io.version>
         <commons.colletions4.version>4.4</commons.colletions4.version>
+        <commons.beanutils.version>1.9.4</commons.beanutils.version>
+        <commons.pool2>2.9.0</commons.pool2>
         <guava.version>20.0</guava.version>
         <zxing.version>3.3.1</zxing.version>
         <thumbnailator.version>0.4.8</thumbnailator.version>
@@ -48,6 +50,16 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-collections4</artifactId>
                 <version>${commons.colletions4.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>${commons.beanutils.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-pool2</artifactId>
+                <version>${commons.pool2}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>

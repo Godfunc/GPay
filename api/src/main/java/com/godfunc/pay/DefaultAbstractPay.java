@@ -3,8 +3,7 @@ package com.godfunc.pay;
 import com.godfunc.cache.ChannelRiskCache;
 import com.godfunc.dto.PayInfoDto;
 import com.godfunc.entity.Order;
-import com.godfunc.entity.PayChannel;
-import com.godfunc.entity.PayChannelAccount;
+import com.godfunc.entity.OrderDetail;
 import com.godfunc.enums.OrderStatusEnum;
 import com.godfunc.exception.GException;
 import com.godfunc.service.PayChannelAccountService;
@@ -41,18 +40,19 @@ public abstract class DefaultAbstractPay implements PayService {
             return;
         }
         // 设置UA等信息 TODO
-
+        OrderDetail detail = order.getDetail();
         Assert.isTrue(!checkOrder(order), "订单已过期");
         Assert.isTrue(!checkChannel(order), "渠道不可用");
         try {
             payInfo = doPay(order);
+
             handleResponse(payInfo, request, response);
         } catch (GException e) {
             if (order.getDetail().getPayChannelDayMax() != null) {
-                channelRiskCache.divideAmount(order.getDetail().getPayChannelId(), order.getAmount());
+                channelRiskCache.divideAmount(detail.getPayChannelId(), order.getAmount());
             }
             if (order.getDetail().getPayChannelAccountDayMax() != null) {
-                channelRiskCache.divideAmount(order.getDetail().getPayChannelAccountId(), order.getAmount());
+                channelRiskCache.divideAmount(detail.getPayChannelAccountId(), order.getAmount());
             }
         }
     }
@@ -69,12 +69,12 @@ public abstract class DefaultAbstractPay implements PayService {
     public boolean checkOrder(Order order) {
         Assert.isTrue(order.getStatus() != OrderStatusEnum.CREATED.getValue()
                 && order.getStatus() != OrderStatusEnum.SCAN.getValue(), "订单已过期");
-        Assert.isTrue(isExpired(order), "订单已过期");
+        Assert.isTrue(isExpired(order.getDetail()), "订单已过期");
         return true;
     }
 
-    private boolean isExpired(Order order) {
-        return order.getDetail().getOrderExpiredTime().isBefore(LocalDateTime.now());
+    private boolean isExpired(OrderDetail detail) {
+        return detail.getOrderExpiredTime().isBefore(LocalDateTime.now());
     }
 
     @Override

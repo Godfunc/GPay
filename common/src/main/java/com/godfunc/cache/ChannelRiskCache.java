@@ -12,16 +12,16 @@ import java.time.format.DateTimeFormatter;
 @RequiredArgsConstructor
 public class ChannelRiskCache {
 
-    private StringRedisTemplate redisTemplate;
+    private final StringRedisTemplate redisTemplate;
 
     /**
      * 在渠道风控时，检查当日交易限额
      *
-     * @param channelId
+     * @param id
      * @return
      */
-    public long getTodayAmount(Long channelId) {
-        String s = redisTemplate.opsForValue().get(channelId + ":" + LocalDate.now().format(DateTimeFormatter.ofPattern(CommonConstant.DATE_FORMAT)));
+    public long getTodayAmount(Long id) {
+        String s = redisTemplate.opsForValue().get(id + ":" + LocalDate.now().format(DateTimeFormatter.ofPattern(CommonConstant.DATE_FORMAT)));
         if (s != null) {
             return Long.parseLong(s);
         } else {
@@ -32,11 +32,15 @@ public class ChannelRiskCache {
     /**
      * 在请求支付前增加今日交易金额
      *
-     * @param channelId
+     * @param id
      * @param amount
      * @return
      */
-    public Long addTodayAmount(Long channelId, Long amount) {
-        return redisTemplate.opsForValue().increment(channelId + ":" + LocalDate.now().format(DateTimeFormatter.ofPattern(CommonConstant.DATE_FORMAT)), amount);
+    public Long addTodayAmount(Long id, Long amount) {
+        return redisTemplate.opsForValue().increment(id + ":" + LocalDate.now().format(DateTimeFormatter.ofPattern(CommonConstant.DATE_FORMAT)), amount);
+    }
+
+    public Long divideAmount(Long id, Long amount) {
+        return redisTemplate.opsForValue().decrement(id + ":" + LocalDate.now().format(DateTimeFormatter.ofPattern(CommonConstant.DATE_FORMAT)), amount);
     }
 }

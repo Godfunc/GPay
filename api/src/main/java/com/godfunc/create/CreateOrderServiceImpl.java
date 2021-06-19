@@ -1,39 +1,48 @@
-package com.godfunc.service.impl;
+package com.godfunc.create;
 
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.godfunc.create.CreateOrderService;
 import com.godfunc.dto.PayOrderDTO;
 import com.godfunc.entity.*;
-import com.godfunc.enums.MerchantStatusEnum;
-import com.godfunc.enums.MerchantTypeEnum;
-import com.godfunc.enums.PayCategoryStatusEnum;
+import com.godfunc.enums.*;
 import com.godfunc.exception.GException;
 import com.godfunc.model.MerchantAgentProfit;
 import com.godfunc.model.PayChannelAccountJoint;
 import com.godfunc.param.PayOrderParam;
+import com.godfunc.pay.PayOrderService;
+import com.godfunc.result.ApiCode;
+import com.godfunc.result.ApiMsg;
+import com.godfunc.result.R;
 import com.godfunc.service.*;
-import com.godfunc.util.AmountUtil;
-import com.godfunc.util.Assert;
-import com.godfunc.util.SignUtils;
-import com.godfunc.util.ValidatorUtils;
+import com.godfunc.service.impl.EarlyProcessorComposite;
+import com.godfunc.util.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 /**
  * @author Godfunc
  * @email godfunc@outlook.com
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
-public class PayOrderServiceImpl implements PayOrderService {
+public class CreateOrderServiceImpl implements CreateOrderService {
 
     @Value("#{gopay}")
     private final String goPayUrl;
@@ -47,10 +56,12 @@ public class PayOrderServiceImpl implements PayOrderService {
     private final PayChannelAccountService payChannelAccountService;
     private final PlatformOrderProfitService platformOrderProfitService;
     private final MerchantOrderProfitService merchantOrderProfitService;
+    private final PayOrderService payOrderService;
+    private final ConfigService configService;
 
 
     @Override
-    public PayOrderDTO create(PayOrderParam param, HttpServletRequest request, HttpServletResponse response) {
+    public PayOrderDTO create(PayOrderParam param, HttpServletRequest request) {
         ValidatorUtils.validate(param);
 
         // 外部风控
@@ -74,13 +85,14 @@ public class PayOrderServiceImpl implements PayOrderService {
         Assert.isTrue(!merchantService.checkAgent(merchant, agentList), "当前商户上游代理已被禁用");
 
         // 检查订单是否已存在
-        Assert.isTrue(orderService.checkExist(param.getOutTradeNo()), "订单号已存在");
+        Assert.isTrue(orderService.checkExist(param.getOutTradeNo(), merchant.getCode()), "订单号已存在");
 
         // 设置订单基本信息
         Long centAmount = AmountUtil.convertDollar2Cent(param.getAmount());
         Order order = new Order();
         order.setId(IdWorker.getId());
         order.setOutTradeNo(param.getOutTradeNo());
+        order.setOrderNo(IdWorker.getIdStr());
         order.setMerchantId(merchant.getId());
         order.setMerchantCode(merchant.getCode());
         order.setMerchantName(merchant.getName());
@@ -132,17 +144,56 @@ public class PayOrderServiceImpl implements PayOrderService {
         detail.setChannelCostRate(payChannel.getCostRate());
         detail.setLogicalTag(payChannel.getLogicalTag());
 
+        String expiredTime = configService.getByName(ConfigNameEnum.ORDER_EXPIRED_TIME.getValue());
+        Assert.isBlank(expiredTime, "初始化参数未设置完整，请联系管理员");
+        detail.setOrderExpiredTime(LocalDateTime.now().plusSeconds(Long.parseLong(expiredTime)));
+
         // 计算收益
         MerchantAgentProfit merchantAgentProfit = merchantOrderProfitService.calc(merchant, agentList, order, detail);
         PlatformOrderProfit platformOrderProfit = platformOrderProfitService.calc(merchantAgentProfit, order, detail);
 
         // 创建订单以及详细
-        boolean flag = orderService.create(order, detail, merchantAgentProfit, platformOrderProfit);
+        boolean flag = false;
+        try {
+            flag = orderService.create(order, detail, merchantAgentProfit, platformOrderProfit);
+        } catch (DuplicateKeyException e) {
+            throw new GException("单号已存在，请检查您的订单号");
+        }
         Assert.isTrue(!flag, "订单创建失败");
 
         // 签名返回
-        PayOrderDTO payOrderDTO = new PayOrderDTO(order.getOutTradeNo(), order.getTradeNo(), goPayUrl + order.getTradeNo(), LocalDateTime.now().plusMinutes(10));
+        PayOrderDTO payOrderDTO = new PayOrderDTO(order.getOutTradeNo(), order.getOrderNo(), goPayUrl + order.getOrderNo(), LocalDateTime.now().plusMinutes(10));
         payOrderDTO.setSign(SignUtils.rsa2Sign(payOrderDTO, merchant.getPlatPrivateKey()));
         return payOrderDTO;
+    }
+
+    @Override
+    public void create(PayOrderParam param, HttpServletRequest request, HttpServletResponse response) {
+        try {
+            PayOrderDTO payOrderDTO = create(param, request);
+            payOrderService.goPay(payOrderDTO.getTradNo(), request, response);
+        } catch (GException e) {
+            Map<String, Object> errorMap = new HashMap<>(2);
+            errorMap.put("code", e.getCode());
+            errorMap.put("msg", e.getMsg());
+        } catch (Exception e) {
+            Map<String, Object> errorMap = new HashMap<>(2);
+            errorMap.put("code", ApiCode.FAIL);
+            errorMap.put("msg", ApiMsg.SYSTEM_BUSY);
+        }
+    }
+
+    private void errorPage(Map<String, Object> errorMap, HttpServletResponse response) {
+        // TODO 看 thymeleaf 怎么做的占位符替换
+        String html = configService.getByName(ConfigNameEnum.ORDER_ERROR_PAGE.getValue());
+        Assert.isBlank(html, "订单错误页未配置，请联系管理员！");
+
+        response.setContentType(MediaType.TEXT_HTML_VALUE);
+        response.setCharacterEncoding(CharsetEnum.UTF8.getValue());
+        try {
+            response.getWriter().write(HtmlPlaceholderUtils.replacePlaceholder(errorMap, html));
+        } catch (IOException e) {
+            log.error("response write异常", e);
+        }
     }
 }

@@ -11,8 +11,9 @@ import com.godfunc.model.MerchantAgentProfit;
  * @email godfunc@outlook.com
  */
 public interface OrderService extends IService<Order> {
-    boolean checkExist(String outTradeNo);
+    boolean checkExist(String outTradeNo, String merchantCode);
 
     boolean create(Order order, OrderDetail detail, MerchantAgentProfit merchantAgentProfit, PlatformOrderProfit platformOrderProfit);
 
+    Order getByOrderNo(String orderNo);
 }

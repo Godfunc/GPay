@@ -73,6 +73,16 @@ public class OrderDetail implements Serializable {
     private String payChannelAccountCode;
 
     /**
+     * 渠道最大限额
+     */
+    private Long payChannelDayMax;
+
+    /**
+     * 账号最大限额
+     */
+    private Long payChannelAccountDayMax;
+
+    /**
      * 渠道下单地址
      */
     private String channelCreateUrl;
@@ -101,6 +111,21 @@ public class OrderDetail implements Serializable {
      * 逻辑标识
      */
     private String logicalTag;
+
+    /**
+     * 订单过期时间
+     */
+    private LocalDateTime orderExpiredTime;
+
+    /**
+     * 客户端类型
+     */
+    private String uaType;
+
+    /**
+     * 支付客户端ip
+     */
+    private String payClientIp;
 
     /**
      * 创建时间

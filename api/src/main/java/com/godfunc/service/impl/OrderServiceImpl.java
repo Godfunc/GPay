@@ -33,8 +33,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private final PlatformOrderProfitService platformOrderProfitService;
 
     @Override
-    public boolean checkExist(String outTradeNo) {
-        return count(Wrappers.<Order>lambdaQuery().eq(Order::getOutTradeNo, outTradeNo)) > 0;
+    public boolean checkExist(String outTradeNo, String merchantCode) {
+        return count(Wrappers.<Order>lambdaQuery().eq(Order::getMerchantCode, merchantCode).eq(Order::getOutTradeNo, outTradeNo)) > 0;
     }
 
     @Override
@@ -49,5 +49,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         }
         boolean platformProfitFlag = platformOrderProfitService.save(platformOrderProfit);
         return orderFlag && orderDetailFlag && merchantProfitFlag && platformProfitFlag;
+    }
+
+    @Override
+    public Order getByOrderNo(String orderNo) {
+        return getOne(Wrappers.<Order>lambdaQuery().eq(Order::getOrderNo, orderNo));
     }
 }

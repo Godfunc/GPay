@@ -91,6 +91,11 @@ public class Order implements Serializable {
     private String payType;
 
     /**
+     * 支付链接
+     */
+    private String payStr;
+
+    /**
      * 回调时间
      */
     private LocalDateTime notifyTime;
@@ -117,5 +122,9 @@ public class Order implements Serializable {
     private LocalDateTime updateTime;
 
     @TableField(exist = false)
+    private OrderDetail detail;
+
+    @TableField(exist = false)
     private static final long serialVersionUID = 1L;
+
 }

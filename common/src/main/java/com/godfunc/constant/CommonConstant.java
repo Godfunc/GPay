@@ -23,4 +23,6 @@ public interface CommonConstant {
     String RATE_PATTERN = "^0.\\d+$";
 
     String ONE_AMOUNT_SPLIT = ",";
+
+    String PAY_SERVICE_PREFIX = "pay_service_";
 }

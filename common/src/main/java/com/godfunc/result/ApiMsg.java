@@ -18,4 +18,6 @@ public interface ApiMsg {
     String NO_PERMISSION = "没有访问权限";
     
     String OTHER = "网络异常，请稍后再试";
+
+    String SYSTEM_BUSY = "系统繁忙，请稍后再试";
 }

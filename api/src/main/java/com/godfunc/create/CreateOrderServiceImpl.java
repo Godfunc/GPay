@@ -44,8 +44,8 @@ import java.util.*;
 @RequiredArgsConstructor
 public class CreateOrderServiceImpl implements CreateOrderService {
 
-    @Value("#{gopay}")
-    private final String goPayUrl;
+    @Value("${gopay}")
+    private String goPayUrl;
 
     private final EarlyProcessorComposite earlyProcessorComposite;
     private final MerchantService merchantService;
@@ -72,11 +72,10 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         }
         Merchant merchant = merchantService.getByCode(param.getMerchantCode());
 
+        Assert.isNull(merchant, "商户不存在");
         // 验证签名
         Assert.isTrue(!SignUtils.rsa2Check(param, merchant.getPublicKey(), param.getSign()), "签名验证未通过，请检查签名是否正确");
-
         // 检查商户状态
-        Assert.isNull(merchant, "商户不存在");
         Assert.isTrue(merchant.getStatus() != MerchantStatusEnum.ENABLE.getValue(), "商户被禁用");
         Assert.isTrue(merchant.getType() != MerchantTypeEnum.MERCHANT.getValue(), "当前商户类型不支持创建订单");
 

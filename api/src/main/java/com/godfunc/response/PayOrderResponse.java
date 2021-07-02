@@ -12,5 +12,5 @@ public class PayOrderResponse {
 
     private String tradeNo;
 
-    private String
+    // private String
 }

@@ -4,8 +4,10 @@ import com.godfunc.constant.CommonConstant;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 
@@ -42,7 +44,8 @@ public class PayOrderParam {
     private String goodName;
 
     @ApiModelProperty("下单时间")
-    @NotBlank(message = "下单时间不能为空")
+    @NotNull(message = "下单时间不能为空")
+    @DateTimeFormat(pattern = CommonConstant.DATETIME_FORMAT)
     private LocalDateTime time;
 
     @ApiModelProperty("回调地址")

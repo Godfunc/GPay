@@ -8,4 +8,4 @@ spring:
         server-addr: 192.168.31.61:8848
         namespace: ce9e9b46-26c4-47f7-a89e-a0044fcdddff
 log:
-  path: /usr/local/log/prod/gpay/gpay-api
+  path: /usr/local/log/test/gpay/gpay-api

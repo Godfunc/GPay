@@ -9,7 +9,6 @@
             <pattern>${CONSOLE_LOG_PATTERN}</pattern>
         </encoder>
     </appender>
-
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${LOG_PATH}/${LOG_NAME}.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -24,7 +23,7 @@
         </layout>
     </appender>
 
-    <!-- 开发、测试环境 -->
+    <!-- 测试环境 -->
     <springProfile name="dev,test">
         <logger name="com.godfunc" level="DEBUG">
             <appender-ref ref="CONSOLE"/>
@@ -33,7 +32,15 @@
             <appender-ref ref="CONSOLE"/>
         </logger>
     </springProfile>
-
+    <!-- 测试环境 -->
+    <springProfile name="test">
+        <logger name="com.godfunc" level="DEBUG">
+            <appender-ref ref="FILE"/>
+        </logger>
+        <logger name="org.springframework" level="INFO">
+            <appender-ref ref="FILE"/>
+        </logger>
+    </springProfile>
     <!-- 生产环境 -->
     <springProfile name="prod">
         <logger name="org.springframework.web" level="ERROR">

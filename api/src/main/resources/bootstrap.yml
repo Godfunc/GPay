@@ -9,4 +9,4 @@ spring:
   application:
     name: gpay-api
   profiles:
-    active: dev
+    active: test

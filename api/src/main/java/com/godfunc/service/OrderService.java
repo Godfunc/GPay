@@ -16,4 +16,7 @@ public interface OrderService extends IService<Order> {
     boolean create(Order order, OrderDetail detail, MerchantAgentProfit merchantAgentProfit, PlatformOrderProfit platformOrderProfit);
 
     Order getByOrderNo(String orderNo);
+
+    boolean updatePayInfo(Order order);
+
 }

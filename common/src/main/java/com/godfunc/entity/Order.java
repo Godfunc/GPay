@@ -111,11 +111,6 @@ public class Order implements Serializable {
     private Byte status;
 
     /**
-     * 下单客户ip
-     */
-    private String clientIp;
-
-    /**
      * 更新时间
      */
     @TableField(fill = FieldFill.UPDATE)

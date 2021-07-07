@@ -6,9 +6,14 @@ import com.godfunc.entity.Order;
 import com.godfunc.entity.OrderDetail;
 import com.godfunc.enums.OrderStatusEnum;
 import com.godfunc.exception.GException;
+import com.godfunc.lock.OrderPayRequestLock;
+import com.godfunc.result.ApiMsg;
+import com.godfunc.service.OrderService;
 import com.godfunc.service.PayChannelAccountService;
 import com.godfunc.service.PayChannelService;
 import com.godfunc.util.Assert;
+import com.godfunc.util.IpUtils;
+import com.godfunc.util.UserAgentUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -29,6 +34,8 @@ public abstract class DefaultAbstractPay implements PayService {
     protected final PayChannelService payChannelService;
     protected final PayChannelAccountService payChannelAccountService;
     protected final ChannelRiskCache channelRiskCache;
+    protected final OrderService orderService;
+    private final OrderPayRequestLock orderPayRequestLock;
 
     @Override
     public void pay(Order order, HttpServletRequest request, HttpServletResponse response) {
@@ -39,27 +46,46 @@ public abstract class DefaultAbstractPay implements PayService {
             handleResponse(payInfo, request, response);
             return;
         }
-        // 设置UA等信息 TODO
+
         OrderDetail detail = order.getDetail();
         Assert.isTrue(!checkOrder(order), "订单已过期");
         Assert.isTrue(!checkChannel(order), "渠道不可用");
-        try {
-            payInfo = doPay(order);
 
+        try {
+            // 锁定当前订单
+            Assert.isTrue(orderPayRequestLock.isLock(order.getId()), ApiMsg.SYSTEM_BUSY);
+            setClientInfo(order, request);
+
+            payInfo = doPay(order);
+            order.setTradeNo(payInfo.getTradeNo());
+            order.setPayStr(payInfo.getPayUrl());
+            // 更新订单支付信息
+            // order : tradeNo, payStr, payTime, status
+            // detail: uaType, uaString, payClientIp
+            Assert.isTrue(!orderService.updatePayInfo(order), "请求支付失败，请检查订单状态");
             handleResponse(payInfo, request, response);
         } catch (GException e) {
+            // 请求失败就把缓存中扣的金额给恢复
             if (order.getDetail().getPayChannelDayMax() != null) {
                 channelRiskCache.divideAmount(detail.getPayChannelId(), order.getAmount());
             }
             if (order.getDetail().getPayChannelAccountDayMax() != null) {
                 channelRiskCache.divideAmount(detail.getPayChannelAccountId(), order.getAmount());
             }
+            // 将异常抛出，让外层方法处理
+            throw e;
+        } finally {
+            // 请求完成后删除锁
+            orderPayRequestLock.rmLock(order.getId());
         }
     }
 
     @Override
     public void setClientInfo(Order order, HttpServletRequest request) {
-        
+        OrderDetail detail = order.getDetail();
+        detail.setUaType(UserAgentUtils.getUAType(request));
+        detail.setUaStr(UserAgentUtils.getUAStr(request));
+        detail.setPayClientIp(IpUtils.getIpAddr(request));
     }
 
     @Override
@@ -84,12 +110,20 @@ public abstract class DefaultAbstractPay implements PayService {
             log.info("渠道 {} 超过限额 {}", order.getDetail().getPayChannelId(), payChannelDayMax);
             throw new GException("当前渠道今日交易已达到上线");
         }
-        Long payChannelAccountDayMax = order.getDetail().getPayChannelAccountDayMax();
-        if (payChannelAccountDayMax != null && channelRiskCache.addTodayAmount(order.getDetail().getPayChannelAccountId(), order.getAmount()) > payChannelAccountDayMax) {
-            log.info("账号 {} 超过限额 {}", order.getDetail().getPayChannelAccountId(), payChannelDayMax);
-            throw new GException("当前渠道今日交易已达到上线");
+        try {
+            Long payChannelAccountDayMax = order.getDetail().getPayChannelAccountDayMax();
+            if (payChannelAccountDayMax != null && channelRiskCache.addTodayAmount(order.getDetail().getPayChannelAccountId(), order.getAmount()) > payChannelAccountDayMax) {
+                log.info("账号 {} 超过限额 {}", order.getDetail().getPayChannelAccountId(), payChannelDayMax);
+                throw new GException("当前渠道今日交易已达到上线");
+            }
+            return true;
+        } catch (GException e) {
+            // 将上面渠道扣除的金额恢复
+            if (order.getDetail().getPayChannelDayMax() != null) {
+                channelRiskCache.divideAmount(order.getDetail().getPayChannelId(), order.getAmount());
+            }
+            throw e;
         }
-        return true;
     }
 
     @Override

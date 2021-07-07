@@ -6,6 +6,7 @@ import com.godfunc.entity.MerchantOrderProfit;
 import com.godfunc.entity.Order;
 import com.godfunc.entity.OrderDetail;
 import com.godfunc.entity.PlatformOrderProfit;
+import com.godfunc.enums.OrderStatusEnum;
 import com.godfunc.mapper.OrderMapper;
 import com.godfunc.model.MerchantAgentProfit;
 import com.godfunc.service.MerchantOrderProfitService;
@@ -54,5 +55,17 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Override
     public Order getByOrderNo(String orderNo) {
         return getOne(Wrappers.<Order>lambdaQuery().eq(Order::getOrderNo, orderNo));
+    }
+
+    @Override
+    public boolean updatePayInfo(Order order) {
+        boolean orderFlag = lambdaUpdate().set(Order::getTradeNo, order.getTradeNo())
+                .set(Order::getPayStr, order.getPayStr())
+                .set(Order::getPayTime, order.getPayTime())
+                .set(Order::getStatus, OrderStatusEnum.SCAN.getValue())
+                .eq(Order::getStatus, OrderStatusEnum.CREATED.getValue())
+                .eq(Order::getId, order.getId()).update();
+        boolean detailFlag = orderDetailService.updateClientInfo(order.getDetail());
+        return orderFlag;
     }
 }

@@ -170,6 +170,41 @@ create table merchant_risk
     index idx_merchant_id (merchant_id)
 ) comment '商户风控';
 
+create table pay_order_detail
+(
+    id                          bigint(20)   not null,
+    order_id                    bigint(20)   not null comment '订单id',
+    merchant_id                 bigint(20)   not null comment '商户id',
+    merchant_code               varchar(64)  not null comment '商户号',
+    merchant_name               varchar(512) not null comment '商户名',
+    pay_category_id             bigint(20)   not null comment '渠道主类id',
+    pay_channel_id              bigint(20)   not null comment '渠道子类id',
+    pay_category_channel_id     bigint(20)   not null comment '渠道关联id',
+    pay_channel_account_id      bigint(20)   not null comment '渠道账号id',
+    pay_channel_account_code    varchar(64)  not null comment '渠道账号商户号',
+    pay_channel_day_max         bigint(20)   null comment '渠道每日最大限额',
+    pay_channel_account_day_max bigint(20)   null comment '账号每日最大限额',
+    channel_create_url          varchar(64)  not null comment '渠道下单地址',
+    channel_query_url           varchar(64)  null comment '渠道查询订单地址',
+    channel_notify_url          varchar(64)  not null comment '渠道回调地址',
+    channel_pay_type_info       text comment '支付类型信息',
+    channel_cost_rate           float(8, 6)  not null comment '费率',
+    logical_tag                 varchar(128) not null comment '逻辑标识',
+    order_expired_time          datetime     null comment '订单过期时间',
+    ua_type                     tinyint(4)   null comment '客户端类型',
+    ua_str                      text         null comment '客户端ua',
+    client_ip                   varchar(128) not null comment '下单客户ip',
+    pay_client_ip               varchar(128) null comment '支付客户端ip',
+    create_time                 datetime     not null comment '创建时间',
+    primary key (id),
+    unique uq_order_id (order_id),
+    index idx_pay_category_id (pay_category_id),
+    index idx_pay_channel_id (pay_channel_id),
+    index idx_pay_channel_account_id (pay_channel_account_id),
+    index idx_logical_tag (logical_tag),
+    index idx_create_time (create_time)
+) comment '订单详情表';
+
 create table channel_risk
 (
     id                 bigint(20) not null,
@@ -212,7 +247,6 @@ create table pay_order
     notify_time          datetime     null comment '回调时间',
     notify_url           text         null comment '回调地址',
     status               tinyint(4)   not null default 1 comment '订单状态 1.已下单 2.已扫码 3.已支付 4.已回调',
-    client_ip            varchar(128) not null comment '下单客户ip',
     update_time          datetime     null comment '更新时间',
     primary key (id),
     unique uq_out_trade_no_merchant_code (merchant_code, out_trade_no),
@@ -221,39 +255,6 @@ create table pay_order
     index idx_pay_time (pay_time),
     index idx_notify_time (notify_time)
 ) comment '订单表';
-
-create table pay_order_detail
-(
-    id                          bigint(20)   not null,
-    order_id                    bigint(20)   not null comment '订单id',
-    merchant_id                 bigint(20)   not null comment '商户id',
-    merchant_code               varchar(64)  not null comment '商户号',
-    merchant_name               varchar(512) not null comment '商户名',
-    pay_category_id             bigint(20)   not null comment '渠道主类id',
-    pay_channel_id              bigint(20)   not null comment '渠道子类id',
-    pay_category_channel_id     bigint(20)   not null comment '渠道关联id',
-    pay_channel_account_id      bigint(20)   not null comment '渠道账号id',
-    pay_channel_account_code    varchar(64)  not null comment '渠道账号商户号',
-    pay_channel_day_max         bigint(20)   null comment '渠道每日最大限额',
-    pay_channel_account_day_max bigint(20)   null comment '账号每日最大限额',
-    channel_create_url          varchar(64)  not null comment '渠道下单地址',
-    channel_query_url           varchar(64)  null comment '渠道查询订单地址',
-    channel_notify_url          varchar(64)  not null comment '渠道回调地址',
-    channel_pay_type_info       text comment '支付类型信息',
-    channel_cost_rate           float(8, 6)  not null comment '费率',
-    logical_tag                 varchar(128) not null comment '逻辑标识',
-    order_expired_time          datetime     null comment '订单过期时间',
-    ua_type                     varchar(128) null comment '客户端类型',
-    pay_client_ip               varchar(128) null comment '支付客户端ip',
-    create_time                 datetime     not null comment '创建时间',
-    primary key (id),
-    unique uq_order_id (order_id),
-    index idx_pay_category_id (pay_category_id),
-    index idx_pay_channel_id (pay_channel_id),
-    index idx_pay_channel_account_id (pay_channel_account_id),
-    index idx_logical_tag (logical_tag),
-    index idx_create_time (create_time)
-) comment '订单详情表';
 
 create table pay_merchant_order_profit
 (

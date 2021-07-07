@@ -120,12 +120,22 @@ public class OrderDetail implements Serializable {
     /**
      * 客户端类型
      */
-    private String uaType;
+    private Integer uaType;
+
+    /**
+     * 客户端ua
+     */
+    private String uaStr;
 
     /**
      * 支付客户端ip
      */
     private String payClientIp;
+
+    /**
+     * 下单客户ip
+     */
+    private String clientIp;
 
     /**
      * 创建时间

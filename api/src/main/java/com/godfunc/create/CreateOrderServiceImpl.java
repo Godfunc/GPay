@@ -96,7 +96,6 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         order.setMerchantCode(merchant.getCode());
         order.setMerchantName(merchant.getName());
         order.setClientCreateTime(param.getTime());
-        order.setClientIp(param.getClientIp());
         order.setPayType(param.getType());
         order.setAmount(centAmount);
 
@@ -117,6 +116,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         detail.setMerchantId(merchant.getId());
         detail.setMerchantCode(merchant.getCode());
         detail.setMerchantName(merchant.getName());
+        detail.setClientIp(param.getClientIp());
 
         // 渠道风控（粗略的限额，后面请求支付时进行详细限额）
         List<PayChannel> payChannelList = payChannelService.getEnableByRisk(payCategory.getId(), order);
@@ -175,15 +175,18 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             Map<String, Object> errorMap = new HashMap<>(2);
             errorMap.put("code", e.getCode());
             errorMap.put("msg", e.getMsg());
+            errorPage(errorMap, response);
         } catch (Exception e) {
             Map<String, Object> errorMap = new HashMap<>(2);
             errorMap.put("code", ApiCode.FAIL);
             errorMap.put("msg", ApiMsg.SYSTEM_BUSY);
+            errorPage(errorMap, response);
         }
     }
 
     private void errorPage(Map<String, Object> errorMap, HttpServletResponse response) {
         // TODO 看 thymeleaf 怎么做的占位符替换
+        // TODO 缓存一下这个页面数据
         String html = configService.getByName(ConfigNameEnum.ORDER_ERROR_PAGE.getValue());
         Assert.isBlank(html, "订单错误页未配置，请联系管理员！");
 

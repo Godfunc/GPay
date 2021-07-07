@@ -22,4 +22,13 @@ public class OrderDetailServiceImpl extends ServiceImpl<OrderDetailMapper, Order
     public OrderDetail getByOrderId(Long orderId) {
         return getOne(Wrappers.<OrderDetail>lambdaQuery().eq(OrderDetail::getOrderId, orderId));
     }
+
+    @Override
+    public boolean updateClientInfo(OrderDetail detail) {
+        return lambdaUpdate().set(OrderDetail::getUaType, detail.getUaType())
+                .set(OrderDetail::getUaStr, detail.getUaStr())
+                .set(OrderDetail::getPayClientIp, detail.getPayClientIp())
+                .eq(OrderDetail::getId, detail.getId()).update();
+
+    }
 }

@@ -20,6 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 /**
@@ -50,7 +51,6 @@ public abstract class DefaultAbstractPay implements PayService {
         OrderDetail detail = order.getDetail();
         Assert.isTrue(!checkOrder(order), "订单已过期");
         Assert.isTrue(!checkChannel(order), "渠道不可用");
-
         try {
             // 锁定当前订单
             Assert.isTrue(orderPayRequestLock.isLock(order.getId()), ApiMsg.SYSTEM_BUSY);
@@ -128,6 +128,10 @@ public abstract class DefaultAbstractPay implements PayService {
 
     @Override
     public void handleResponse(PayInfoDto payInfo, HttpServletRequest request, HttpServletResponse response) {
-
+        try {
+            response.sendRedirect(payInfo.getPayUrl());
+        } catch (IOException e) {
+            log.error("跳转到支付链接异常", e);
+        }
     }
 }

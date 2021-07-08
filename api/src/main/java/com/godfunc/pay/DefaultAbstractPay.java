@@ -67,10 +67,10 @@ public abstract class DefaultAbstractPay implements PayService {
         } catch (GException e) {
             // 请求失败就把缓存中扣的金额给恢复
             if (order.getDetail().getPayChannelDayMax() != null) {
-                channelRiskCache.divideAmount(detail.getPayChannelId(), order.getAmount());
+                channelRiskCache.divideTodayAmount(detail.getPayChannelId(), order.getAmount());
             }
             if (order.getDetail().getPayChannelAccountDayMax() != null) {
-                channelRiskCache.divideAmount(detail.getPayChannelAccountId(), order.getAmount());
+                channelRiskCache.divideTodayAmount(detail.getPayChannelAccountId(), order.getAmount());
             }
             // 将异常抛出，让外层方法处理
             throw e;
@@ -120,7 +120,7 @@ public abstract class DefaultAbstractPay implements PayService {
         } catch (GException e) {
             // 将上面渠道扣除的金额恢复
             if (order.getDetail().getPayChannelDayMax() != null) {
-                channelRiskCache.divideAmount(order.getDetail().getPayChannelId(), order.getAmount());
+                channelRiskCache.divideTodayAmount(order.getDetail().getPayChannelId(), order.getAmount());
             }
             throw e;
         }

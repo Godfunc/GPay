@@ -40,7 +40,14 @@ public class ChannelRiskCache {
         return redisTemplate.opsForValue().increment(id + ":" + LocalDate.now().format(DateTimeFormatter.ofPattern(CommonConstant.DATE_FORMAT)), amount);
     }
 
-    public Long divideAmount(Long id, Long amount) {
+    /**
+     * 过期的订单需要删除金额
+     *
+     * @param id
+     * @param amount
+     * @return
+     */
+    public Long divideTodayAmount(Long id, Long amount) {
         return redisTemplate.opsForValue().decrement(id + ":" + LocalDate.now().format(DateTimeFormatter.ofPattern(CommonConstant.DATE_FORMAT)), amount);
     }
 }

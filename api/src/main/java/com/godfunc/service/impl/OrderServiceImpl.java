@@ -9,6 +9,7 @@ import com.godfunc.entity.PlatformOrderProfit;
 import com.godfunc.enums.OrderStatusEnum;
 import com.godfunc.mapper.OrderMapper;
 import com.godfunc.model.MerchantAgentProfit;
+import com.godfunc.model.NotifyOrderInfo;
 import com.godfunc.service.MerchantOrderProfitService;
 import com.godfunc.service.OrderDetailService;
 import com.godfunc.service.OrderService;
@@ -18,6 +19,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -58,6 +60,22 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
     @Override
+    public Order getByTradeNo(String tradeNo) {
+        return getOne(Wrappers.<Order>lambdaQuery().eq(Order::getTradeNo, tradeNo));
+    }
+
+    @Override
+    public boolean updatePaid(Long id, NotifyOrderInfo notifyOrderInfo) {
+        return lambdaUpdate().set(Order::getTradeNo, notifyOrderInfo.getTradeNo())
+                .set(Order::getRealAmount, notifyOrderInfo.getRealAmount())
+                .set(Order::getStatus, OrderStatusEnum.PAID.getValue())
+                .set(Order::getNotifyTime, LocalDateTime.now())
+                .eq(Order::getId, id)
+                .eq(Order::getStatus, OrderStatusEnum.SCAN.getValue())
+                .update();
+    }
+
+    @Override
     public boolean updatePayInfo(Order order) {
         boolean orderFlag = lambdaUpdate().set(Order::getTradeNo, order.getTradeNo())
                 .set(Order::getPayStr, order.getPayStr())
@@ -68,4 +86,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         boolean detailFlag = orderDetailService.updateClientInfo(order.getDetail());
         return orderFlag;
     }
+
+
 }

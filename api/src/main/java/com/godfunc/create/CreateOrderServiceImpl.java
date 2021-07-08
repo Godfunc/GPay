@@ -136,6 +136,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         detail.setPayCategoryChannelId(payChannel.getCategoryChannelId());
         detail.setPayChannelAccountId(payChannelAccount.getId());
         detail.setPayChannelAccountCode(payChannelAccount.getAccountCode());
+        detail.setPayChannelAccountKeyInfo(payChannelAccount.getKeyInfo());
         detail.setChannelCreateUrl(payChannel.getCreateUrl());
         detail.setChannelQueryUrl(payChannel.getQueryUrl());
         detail.setChannelNotifyUrl(payChannel.getNotifyUrl());

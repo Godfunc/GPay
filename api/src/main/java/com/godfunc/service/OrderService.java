@@ -5,6 +5,7 @@ import com.godfunc.entity.Order;
 import com.godfunc.entity.OrderDetail;
 import com.godfunc.entity.PlatformOrderProfit;
 import com.godfunc.model.MerchantAgentProfit;
+import com.godfunc.model.NotifyOrderInfo;
 
 /**
  * @author Godfunc
@@ -19,4 +20,7 @@ public interface OrderService extends IService<Order> {
 
     boolean updatePayInfo(Order order);
 
+    Order getByTradeNo(String tradeNo);
+
+    boolean updatePaid(Long id, NotifyOrderInfo notifyOrderInfo);
 }

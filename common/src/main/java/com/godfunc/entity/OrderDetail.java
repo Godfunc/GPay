@@ -73,6 +73,11 @@ public class OrderDetail implements Serializable {
     private String payChannelAccountCode;
 
     /**
+     * 渠道账号密钥
+     */
+    private String payChannelAccountKeyInfo;
+
+    /**
      * 渠道最大限额
      */
     private Long payChannelDayMax;

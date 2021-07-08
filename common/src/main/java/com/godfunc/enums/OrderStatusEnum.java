@@ -10,10 +10,21 @@ public enum OrderStatusEnum {
      * 已下单 1
      */
     CREATED(1),
+
     /**
-     * 已扫码 1
+     * 已扫码 2
      */
-    SCAN(2);
+    SCAN(2),
+
+    /**
+     * 已支付 3
+     */
+    PAID(3),
+
+    /**
+     * 已完成 4
+     */
+    FINISH(4);
 
     private final int value;
 

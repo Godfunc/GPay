@@ -1,6 +1,6 @@
 package com.godfunc.pay;
 
-import com.godfunc.constant.CommonConstant;
+import com.godfunc.constant.ApiConstant;
 import com.godfunc.entity.Order;
 import com.godfunc.entity.OrderDetail;
 import com.godfunc.service.OrderDetailService;
@@ -32,7 +32,7 @@ public class PayOrderService {
         OrderDetail detail = orderDetailService.getByOrderId(order.getId());
         Assert.isNull(detail, "订单信息不全，请重新下单");
         order.setDetail(detail);
-        PayService payService = (PayService) applicationContext.getBean(CommonConstant.PAY_SERVICE_PREFIX + detail.getLogicalTag());
+        PayService payService = (PayService) applicationContext.getBean(ApiConstant.PAY_SERVICE_PREFIX + detail.getLogicalTag());
         Assert.isNull(payService, "不支持的支付类型");
 
         payService.pay(order,  request, response);

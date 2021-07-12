@@ -7,6 +7,8 @@ import com.godfunc.entity.OrderDetail;
 import com.godfunc.enums.OrderStatusEnum;
 import com.godfunc.exception.GException;
 import com.godfunc.lock.OrderPayRequestLock;
+import com.godfunc.pay.advice.PayUrlRequestAdvice;
+import com.godfunc.pay.advice.PayUrlRequestAdviceFinder;
 import com.godfunc.result.ApiMsg;
 import com.godfunc.service.OrderService;
 import com.godfunc.service.PayChannelAccountService;
@@ -16,6 +18,7 @@ import com.godfunc.util.IpUtils;
 import com.godfunc.util.UserAgentUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,7 +41,10 @@ public abstract class DefaultAbstractPay implements PayService {
     protected final ChannelRiskCache channelRiskCache;
     protected final OrderService orderService;
     private final OrderPayRequestLock orderPayRequestLock;
+    private final PayUrlRequestAdviceFinder payUrlRequestAdviceFinder;
 
+
+    private List<PayUrlRequestAdvice> payUrlRequestAdvicesCacheList;
 
     @Override
     public void pay(Order order, HttpServletRequest request, HttpServletResponse response) {
@@ -56,7 +62,11 @@ public abstract class DefaultAbstractPay implements PayService {
         try {
             // 锁定当前订单
             Assert.isTrue(orderPayRequestLock.isLock(order.getId()), ApiMsg.SYSTEM_BUSY);
+
+            List<PayUrlRequestAdvice> payUrlRequestAdvices = getPayUrlRequestAdvices();
             setClientInfo(order, request);
+
+            payUrlRequestAdviceInvokeBefore(payUrlRequestAdvices, order, request);
 
             payInfo = doPay(order);
             order.setTradeNo(payInfo.getTradeNo());
@@ -65,6 +75,8 @@ public abstract class DefaultAbstractPay implements PayService {
             // order : tradeNo, payStr, payTime, status
             // detail: uaType, uaString, payClientIp
             Assert.isTrue(!orderService.updatePayInfo(order), "请求支付失败，请检查订单状态");
+
+            payUrlRequestAdviceInvokeAfter(payUrlRequestAdvices, payInfo);
 
             handleResponse(payInfo, request, response);
         } catch (GException e) {
@@ -138,7 +150,33 @@ public abstract class DefaultAbstractPay implements PayService {
         }
     }
 
-     getPayUrlRequestAdvices() {
+    /**
+     * 返回排序后的所有的 PayUrlRequestAdvice
+     *
+     * @return
+     */
+    private List<PayUrlRequestAdvice> getPayUrlRequestAdvices() {
+        if (payUrlRequestAdvicesCacheList == null) {
+            payUrlRequestAdvicesCacheList = payUrlRequestAdviceFinder.findAll();
+        }
+        return payUrlRequestAdvicesCacheList;
+    }
 
+    private void payUrlRequestAdviceInvokeBefore(List<PayUrlRequestAdvice> list, Order order, HttpServletRequest request) {
+        if (CollectionUtils.isEmpty(list)) {
+            return;
+        }
+        for (PayUrlRequestAdvice payUrlRequestAdvice : list) {
+            payUrlRequestAdvice.beforeRequest(order, request);
+        }
+    }
+
+    private void payUrlRequestAdviceInvokeAfter(List<PayUrlRequestAdvice> list, PayInfoDto payInfo) {
+        if (CollectionUtils.isEmpty(list)) {
+            return;
+        }
+        for (PayUrlRequestAdvice payUrlRequestAdvice : list) {
+            payUrlRequestAdvice.afterRequest(payInfo);
+        }
     }
 }

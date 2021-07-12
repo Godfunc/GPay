@@ -72,7 +72,6 @@ public class NotifyOrderService {
             return handler.failResult();
         }
 
-        // 风控金额 TODO
         // 更新订单信息
         if (orderService.updatePaid(order.getId(), notifyOrderInfo)) {
             return handler.successResult();

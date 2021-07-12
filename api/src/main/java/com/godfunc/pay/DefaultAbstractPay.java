@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author godfunc
@@ -37,6 +38,7 @@ public abstract class DefaultAbstractPay implements PayService {
     protected final ChannelRiskCache channelRiskCache;
     protected final OrderService orderService;
     private final OrderPayRequestLock orderPayRequestLock;
+
 
     @Override
     public void pay(Order order, HttpServletRequest request, HttpServletResponse response) {
@@ -63,6 +65,7 @@ public abstract class DefaultAbstractPay implements PayService {
             // order : tradeNo, payStr, payTime, status
             // detail: uaType, uaString, payClientIp
             Assert.isTrue(!orderService.updatePayInfo(order), "请求支付失败，请检查订单状态");
+
             handleResponse(payInfo, request, response);
         } catch (GException e) {
             // 请求失败就把缓存中扣的金额给恢复
@@ -133,5 +136,9 @@ public abstract class DefaultAbstractPay implements PayService {
         } catch (IOException e) {
             log.error("跳转到支付链接异常", e);
         }
+    }
+
+     getPayUrlRequestAdvices() {
+
     }
 }

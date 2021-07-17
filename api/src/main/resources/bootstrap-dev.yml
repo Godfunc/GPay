@@ -3,9 +3,9 @@ spring:
     nacos:
       config:
         server-addr: 192.168.31.62:8848
-        namespace: ce9e9b46-26c4-47f7-a89e-a0044fcdddff
+        namespace: 995cfeac-3dc5-4ade-a0f6-9adb299cc536
       discovery:
-        server-addr: 192.168.31.61:8848
-        namespace: ce9e9b46-26c4-47f7-a89e-a0044fcdddff
+        server-addr: 192.168.31.62:8848
+        namespace: 995cfeac-3dc5-4ade-a0f6-9adb299cc536
 log:
   path: /tmp

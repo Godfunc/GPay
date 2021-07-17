@@ -65,10 +65,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
     @Override
-    public boolean updatePaid(Long id, NotifyOrderInfo notifyOrderInfo) {
+    public boolean updatePaid(Long id, int currentStatus, NotifyOrderInfo notifyOrderInfo) {
         return lambdaUpdate().set(Order::getTradeNo, notifyOrderInfo.getTradeNo())
                 .set(Order::getRealAmount, notifyOrderInfo.getRealAmount())
-                .set(Order::getStatus, OrderStatusEnum.PAID.getValue())
+                .set(Order::getStatus, currentStatus)
                 .set(Order::getNotifyTime, LocalDateTime.now())
                 .eq(Order::getId, id)
                 .eq(Order::getStatus, OrderStatusEnum.SCAN.getValue())

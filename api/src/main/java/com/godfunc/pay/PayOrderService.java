@@ -27,6 +27,7 @@ public class PayOrderService {
     private final ApplicationContext applicationContext;
 
     public void goPay(String orderNo, HttpServletRequest request, HttpServletResponse response) {
+        // TODO 添加订单日志 记录订单状态变更的记录。 创建订单 扫码 请求支付 获取支付链接 处理过期 收到异步通知（分为成功和失败两种） 通知商户（什么时候通知的，通知的结果是什么）
         Order order = orderService.getByOrderNo(orderNo);
         Assert.isNull(order, "订单不存在");
         OrderDetail detail = orderDetailService.getByOrderId(order.getId());

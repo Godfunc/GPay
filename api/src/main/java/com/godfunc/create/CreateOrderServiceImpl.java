@@ -9,6 +9,7 @@ import com.godfunc.model.MerchantAgentProfit;
 import com.godfunc.model.PayChannelAccountJoint;
 import com.godfunc.param.PayOrderParam;
 import com.godfunc.pay.PayOrderService;
+import com.godfunc.queue.OrderExpireQueue;
 import com.godfunc.result.ApiCode;
 import com.godfunc.result.ApiMsg;
 import com.godfunc.service.*;
@@ -52,6 +53,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     private final MerchantOrderProfitService merchantOrderProfitService;
     private final PayOrderService payOrderService;
     private final ConfigService configService;
+    private final OrderExpireQueue orderExpireQueue;
 
 
     @Override
@@ -155,6 +157,9 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         }
         Assert.isTrue(!flag, "订单创建失败");
 
+        // 添加到过期队列中
+        intoExpireQueue(order);
+        
         // 签名返回
         PayOrderDTO payOrderDTO = new PayOrderDTO(order.getOutTradeNo(), order.getOrderNo(), goPayUrl + order.getOrderNo(), LocalDateTime.now().plusMinutes(10));
         payOrderDTO.setSign(SignUtils.rsa2Sign(payOrderDTO, merchant.getPlatPrivateKey()));
@@ -192,5 +197,15 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         } catch (IOException e) {
             log.error("response write异常", e);
         }
+    }
+
+    private void intoExpireQueue(Order order) {
+        OrderExpireQueue.OrderExpire orderExpire = new OrderExpireQueue.OrderExpire();
+        orderExpire.setId(order.getId());
+        orderExpire.setCreateTime(order.getCreateTime());
+        orderExpire.setAmount(order.getAmount());
+        orderExpire.setExpiredTime(order.getDetail().getOrderExpiredTime());
+        orderExpire.setStatus(order.getStatus());
+        orderExpireQueue.push(orderExpire);
     }
 }

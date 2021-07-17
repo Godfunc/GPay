@@ -24,8 +24,18 @@ public enum OrderStatusEnum {
     /**
      * 已完成 4
      */
-    FINISH(4);
+    FINISH(4),
 
+    /**
+     * 订单失败 5
+     */
+    FAIL(5),
+
+    /**
+     * 订单取消 6
+     */
+    EXPIRED(6);
+    
     private final int value;
 
     OrderStatusEnum(int value) {

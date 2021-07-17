@@ -1,5 +1,6 @@
 package com.godfunc.notify;
 
+import com.godfunc.cache.ChannelRiskCache;
 import com.godfunc.constant.ApiConstant;
 import com.godfunc.entity.Order;
 import com.godfunc.entity.OrderDetail;
@@ -26,6 +27,7 @@ public class NotifyOrderService {
     private final ApplicationContext applicationContext;
     private final OrderService orderService;
     private final OrderDetailService orderDetailService;
+    private final ChannelRiskCache channelRiskCache;
 
     public String notifyOrder(String logical, HttpServletRequest request) {
         NotifyOrderHandler handler = (NotifyOrderHandler) applicationContext.getBean(ApiConstant.NOTIFY_SERVICE_PREFIX + logical);
@@ -57,8 +59,9 @@ public class NotifyOrderService {
             return handler.successResult();
         }
 
-        if (order.getStatus() != OrderStatusEnum.SCAN.getValue()) {
-            log.info("订单状态不正确，非已扫码状态 status={}", order.getStatus());
+        if (order.getStatus() != OrderStatusEnum.SCAN.getValue()
+                && order.getStatus() != OrderStatusEnum.EXPIRED.getValue()) {
+            log.info("订单状态不正确，非已扫码或过期状态 status={}", order.getStatus());
             return handler.failResult();
         }
 
@@ -72,8 +75,22 @@ public class NotifyOrderService {
             return handler.failResult();
         }
 
+        int currentStatus = OrderStatusEnum.SCAN.getValue();
+
+        // 过期订单收到支付通知进行 自动修复
+        if (order.getStatus() != OrderStatusEnum.EXPIRED.getValue()) {
+            currentStatus = OrderStatusEnum.EXPIRED.getValue();
+            if (detail.getPayChannelDayMax() != null) {
+                channelRiskCache.addTodayAmount(detail.getPayChannelId(), order.getAmount());
+            }
+            if (detail.getPayChannelAccountDayMax() != null) {
+                channelRiskCache.addTodayAmount(detail.getPayChannelAccountId(), order.getAmount());
+            }
+        }
+
         // 更新订单信息
-        if (orderService.updatePaid(order.getId(), notifyOrderInfo)) {
+        if (orderService.updatePaid(order.getId(), currentStatus, notifyOrderInfo)) {
+            // TODO 添加到通知商户的队列中
             return handler.successResult();
         } else {
             log.error("订单更新为已支付失败 {}", order.getId());

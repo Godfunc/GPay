@@ -32,6 +32,7 @@ public class OrderExpireQueue {
         private Long amount;
         private Integer status;
         private LocalDateTime createTime;
+        private LocalDateTime expiredTime;
     }
 
 }

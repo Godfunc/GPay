@@ -108,7 +108,7 @@ public class Order implements Serializable {
     /**
      * 订单状态 1.已下单 2.已扫码 3.已支付 4.已回调
      */
-    private Byte status;
+    private Integer status;
 
     /**
      * 更新时间

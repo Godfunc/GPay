@@ -79,7 +79,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    @Cacheable(cacheNames = "user::detail", key = "#id")
+    @Cacheable(cacheNames = "userTokenService.deleteByUserId(userDetail.getId());", key = "#id")
     public UserDetails getByUserId(Long id) {
         User user = getById(id);
         return getByUser(user);
@@ -198,5 +198,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public List<UserSimpleDTO> getList() {
         return this.baseMapper.selectWithoutMerchant();
+    }
+
+    @Override
+    @CacheEvict(cacheNames = "user::detail", key = "#id")
+    public void logout(Long id) {
+        userTokenService.deleteByUserId(id);
     }
 }

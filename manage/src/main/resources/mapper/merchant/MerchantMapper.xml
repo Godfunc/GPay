@@ -3,28 +3,29 @@
 <mapper namespace="com.godfunc.modules.merchant.mapper.MerchantMapper">
 
     <select id="selectCustomPage" resultType="com.godfunc.entity.Merchant">
-        select id,
-        user_id,
-        agent_id,
-        name,
-        code,
-        type,
-        plat_public_key,
-        public_key,
-        status,
-        create_id,
-        create_time,
-        update_id,
-        update_time
-        from merchant
-        where rm_tag = 0
-        <if test="type!=null">and type = #{type}</if>
-        <if test="status!=null">and status = #{status}</if>
-        <if test="code!=null and code!=''">and code = #{code}</if>
-        <if test="name!=null and name!=''">and name = #{name}</if>
-        <if test="id!=null">and id = #{id}</if>
-        <if test="agentId!=null">and agent_id = #{agentId}</if>
-        order by create_time desc
+        select m.id,
+        m.user_id,
+        u.username,
+        m.agent_id,
+        m.name,
+        m.code,
+        m.type,
+        m.plat_public_key,
+        m.public_key,
+        m.status,
+        m.create_id,
+        m.create_time,
+        m.update_id,
+        m.update_time
+        from merchant m left join mg_user u on m.user_id = u.id
+        where m.rm_tag = 0
+        <if test="type!=null">and m.type = #{type}</if>
+        <if test="status!=null">and m.status = #{status}</if>
+        <if test="code!=null and code!=''">and m.code = #{code}</if>
+        <if test="name!=null and name!=''">and m.name = #{name}</if>
+        <if test="id!=null">and m.id = #{id}</if>
+        <if test="agentId!=null">and m.agent_id = #{agentId}</if>
+        order by m.create_time desc
     </select>
     <select id="selectListByType" resultType="com.godfunc.modules.merchant.dto.MerchantSimpleDTO">
         select id, name, code

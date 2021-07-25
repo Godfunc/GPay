@@ -35,7 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(new SecurityAccessDefinedHandler())
                 .and().csrf().disable()
                 .authorizeRequests().anyRequest().authenticated()
-                .and().logout().addLogoutHandler(new SecurityLogoutHandler(userTokenService))
+                .and().logout().addLogoutHandler(new SecurityLogoutHandler(userService))
                 .and().addFilterAt(new UsernamePasswordJsonAuthenticationFilter(authenticationManager(), userTokenService, captchaService), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new AuthenticationFilter(userService, userTokenService), LogoutFilter.class).httpBasic();
 

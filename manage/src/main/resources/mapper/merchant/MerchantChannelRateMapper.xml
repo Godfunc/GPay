@@ -26,7 +26,7 @@
                  left join pay_category cate on cate.id = cc.category_id and cate.rm_tag = 0
                  left join pay_channel channel on channel.id = cc.channel_id and channel.rm_tag = 0
                  left join merchant_channel_rate mcr
-                           on mcr.category_channel_id = cc.id and mcr.merchant_code = #{merchantCode}
+                           on mcr.pay_category_channel_id = cc.id and mcr.merchant_code = #{merchantCode}
         order by cc.create_time desc
     </select>
 </mapper>

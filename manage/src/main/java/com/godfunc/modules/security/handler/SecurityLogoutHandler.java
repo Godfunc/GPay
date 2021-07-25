@@ -1,7 +1,7 @@
 package com.godfunc.modules.security.handler;
 
-import com.godfunc.modules.security.service.UserTokenService;
 import com.godfunc.modules.sys.model.UserDetail;
+import com.godfunc.modules.sys.service.UserService;
 import com.godfunc.result.R;
 import com.godfunc.util.ResponseUtils;
 import lombok.RequiredArgsConstructor;
@@ -14,12 +14,12 @@ import javax.servlet.http.HttpServletResponse;
 @RequiredArgsConstructor
 public class SecurityLogoutHandler implements LogoutHandler {
 
-    private final UserTokenService userTokenService;
+    private final UserService userService;
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         UserDetail userDetail = (UserDetail) authentication.getPrincipal();
-        userTokenService.deleteByUserId(userDetail.getId());
+        userService.logout(userDetail.getId());
         ResponseUtils.out(response, R.ok());
     }
 }

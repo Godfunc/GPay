@@ -79,13 +79,15 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantMapper, Merchant> i
         Assert.isTrue(checkExistByUserId(param.getUserId()), "当前用户已创建过商户信息");
         User user = userService.getById(param.getUserId());
         Assert.isNull(user, "选择的用户不存在或已被删除");
-        Assert.isNull(getById(param.getAgentId()), "选择的代理商户不存在或已被删除");
+        if (param.getAgentId() != null) {
+            Assert.isNull(getById(param.getAgentId()), "选择的代理商户不存在或已被删除");
+        }
         Merchant merchant = ConvertUtils.source2Target(param, Merchant.class);
         RSAUtils.KeyPairModel keyPairModel = null;
         try {
             keyPairModel = RSAUtils.generateKeyPair();
         } catch (NoSuchAlgorithmException e) {
-            log.error("生成密钥对失败 {}", e);
+            log.error("生成密钥对失败", e);
             throw new GException("生成密钥对失败");
         }
         if (MerchantTypeEnum.MERCHANT.getValue() == merchant.getType()) {

@@ -41,4 +41,6 @@ public interface UserService extends IService<User>, UserDetailsService {
     boolean password(UserPasswordParam param);
 
     List<UserSimpleDTO> getList();
+
+    void logout(Long id);
 }

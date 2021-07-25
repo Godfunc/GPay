@@ -33,12 +33,14 @@ public class MerchantRiskServiceImpl extends ServiceImpl<MerchantRiskMapper, Mer
 
     @Override
     public boolean riskMerchant(Long merchantId, Order order) {
+        // 查询商户的可用风控数据列表
         List<MerchantRisk> merchantRiskList = getByMerchant(merchantId);
         if (CollectionUtils.isEmpty(merchantRiskList)) {
             return true;
         } else {
             for (int i = 0; i < merchantRiskList.size(); i++) {
                 MerchantRisk merchantRisk = merchantRiskList.get(i);
+                // 进行风控
                 if (!doRiskMerchant(merchantRisk, order)) {
                     return false;
                 }
@@ -47,6 +49,13 @@ public class MerchantRiskServiceImpl extends ServiceImpl<MerchantRiskMapper, Mer
         }
     }
 
+    /**
+     * 进行商户风控，对使用时间段、单笔金额等进行风控，不符合风控规则就抛出异常或者返回false
+     * 如果是抛出异常，将会直接返回给
+     * @param merchantRisk 风控规则
+     * @param order        订单
+     * @return true表示未被风控 false或者异常表示被风控了
+     */
     private boolean doRiskMerchant(MerchantRisk merchantRisk, Order order) {
         LocalTime now = LocalTime.now();
         // 时间

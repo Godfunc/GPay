@@ -94,7 +94,9 @@ public class ChannelRiskServiceImpl extends ServiceImpl<ChannelRiskMapper, Chann
 
         // 每日最大
         if (channelRisk.getDayAmountMax() != null
-                && channelRisk.getDayAmountMax() < channelRiskCache.getTodayAmount(channelRisk.getChannelId()) + order.getAmount()) {
+                && channelRisk.getDayAmountMax() <
+                // 从redis获取当前渠道风控的当日使用金额 + 订单金额
+                channelRiskCache.getTodayAmount(channelRisk.getChannelId()) + order.getAmount()) {
             return false;
         }
         return true;

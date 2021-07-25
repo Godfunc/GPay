@@ -8,5 +8,7 @@ import com.godfunc.entity.Config;
  * @email godfunc@outlook.com
  */
 public interface ConfigService extends IService<Config> {
-    String getByName(String name);
+    Config getByName(String name);
+
+    Long getExpireSeconds(Config expireConfig);
 }

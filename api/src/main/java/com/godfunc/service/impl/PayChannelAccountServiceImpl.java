@@ -35,9 +35,9 @@ public class PayChannelAccountServiceImpl extends ServiceImpl<PayChannelAccountM
 
     private final ChannelRiskService channelRiskService;
 
-    public List<PayChannelAccount> getEnableByChannel(Set<Long> channelIds) {
+    public List<PayChannelAccount> getEnableByChannel(Long channelId) {
         return list(Wrappers.<PayChannelAccount>lambdaQuery()
-                .in(PayChannelAccount::getChannelId, channelIds)
+                .eq(PayChannelAccount::getChannelId, channelId)
                 .eq(PayChannelAccount::getStatus, PayChannelAccountStatusEnum.ENABLE.getValue())
                 .isNotNull(PayChannelAccount::getAccountCode));
     }
@@ -62,19 +62,35 @@ public class PayChannelAccountServiceImpl extends ServiceImpl<PayChannelAccountM
         return new PayChannelAccountJoint(payChannel, payChannelAccountList.get(WeightRandomUtils.getByWeight(payChannelAccountList)));
     }
 
+    /**
+     * 根据渠道子类获取可用的渠道账号列表
+     *
+     * @param payChannelList 渠道子类
+     * @param order          订单
+     * @return 渠道账号列表
+     */
     public List<PayChannelAccount> getEnableByRisk(List<PayChannel> payChannelList, Order order) {
         Iterator<PayChannel> payChannelIterator = payChannelList.iterator();
         List<PayChannelAccount> payChannelAccountList = new ArrayList<>();
+        // 迭代渠道子类列表
         while (payChannelIterator.hasNext()) {
             PayChannel payChannel = payChannelIterator.next();
             if (payChannel.getWeight() > 0) {
-                List<PayChannelAccount> temp = getEnableByChannel(payChannelList.stream().map(PayChannel::getId).collect(Collectors.toSet()));
-                if (CollectionUtils.isNotEmpty(temp)) {
-                    payChannelAccountList.addAll(temp.parallelStream().filter(account -> doRisk(account, order)).collect(Collectors.toList()));
+                // 根据渠道子类id查询可用的渠道账号列表
+                List<PayChannelAccount> temp = getEnableByChannel(payChannel.getId());
+                if (CollectionUtils.isNotEmpty(temp)
+                        && CollectionUtils.isNotEmpty((
+                        temp = temp.parallelStream()
+                                .filter(account -> doRisk(account, order))
+                                .collect(Collectors.toList())))) {
+                    // 风控渠道账号列表，选取可用的渠道账号添加到列表
+                    payChannelAccountList.addAll(temp);
                 } else {
+                    // 将没有渠道子账号
                     payChannelList.remove(payChannel);
                 }
             } else {
+                // 丢弃渠道子类权重 <=0 的
                 payChannelList.remove(payChannel);
             }
         }

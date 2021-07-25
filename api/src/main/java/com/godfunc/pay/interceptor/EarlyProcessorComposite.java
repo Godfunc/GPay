@@ -26,12 +26,25 @@ public class EarlyProcessorComposite implements EarlyProcessor {
 
     public List<EarlyProcessor> earlyProcessorCached = null;
 
+    /**
+     * 判断是否支持当前param
+     *
+     * @param param 下单参数
+     * @return true支持 false不支持
+     */
     @Override
     public boolean support(PayOrderParam param) {
         // 自定义操作，可以根据需要决定哪些商户走风控策略，哪些商户不走
         return false;
     }
 
+    /**
+     * 执行检查
+     *
+     * @param request 当前http请求的request
+     * @param param   当前下单的参数
+     * @return true表示通过 false表示未通过
+     */
     @Override
     public boolean check(HttpServletRequest request, PayOrderParam param) {
         if (earlyProcessorCached == null) {
@@ -76,6 +89,11 @@ public class EarlyProcessorComposite implements EarlyProcessor {
         return true;
     }
 
+    /**
+     * 对EarlyProcessor进行排序，根据Spring的Order等接口进行排序
+     *
+     * @param earlyProcessor 待排序的列表
+     */
     private void sortPostProcessors(List<EarlyProcessor> earlyProcessor) {
         if (earlyProcessor.size() > 1) {
             Comparator<Object> comparatorToUse = null;
@@ -89,6 +107,11 @@ public class EarlyProcessorComposite implements EarlyProcessor {
         }
     }
 
+    /**
+     * 缓存排序后的EarlyProcessor集合
+     *
+     * @param earlyProcessor 排序后的EarlyProcessor集合
+     */
     private void cachePostProcessors(List<EarlyProcessor> earlyProcessor) {
         earlyProcessorCached.addAll(earlyProcessor);
     }

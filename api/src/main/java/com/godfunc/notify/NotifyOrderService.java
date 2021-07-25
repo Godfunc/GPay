@@ -6,6 +6,7 @@ import com.godfunc.entity.Order;
 import com.godfunc.entity.OrderDetail;
 import com.godfunc.enums.OrderStatusEnum;
 import com.godfunc.model.NotifyOrderInfo;
+import com.godfunc.producer.OrderNotifyQueue;
 import com.godfunc.service.OrderDetailService;
 import com.godfunc.service.OrderService;
 import com.godfunc.util.Assert;
@@ -28,6 +29,7 @@ public class NotifyOrderService {
     private final OrderService orderService;
     private final OrderDetailService orderDetailService;
     private final ChannelRiskCache channelRiskCache;
+    private final OrderNotifyQueue orderNotifyQueue;
 
     public String notifyOrder(String logical, HttpServletRequest request) {
         NotifyOrderHandler handler = (NotifyOrderHandler) applicationContext.getBean(ApiConstant.NOTIFY_SERVICE_PREFIX + logical);
@@ -90,7 +92,8 @@ public class NotifyOrderService {
 
         // 更新订单信息
         if (orderService.updatePaid(order.getId(), currentStatus, notifyOrderInfo)) {
-            // TODO 添加到通知商户的队列中
+            order.setStatus(OrderStatusEnum.PAID.getValue());
+            orderNotifyQueue.push(order);
             return handler.successResult();
         } else {
             log.error("订单更新为已支付失败 {}", order.getId());

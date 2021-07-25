@@ -10,6 +10,8 @@ import com.godfunc.enums.OrderStatusEnum;
 import com.godfunc.mapper.OrderMapper;
 import com.godfunc.model.MerchantAgentProfit;
 import com.godfunc.model.NotifyOrderInfo;
+import com.godfunc.producer.OrderExpireQueue;
+import com.godfunc.queue.model.OrderExpire;
 import com.godfunc.service.MerchantOrderProfitService;
 import com.godfunc.service.OrderDetailService;
 import com.godfunc.service.OrderService;
@@ -34,6 +36,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private final OrderDetailService orderDetailService;
     private final MerchantOrderProfitService merchantOrderProfitService;
     private final PlatformOrderProfitService platformOrderProfitService;
+    private final OrderExpireQueue orderExpireQueue;
 
     @Override
     public boolean checkExist(String outTradeNo, String merchantCode) {
@@ -41,7 +44,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public boolean create(Order order, OrderDetail detail, MerchantAgentProfit merchantAgentProfit, PlatformOrderProfit platformOrderProfit) {
         boolean orderFlag = save(order);
         boolean orderDetailFlag = orderDetailService.save(detail);
@@ -51,7 +54,21 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             agentProfitList.parallelStream().forEach(merchantOrderProfitService::save);
         }
         boolean platformProfitFlag = platformOrderProfitService.save(platformOrderProfit);
+
+        intoExpireQueue(order);
         return orderFlag && orderDetailFlag && merchantProfitFlag && platformProfitFlag;
+    }
+
+    private void intoExpireQueue(Order order) {
+        OrderExpire orderExpire = new OrderExpire();
+        orderExpire.setId(order.getId());
+        orderExpire.setCreateTime(order.getCreateTime());
+        orderExpire.setAmount(order.getAmount());
+        orderExpire.setExpiredTime(order.getDetail().getOrderExpiredTime());
+        orderExpire.setStatus(order.getStatus());
+        orderExpire.setPayChannelId(order.getDetail().getPayChannelId());
+        orderExpire.setPayChannelAccountId(order.getDetail().getPayChannelAccountId());
+        orderExpireQueue.push(orderExpire);
     }
 
     @Override

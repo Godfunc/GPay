@@ -9,7 +9,6 @@ import com.godfunc.model.MerchantAgentProfit;
 import com.godfunc.model.PayChannelAccountJoint;
 import com.godfunc.param.PayOrderParam;
 import com.godfunc.pay.PayOrderService;
-import com.godfunc.queue.OrderExpireQueue;
 import com.godfunc.result.ApiCode;
 import com.godfunc.result.ApiMsg;
 import com.godfunc.service.*;
@@ -18,6 +17,7 @@ import com.godfunc.util.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.MediaType;
@@ -53,7 +53,6 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     private final MerchantOrderProfitService merchantOrderProfitService;
     private final PayOrderService payOrderService;
     private final ConfigService configService;
-    private final OrderExpireQueue orderExpireQueue;
 
 
     @Override
@@ -113,6 +112,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         detail.setMerchantCode(merchant.getCode());
         detail.setMerchantName(merchant.getName());
         detail.setClientIp(param.getClientIp());
+        detail.setPlatPrivateKey(merchant.getPlatPrivateKey());
 
         // 渠道风控（粗略的限额，后面请求支付时进行详细限额）
         List<PayChannel> payChannelList = payChannelService.getEnableByRisk(payCategory.getId(), order);
@@ -140,9 +140,13 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         detail.setChannelCostRate(payChannel.getCostRate());
         detail.setLogicalTag(payChannel.getLogicalTag());
 
-        String expiredTime = configService.getByName(ConfigNameEnum.ORDER_EXPIRED_TIME.getValue());
-        Assert.isBlank(expiredTime, "初始化参数未设置完整，请联系管理员");
-        detail.setOrderExpiredTime(LocalDateTime.now().plusSeconds(Long.parseLong(expiredTime)));
+        Config expireConfig = configService.getByName(ConfigNameEnum.ORDER_EXPIRED_TIME.getValue());
+        Assert.isNull(expireConfig, "初始化参数未设置，请联系管理员");
+        Assert.isBlank(expireConfig.getValue(), "初始化参数value未设置完整，请联系管理员");
+        Assert.isBlank(expireConfig.getRemark(), "初始化参数remark未设置完整，请联系管理员");
+        Long expireSecond = configService.getExpireSeconds(expireConfig);
+        Assert.isNull(expireSecond, "expire系统配置错误，请联系管理员");
+        detail.setOrderExpiredTime(LocalDateTime.now().plusSeconds(expireSecond));
 
         // 计算收益
         MerchantAgentProfit merchantAgentProfit = merchantOrderProfitService.calc(merchant, agentList, order, detail);
@@ -154,12 +158,11 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             flag = orderService.create(order, detail, merchantAgentProfit, platformOrderProfit);
         } catch (DuplicateKeyException e) {
             throw new GException("单号已存在，请检查您的订单号");
+        } catch (Exception e) {
+            throw new GException(ApiMsg.SYSTEM_BUSY);
         }
         Assert.isTrue(!flag, "订单创建失败");
 
-        // 添加到过期队列中
-        intoExpireQueue(order);
-        
         // 签名返回
         PayOrderDTO payOrderDTO = new PayOrderDTO(order.getOutTradeNo(), order.getOrderNo(), goPayUrl + order.getOrderNo(), LocalDateTime.now().plusMinutes(10));
         payOrderDTO.setSign(SignUtils.rsa2Sign(payOrderDTO, merchant.getPlatPrivateKey()));
@@ -187,25 +190,15 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     private void errorPage(Map<String, Object> errorMap, HttpServletResponse response) {
         // TODO 看 thymeleaf 怎么做的占位符替换
         // TODO 缓存一下这个页面数据
-        String html = configService.getByName(ConfigNameEnum.ORDER_ERROR_PAGE.getValue());
-        Assert.isBlank(html, "订单错误页未配置，请联系管理员！");
+        Config config = configService.getByName(ConfigNameEnum.ORDER_ERROR_PAGE.getValue());
+        Assert.isTrue(config == null || StringUtils.isBlank(config.getValue()), "订单错误页未配置，请联系管理员！");
 
         response.setContentType(MediaType.TEXT_HTML_VALUE);
         response.setCharacterEncoding(CharsetEnum.UTF8.getValue());
         try {
-            response.getWriter().write(HtmlPlaceholderUtils.replacePlaceholder(errorMap, html));
+            response.getWriter().write(HtmlPlaceholderUtils.replacePlaceholder(errorMap, config.getValue()));
         } catch (IOException e) {
             log.error("response write异常", e);
         }
-    }
-
-    private void intoExpireQueue(Order order) {
-        OrderExpireQueue.OrderExpire orderExpire = new OrderExpireQueue.OrderExpire();
-        orderExpire.setId(order.getId());
-        orderExpire.setCreateTime(order.getCreateTime());
-        orderExpire.setAmount(order.getAmount());
-        orderExpire.setExpiredTime(order.getDetail().getOrderExpiredTime());
-        orderExpire.setStatus(order.getStatus());
-        orderExpireQueue.push(orderExpire);
     }
 }

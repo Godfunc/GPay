@@ -33,6 +33,12 @@ public class Config implements Serializable {
      */
     private String value;
 
+
+    /**
+     * 额外信息
+     */
+    private String remark;
+
     /**
      * 创建人id
      */

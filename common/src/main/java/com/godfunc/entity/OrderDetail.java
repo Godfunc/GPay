@@ -48,6 +48,11 @@ public class OrderDetail implements Serializable {
     private String merchantName;
 
     /**
+     * 平台私钥
+     */
+    private String platPrivateKey;
+
+    /**
      * 渠道主类id
      */
     private Long payCategoryId;

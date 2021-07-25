@@ -27,6 +27,13 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantMapper, Merchant> i
         return getOne(Wrappers.<Merchant>lambdaQuery().eq(Merchant::getCode, code));
     }
 
+    /**
+     * 检查商户的代理的状态，如果有一个代理被停用的，就返回false
+     *
+     * @param merchant  要检查的商户
+     * @param agentList 代理集合，将商户的所有代理放入到集合中
+     * @return true表示商户的代理都是可用的 false表示商户的代理有被禁用的
+     */
     @Override
     public boolean checkAgent(Merchant merchant, List<Merchant> agentList) {
         Merchant agent = null;

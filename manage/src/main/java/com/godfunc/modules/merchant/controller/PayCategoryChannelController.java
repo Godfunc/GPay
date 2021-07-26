@@ -3,6 +3,7 @@ package com.godfunc.modules.merchant.controller;
 import com.godfunc.constant.LogRecordConstant;
 import com.godfunc.modules.log.annotation.LogRecord;
 import com.godfunc.modules.merchant.dto.PayCategoryChannelDTO;
+import com.godfunc.modules.merchant.param.PayCategoryChannelWeightParam;
 import com.godfunc.modules.merchant.service.PayCategoryChannelService;
 import com.godfunc.result.R;
 import io.swagger.annotations.Api;
@@ -35,7 +36,15 @@ public class PayCategoryChannelController {
     @LogRecord(LogRecordConstant.LIST)
     @ApiOperation(LogRecordConstant.LIST)
     @PreAuthorize("hasAuthority('merchant:payCategoryChannel:list')")
-    public R<List<PayCategoryChannelDTO>> list() {
-        return R.ok(payCategoryChannelService.getList());
+    public R<List<PayCategoryChannelDTO>> list(@RequestParam(required = false) Long payCategoryId) {
+        return R.ok(payCategoryChannelService.getList(payCategoryId));
+    }
+
+    @PostMapping("weight")
+    @LogRecord("权重设置")
+    @ApiOperation("权重设置")
+    @PreAuthorize("hasAuthority('merchant:payCategoryChannel:weight')")
+    public R<Boolean> weight(@RequestBody PayCategoryChannelWeightParam param) {
+        return R.ok(payCategoryChannelService.weight(param));
     }
 }

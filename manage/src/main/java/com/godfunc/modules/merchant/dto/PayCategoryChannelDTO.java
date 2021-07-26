@@ -24,4 +24,7 @@ public class PayCategoryChannelDTO implements Serializable {
 
     @ApiModelProperty("渠道主类名称")
     private String payChannelName;
+
+    @ApiModelProperty("权重")
+    private Integer weight;
 }

@@ -79,7 +79,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    @Cacheable(cacheNames = "userTokenService.deleteByUserId(userDetail.getId());", key = "#id")
+    @Cacheable(cacheNames = "user::detail", key = "#id")
     public UserDetails getByUserId(Long id) {
         User user = getById(id);
         return getByUser(user);

@@ -3,13 +3,14 @@
 <mapper namespace="com.godfunc.modules.merchant.mapper.PayCategoryChannelMapper">
 
     <select id="selectListInfo" resultType="com.godfunc.modules.merchant.dto.PayCategoryChannelDTO">
-        select cc.id,
-               cate.name    pay_category_name,
-               cate.code    pay_category_code,
-               channel.code pay_channel_code,
-               channel.name pay_channel_name
+        select cc.id, cc.weight,
+        cate.name pay_category_name,
+        cate.code pay_category_code,
+        channel.code pay_channel_code,
+        channel.name pay_channel_name
         from pay_category_channel cc
-                 left join pay_category cate on cate.id = cc.category_id and cate.rm_tag = 0
-                 left join pay_channel channel on channel.id = cc.channel_id and channel.rm_tag = 0
+        left join pay_category cate on cate.id = cc.category_id and cate.rm_tag = 0
+        left join pay_channel channel on channel.id = cc.channel_id and channel.rm_tag = 0
+        <if test="payCategoryId!=null">where cate.id = #{payCategoryId}</if>
     </select>
 </mapper>

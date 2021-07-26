@@ -2,14 +2,14 @@ package com.godfunc.modules.merchant.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.godfunc.entity.MerchantChannelRate;
 import com.godfunc.entity.PayCategoryChannel;
 import com.godfunc.modules.merchant.dto.PayCategoryChannelDTO;
 import com.godfunc.modules.merchant.mapper.PayCategoryChannelMapper;
-import com.godfunc.modules.merchant.service.MerchantChannelRateService;
+import com.godfunc.modules.merchant.param.PayCategoryChannelWeightParam;
 import com.godfunc.modules.merchant.service.PayCategoryChannelService;
+import com.godfunc.util.Assert;
+import com.godfunc.util.ValidatorUtils;
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,7 +45,17 @@ public class PayCategoryChannelServiceImpl extends ServiceImpl<PayCategoryChanne
     }
 
     @Override
-    public List<PayCategoryChannelDTO> getList() {
-        return this.baseMapper.selectListInfo();
+    public List<PayCategoryChannelDTO> getList(Long payCategoryId) {
+        return this.baseMapper.selectListInfo(payCategoryId);
+    }
+
+    @Override
+    public boolean weight(PayCategoryChannelWeightParam param) {
+        ValidatorUtils.validate(param);
+        PayCategoryChannel payCategoryChannel = getById(param.getId());
+        Assert.isNull(payCategoryChannel, "渠道关联数据不存在或已被删除");
+        return lambdaUpdate()
+                .set(PayCategoryChannel::getWeight, param.getWeight())
+                .eq(PayCategoryChannel::getId, param.getId()).update();
     }
 }

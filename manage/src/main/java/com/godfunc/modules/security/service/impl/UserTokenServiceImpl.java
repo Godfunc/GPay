@@ -50,7 +50,7 @@ public class UserTokenServiceImpl extends ServiceImpl<UserTokenMapper, UserToken
     }
 
     @Override
-    @CacheEvict(cacheNames = "user::detail", key = "#result.token")
+    @CacheEvict(key = "#result.token")
     public UserToken deleteByUserId(Long userId) {
         UserToken usertoken = getOne(Wrappers.<UserToken>lambdaQuery().eq(UserToken::getUserId, userId));
         remove(Wrappers.<UserToken>lambdaQuery().eq(UserToken::getUserId, userId));

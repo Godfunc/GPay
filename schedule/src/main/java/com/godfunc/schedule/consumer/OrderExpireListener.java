@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @RocketMQMessageListener(topic = QueueConstant.EXPIRE_ORDER_TOPIC,
-        consumerGroup = "${rocketmq.consumer.group}")
+        consumerGroup = QueueConstant.EXPIRE_ORDER_GROUP)
 public class OrderExpireListener implements RocketMQListener<OrderExpire> {
 
     private final OrderService orderService;

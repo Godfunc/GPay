@@ -61,5 +61,3 @@ rocketmq:
   name-server: 192.168.31.184:9876
   producer:
     group: gpay-producer-group
-  consumer:
-    group: gpay-consumer-group

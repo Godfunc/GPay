@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @RocketMQMessageListener(topic = QueueConstant.MERCHANT_NOTIFY_ORDER_TOPIC,
-        consumerGroup = "${rocketmq.consumer.group}")
+        consumerGroup = QueueConstant.MERCHANT_NOTIFY_ORDER_GROUP)
 public class MerchantNotifyListener implements RocketMQListener<OrderNotify> {
 
     private final OrderService orderService;

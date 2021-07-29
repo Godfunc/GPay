@@ -32,7 +32,7 @@
         <jsoup.version>1.13.1</jsoup.version>
         <jBCrypt.version>0.4.3</jBCrypt.version>
         <rocketmq.version>2.2.0</rocketmq.version>
-        <spring-cloud-alibaba.version>2.2.1.RELEASE</spring-cloud-alibaba.version>
+        <spring-cloud-alibaba.version>2.2.6.RELEASE</spring-cloud-alibaba.version>
     </properties>
 
     <modules>

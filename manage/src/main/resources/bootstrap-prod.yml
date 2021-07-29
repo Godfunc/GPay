@@ -2,10 +2,10 @@ spring:
   cloud:
     nacos:
       config:
-        server-addr: 192.168.31.62:8848
-        namespace: 97a12ee4-81a2-420f-ba7b-564b47b3279b
-      discovery:
         server-addr: 192.168.31.61:8848
-        namespace: 97a12ee4-81a2-420f-ba7b-564b47b3279b
+        namespace: fd744ed2-0b38-4fe3-9414-662bf018e1df
+      discovery:
+        server-addr: 192.168.31.62:8848
+        namespace: fd744ed2-0b38-4fe3-9414-662bf018e1df
 log:
   path: /usr/local/log/prod/gpay/gpay-manage

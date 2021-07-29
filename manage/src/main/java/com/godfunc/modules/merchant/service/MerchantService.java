@@ -27,4 +27,6 @@ public interface MerchantService extends IService<Merchant> {
     List<MerchantSimpleDTO> getList(Integer type);
 
     Merchant getByCode(String code);
+
+    Merchant getByUserId(Long userId);
 }

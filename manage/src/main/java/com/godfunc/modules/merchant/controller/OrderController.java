@@ -34,17 +34,17 @@ public class OrderController {
             @ApiImplicitParam(name = "limit", value = "每页条数", paramType = "path", required = true, dataType = "int", dataTypeClass = Integer.class),
             @ApiImplicitParam(name = "status", value = "状态", paramType = "query", dataType = "int", dataTypeClass = Integer.class),
             @ApiImplicitParam(name = "payType", value = "支付类型", paramType = "query", dataType = "String", dataTypeClass = String.class),
-            @ApiImplicitParam(name = "tradeNo", value = "商户单号", paramType = "query", dataType = "String", dataTypeClass = String.class),
+            @ApiImplicitParam(name = "outTradeNo", value = "商户单号", paramType = "query", dataType = "String", dataTypeClass = String.class),
             @ApiImplicitParam(name = "orderNo", value = "创建时间", paramType = "query", dataType = "LocalDateTime", dataTypeClass = LocalDateTime.class)
     })
     public R<PageDTO<OrderDTO>> page(@PathVariable Integer page,
                                      @PathVariable Integer limit,
                                      @RequestParam(required = false) Integer status,
                                      @RequestParam(required = false) String payType,
-                                     @RequestParam(required = false) String tradeNo,
+                                     @RequestParam(required = false) String outTradeNo,
                                      @RequestParam(required = false) String orderNo,
                                      @RequestParam(required = false) LocalDateTime createTime) {
-        return R.ok(orderService.getPage(page, limit, status, payType, tradeNo, orderNo, createTime));
+        return R.ok(orderService.getPage(page, limit, status, payType, outTradeNo, orderNo, createTime));
     }
 
     @PostMapping("updatePaid/{id}")

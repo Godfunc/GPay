@@ -3,18 +3,20 @@
 <mapper namespace="com.godfunc.modules.merchant.mapper.OrderMapper">
 
 
-    <select id="selectCustomPage" resultType="com.godfunc.entity.Order">
+    <select id="selectCustomPage" resultType="com.godfunc.modules.merchant.dto.OrderDTO">
         select id, merchant_code, merchant_name,
         out_trade_no, order_no, trade_no,
-        channel_account_code, amount,
-        real_amount, client_create_time,
+        channel_account_code,
+        truncate(amount/100, 2) amount,
+        truncate(real_amount/100, 2) real_amount,
+        client_create_time,
         create_time, pay_time, pay_type,
         notify_time, status from pay_order
         <where>
             <if test="merchantId!=null">and merchant_id = #{merchantId}</if>
             <if test="outTradeNo!=null and outTradeNo!=''">and out_trade_no = #{outTradeNo}</if>
             <if test="orderNo!=null and orderNo!=''">and order_no = #{orderNo}</if>
-            <if test="tradeNo!=null and tradeNo!=''">and trade_no = #{tradeNo}</if>
+            <if test="outTradeNo!=null and outTradeNo!=''">and out_trade_no = #{outTradeNo}</if>
             <if test="payType!=null and payType!=''">and pay_type = #{payType}</if>
             <if test="status!=null">and status = #{status}</if>
             <if test="createTime!=null">and create_time = #{createTime}</if>

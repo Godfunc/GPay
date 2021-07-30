@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public interface OrderService extends IService<Order> {
 
     PageDTO<OrderDTO> getPage(Integer page, Integer limit, Integer status,
-                              String payType, String tradeNo, String orderNo,
+                              String payType, String outTradeNo, String orderNo,
                               LocalDateTime createTime);
 
     Boolean updatePaid(Long id);

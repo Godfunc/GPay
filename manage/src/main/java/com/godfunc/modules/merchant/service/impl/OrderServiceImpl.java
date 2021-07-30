@@ -40,7 +40,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Override
     public PageDTO<OrderDTO> getPage(Integer page, Integer limit, Integer status,
-                                     String payType, String tradeNo, String orderNo,
+                                     String payType, String outTradeNo, String orderNo,
                                      LocalDateTime createTime) {
         Long merchantId = null;
 
@@ -55,8 +55,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             throw new GException(ApiCodeMsg.NOPERMISSION);
         }
         IPage<OrderDTO> resultPage = new Page<>(page, limit);
-        List<Order> list = this.baseMapper.selectCustomPage(resultPage, merchantId, status, payType, tradeNo, orderNo, createTime);
-        resultPage.setRecords(ConvertUtils.source2Target(list, OrderDTO.class));
+        List<OrderDTO> list = this.baseMapper.selectCustomPage(resultPage, merchantId, status, payType, outTradeNo, orderNo, createTime);
+        resultPage.setRecords(list);
         return new PageDTO<OrderDTO>(resultPage);
     }
 

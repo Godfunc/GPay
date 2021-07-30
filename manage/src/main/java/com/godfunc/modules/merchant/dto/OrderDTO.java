@@ -58,13 +58,13 @@ public class OrderDTO implements Serializable {
      * 订单金额
      */
     @ApiModelProperty("订单金额")
-    private Long amount;
+    private String amount;
 
     /**
      * 实际支付金额
      */
     @ApiModelProperty("实际金额")
-    private Long realAmount;
+    private String realAmount;
 
     /**
      * 客户端创建时间

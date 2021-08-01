@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.godfunc.modules.merchant.mapper.OrderLogMapper">
+
+    <select id="selectCustomPage" resultType="com.godfunc.modules.merchant.dto.OrderLogDTO">
+        select old_status, new_status, reason, result, o.create_time from pay_order_log log left join pay_order o on
+        o.id = log.order_id
+        where log.order_id = #{orderId}
+        <if test="merchantId!=null">and o.merchant_id = #{merchantId}</if>
+    </select>
+</mapper>

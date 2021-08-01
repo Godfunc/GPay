@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -38,9 +37,6 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class CreateOrderServiceImpl implements CreateOrderService {
-
-    @Value("${gopay}")
-    private String goPayUrl;
 
     private final EarlyProcessorComposite earlyProcessorComposite;
     private final MerchantService merchantService;
@@ -164,7 +160,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         Assert.isTrue(!flag, "订单创建失败");
 
         // 签名返回
-        PayOrderDTO payOrderDTO = new PayOrderDTO(order.getOutTradeNo(), order.getOrderNo(), goPayUrl + order.getOrderNo(), LocalDateTime.now().plusMinutes(10));
+        PayOrderDTO payOrderDTO = new PayOrderDTO(order.getOutTradeNo(), order.getOrderNo(), HostUtils.getFullHost(request) + "goPay" + order.getOrderNo(), LocalDateTime.now().plusMinutes(10));
         payOrderDTO.setSign(SignUtils.rsa2Sign(payOrderDTO, merchant.getPlatPrivateKey()));
         return payOrderDTO;
     }

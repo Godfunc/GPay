@@ -50,7 +50,7 @@ mybatis-plus:
     call-setters-on-nulls: true
     jdbc-type-for-null: 'null'
 
-host: http://localhost:${server.port}/
-gopay: ${host}gopay/
-log:
-  path: /tmp
+rocketmq:
+  name-server: 192.168.31.184:9876
+  producer:
+    group: gpay-producer-group

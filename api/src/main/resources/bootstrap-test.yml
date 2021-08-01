@@ -3,9 +3,9 @@ spring:
     nacos:
       config:
         server-addr: 192.168.31.62:8848
-        namespace: 59930d0c-4ea7-4260-b573-2cadfe975218
+        namespace: fbfeb43d-481a-41fd-9fd3-45453f7cf6d9
       discovery:
         server-addr: 192.168.31.61:8848
-        namespace: 59930d0c-4ea7-4260-b573-2cadfe975218
+        namespace: fbfeb43d-481a-41fd-9fd3-45453f7cf6d9
 log:
   path: /usr/local/log/test/gpay/gpay-api

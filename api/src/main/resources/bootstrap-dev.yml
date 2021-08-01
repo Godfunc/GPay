@@ -7,6 +7,5 @@ spring:
       discovery:
         server-addr: 192.168.31.46:8848
         namespace: 46c3ac36-7a9a-42bf-a897-cd7729221689
-
 log:
   path: /tmp

@@ -38,7 +38,6 @@ public class JobService extends ServiceImpl<JobMapper, JobEntity> {
             try {
                 if (ScheduleUtils.checkExists(scheduler, job)) {
                     ScheduleUtils.delete(scheduler, job);
-
                 }
                 ScheduleUtils.create(scheduler, job);
                 return true;

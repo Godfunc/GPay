@@ -2,7 +2,11 @@ package com.godfunc.schedule.consumer;
 
 import com.godfunc.cache.ChannelRiskCache;
 import com.godfunc.constant.QueueConstant;
+import com.godfunc.entity.OrderLog;
+import com.godfunc.enums.OrderStatusEnum;
+import com.godfunc.enums.OrderStatusLogReasonEnum;
 import com.godfunc.queue.model.OrderExpire;
+import com.godfunc.schedule.service.OrderLogService;
 import com.godfunc.schedule.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
@@ -17,6 +21,7 @@ public class OrderExpireListener implements RocketMQListener<OrderExpire> {
 
     private final OrderService orderService;
     private final ChannelRiskCache channelRiskCache;
+    private final OrderLogService orderLogService;
 
     /**
      * 订单过期取消
@@ -25,7 +30,8 @@ public class OrderExpireListener implements RocketMQListener<OrderExpire> {
      */
     @Override
     public void onMessage(OrderExpire orderExpire) {
-        if (orderService.expired(orderExpire.getId(), orderExpire.getStatus())) {
+        boolean flag = orderService.expired(orderExpire.getId(), orderExpire.getStatus());
+        if (flag) {
             if (orderExpire.getPayChannelId() != null) {
                 channelRiskCache.divideTodayAmount(orderExpire.getPayChannelId(), orderExpire.getAmount());
             }
@@ -33,5 +39,6 @@ public class OrderExpireListener implements RocketMQListener<OrderExpire> {
                 channelRiskCache.divideTodayAmount(orderExpire.getPayChannelAccountId(), orderExpire.getAmount());
             }
         }
+        orderLogService.save(new OrderLog(orderExpire.getId(), orderExpire.getStatus(), OrderStatusEnum.EXPIRED.getValue(), OrderStatusLogReasonEnum.ORDER_DELAY_EXPIRED.getValue(), flag));
     }
 }

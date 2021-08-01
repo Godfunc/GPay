@@ -306,3 +306,31 @@ create table mg_config
     unique uq_name (name),
     index idx_create_time (create_time)
 ) comment '系统配置表';
+
+create table mg_job
+(
+    id         bigint(20)   not null,
+    name       varchar(128) not null comment '任务名',
+    group_job  varchar(128) not null comment '任务所属组',
+    invoke     varchar(256) not null comment '目标任务',
+    cron       varchar(512) not null comment '任务cron',
+    misfire    tinyint(4)   not null default 0 comment 'misfire策略 0默认 1立即执行 2触发一次执行 3不触发执行',
+    concurrent tinyint(2)   not null default 1 comment '是否允许并发执行 0禁止 1允许',
+    status     tinyint(2)   not null default 1 comment '状态 0停用 1启用',
+    primary key (id),
+    unique uq_name_group_job_invoke (name, group_job, invoke)
+) comment '任务表';
+
+create table pay_order_log
+(
+    id          bigint(20) not null,
+    order_id bigint(20) not null comment '订单id',
+    old_status  tinyint(4) not null comment '原始订单状态',
+    new_status  tinyint(4) not null comment '订单新状态',
+    reason      text       null comment '状态变更原因',
+    result tinyint(2) not null comment '状态 1成功 2失败',
+    create_time datetime   not null comment '创建时间',
+    primary key (id),
+    index idx_order_id(order_id),
+    index idx_create_time (create_time)
+) comment '订单日志表'

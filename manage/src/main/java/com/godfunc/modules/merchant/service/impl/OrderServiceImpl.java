@@ -7,13 +7,16 @@ import com.godfunc.dto.PageDTO;
 import com.godfunc.entity.Merchant;
 import com.godfunc.entity.Order;
 import com.godfunc.entity.OrderDetail;
+import com.godfunc.entity.OrderLog;
 import com.godfunc.enums.OrderStatusEnum;
+import com.godfunc.enums.OrderStatusLogReasonEnum;
 import com.godfunc.exception.GException;
 import com.godfunc.modules.merchant.dto.OrderDTO;
 import com.godfunc.modules.merchant.enums.RoleNameEnum;
 import com.godfunc.modules.merchant.mapper.OrderMapper;
 import com.godfunc.modules.merchant.service.MerchantService;
 import com.godfunc.modules.merchant.service.OrderDetailService;
+import com.godfunc.modules.merchant.service.OrderLogService;
 import com.godfunc.modules.merchant.service.OrderService;
 import com.godfunc.modules.security.util.SecurityUser;
 import com.godfunc.modules.sys.enums.SuperManagerEnum;
@@ -37,6 +40,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private final MerchantService merchantService;
     private final NotifyMerchantService notifyMerchantService;
     private final OrderDetailService orderDetailService;
+    private final OrderLogService orderLogService;
 
     @Override
     public PageDTO<OrderDTO> getPage(Integer page, Integer limit, Integer status,
@@ -66,10 +70,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         Assert.isNull(order, "订单不存在");
         Assert.isTrue(order.getStatus() != OrderStatusEnum.SCAN.getValue()
                 && order.getStatus() != OrderStatusEnum.EXPIRED.getValue(), "只有已扫码和已过期的订单才能修改为已支付");
-        return lambdaUpdate().set(Order::getStatus, OrderStatusEnum.PAID.getValue())
+        boolean flag = lambdaUpdate().set(Order::getStatus, OrderStatusEnum.PAID.getValue())
                 .set(Order::getPayTime, LocalDateTime.now())
                 .eq(Order::getId, order.getId())
                 .eq(Order::getStatus, order.getStatus()).update();
+        orderLogService.save(new OrderLog(id, order.getStatus(), OrderStatusEnum.PAID.getValue(), OrderStatusLogReasonEnum.UPDATE_PAID.getValue(), flag));
+        return flag;
 
     }
 
@@ -84,11 +90,14 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 order.getOrderNo(), order.getAmount(), order.getRealAmount(),
                 order.getPayType(), order.getStatus(), detail.getPlatPrivateKey());
         Assert.isTrue(!flag, "通知商户失败");
+        boolean orderFlag = false;
         if (order.getStatus() == OrderStatusEnum.PAID.getValue()) {
-            return updateStatus(order.getId(), order.getStatus(), OrderStatusEnum.FINISH.getValue());
+            orderFlag = updateStatus(order.getId(), order.getStatus(), OrderStatusEnum.FINISH.getValue());
         } else {
-            return updateStatus(order.getId(), order.getStatus(), OrderStatusEnum.FINISH.getValue());
+            orderFlag = updateStatus(order.getId(), order.getStatus(), OrderStatusEnum.FINISH.getValue());
         }
+        orderLogService.save(new OrderLog(id, order.getStatus(), OrderStatusEnum.FINISH.getValue(), OrderStatusLogReasonEnum.OPER_NOTIFY_MERCHANT.getValue(), orderFlag));
+        return orderFlag;
     }
 
     public boolean updateStatus(Long id, Integer oldStatus, Integer newStatus) {

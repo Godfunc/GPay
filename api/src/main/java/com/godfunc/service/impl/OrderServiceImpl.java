@@ -2,20 +2,15 @@ package com.godfunc.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.godfunc.entity.MerchantOrderProfit;
-import com.godfunc.entity.Order;
-import com.godfunc.entity.OrderDetail;
-import com.godfunc.entity.PlatformOrderProfit;
+import com.godfunc.entity.*;
 import com.godfunc.enums.OrderStatusEnum;
+import com.godfunc.enums.OrderStatusLogReasonEnum;
 import com.godfunc.mapper.OrderMapper;
 import com.godfunc.model.MerchantAgentProfit;
 import com.godfunc.model.NotifyOrderInfo;
 import com.godfunc.producer.OrderExpireQueue;
 import com.godfunc.queue.model.OrderExpire;
-import com.godfunc.service.MerchantOrderProfitService;
-import com.godfunc.service.OrderDetailService;
-import com.godfunc.service.OrderService;
-import com.godfunc.service.PlatformOrderProfitService;
+import com.godfunc.service.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
@@ -37,6 +32,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private final MerchantOrderProfitService merchantOrderProfitService;
     private final PlatformOrderProfitService platformOrderProfitService;
     private final OrderExpireQueue orderExpireQueue;
+    private final OrderLogService orderLogService;
 
     @Override
     public boolean checkExist(String outTradeNo, String merchantCode) {
@@ -56,6 +52,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         boolean platformProfitFlag = platformOrderProfitService.save(platformOrderProfit);
 
         intoExpireQueue(order);
+        orderLogService.save(new OrderLog(order.getId(), 0, order.getStatus(), OrderStatusLogReasonEnum.MERCHANT_CREATE.getValue(), orderFlag));
         return orderFlag && orderDetailFlag && merchantProfitFlag && platformProfitFlag;
     }
 
@@ -83,13 +80,16 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Override
     public boolean updatePaid(Long id, int currentStatus, NotifyOrderInfo notifyOrderInfo) {
-        return lambdaUpdate().set(Order::getTradeNo, notifyOrderInfo.getTradeNo())
+        boolean flag = lambdaUpdate().set(Order::getTradeNo, notifyOrderInfo.getTradeNo())
                 .set(Order::getRealAmount, notifyOrderInfo.getRealAmount())
                 .set(Order::getStatus, currentStatus)
                 .set(Order::getNotifyTime, LocalDateTime.now())
                 .eq(Order::getId, id)
                 .eq(Order::getStatus, OrderStatusEnum.SCAN.getValue())
                 .update();
+        orderLogService.save(new OrderLog(id, currentStatus, OrderStatusEnum.SCAN.getValue(), OrderStatusLogReasonEnum.ORDER_NOTIFY.getValue(), flag));
+        return flag;
+
     }
 
     @Override
@@ -101,6 +101,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 .eq(Order::getStatus, OrderStatusEnum.CREATED.getValue())
                 .eq(Order::getId, order.getId()).update();
         boolean detailFlag = orderDetailService.updateClientInfo(order.getDetail());
+        orderLogService.save(new OrderLog(order.getId(), OrderStatusEnum.CREATED.getValue(), OrderStatusEnum.SCAN.getValue(), OrderStatusLogReasonEnum.MERCHANT_SCAN.getValue(), orderFlag));
         return orderFlag;
     }
 

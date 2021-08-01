@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serializable;
 
-@TableName("t_job")
+@TableName("mg_job")
 public class JobEntity implements Serializable {
 
     public static final String TASK_PROPERTIES = "TASK_PROPERTIES";

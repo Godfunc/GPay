@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -47,7 +47,7 @@ public class OrderLog implements Serializable {
      * 创建时间
      */
     @TableField(fill = FieldFill.INSERT)
-    private Date createTime;
+    private LocalDateTime createTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

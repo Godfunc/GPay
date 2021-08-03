@@ -9,6 +9,8 @@ import com.godfunc.exception.GException;
 import com.godfunc.lock.OrderPayRequestLock;
 import com.godfunc.pay.advice.PayUrlRequestAdvice;
 import com.godfunc.pay.advice.PayUrlRequestAdviceFinder;
+import com.godfunc.producer.FixChannelRiskQueue;
+import com.godfunc.queue.model.FixChannelRisk;
 import com.godfunc.result.ApiMsg;
 import com.godfunc.service.OrderService;
 import com.godfunc.service.PayChannelAccountService;
@@ -24,6 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -42,6 +45,7 @@ public abstract class DefaultAbstractPay implements PayService {
     protected final OrderService orderService;
     private final OrderPayRequestLock orderPayRequestLock;
     private final PayUrlRequestAdviceFinder payUrlRequestAdviceFinder;
+    private final FixChannelRiskQueue fixChannelRiskQueue;
 
 
     private List<PayUrlRequestAdvice> payUrlRequestAdvicesCacheList;
@@ -131,6 +135,10 @@ public abstract class DefaultAbstractPay implements PayService {
                 log.info("账号 {} 超过限额 {}", order.getDetail().getPayChannelAccountId(), payChannelDayMax);
                 throw new GException("当前渠道今日交易已达到上线");
             }
+            fixChannelRiskQueue.push(new FixChannelRisk(order.getId(), order.getAmount(),
+                    payChannelDayMax != null ? order.getDetail().getPayChannelId() : null,
+                    payChannelAccountDayMax != null ? order.getDetail().getPayChannelAccountId() : null,
+                    Duration.between(LocalDateTime.now(), order.getDetail().getOrderExpiredTime()).toMillis() + 2000));
             return true;
         } catch (GException e) {
             // 将上面渠道扣除的金额恢复
@@ -139,6 +147,7 @@ public abstract class DefaultAbstractPay implements PayService {
             }
             throw e;
         }
+
     }
 
     @Override

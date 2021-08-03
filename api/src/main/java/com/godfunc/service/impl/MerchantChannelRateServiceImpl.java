@@ -18,9 +18,10 @@ import org.springframework.stereotype.Service;
 public class MerchantChannelRateServiceImpl extends ServiceImpl<MerchantChannelRateMapper, MerchantChannelRate> implements MerchantChannelRateService {
 
     @Override
-    public MerchantChannelRate getByMerchant(String merchantCode, Long payCategoryChannelId) {
+    public MerchantChannelRate getByMerchant(String merchantCode, Long payCategoryId, Long payChannelId) {
         return getOne(Wrappers.<MerchantChannelRate>lambdaQuery()
                 .eq(MerchantChannelRate::getMerchantCode, merchantCode)
-                .eq(MerchantChannelRate::getCategoryChannelId, payCategoryChannelId));
+                .eq(MerchantChannelRate::getPayCategoryId, payCategoryId)
+                .eq(MerchantChannelRate::getPayChannelId, payChannelId));
     }
 }

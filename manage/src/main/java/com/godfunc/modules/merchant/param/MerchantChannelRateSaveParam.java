@@ -17,9 +17,13 @@ public class MerchantChannelRateSaveParam {
     @ApiModelProperty("id")
     private Long id;
 
-    @ApiModelProperty("渠道关联id")
-    @NotNull(message = "渠道关联不能为空")
-    private Long categoryChannelId;
+    @ApiModelProperty("渠道主类id")
+    @NotNull(message = "渠道主类不能为空")
+    private Long payChannelId;
+
+    @ApiModelProperty("渠道子类id")
+    @NotNull(message = "渠道子类不能为空")
+    private Long payCategoryId;
 
     @ApiModelProperty("商户号")
     @NotNull(message = "商户号不能为空")

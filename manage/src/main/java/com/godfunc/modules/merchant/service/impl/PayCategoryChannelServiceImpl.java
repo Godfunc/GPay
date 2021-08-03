@@ -25,7 +25,6 @@ public class PayCategoryChannelServiceImpl extends ServiceImpl<PayCategoryChanne
 
     @Override
     public boolean removeByChannel(Long channelId) {
-
         return remove(Wrappers.<PayCategoryChannel>lambdaQuery().eq(PayCategoryChannel::getChannelId, channelId));
     }
 

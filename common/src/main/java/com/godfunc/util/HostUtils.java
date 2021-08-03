@@ -9,11 +9,11 @@ public class HostUtils {
         int serverPort = request.getServerPort();
         String contentPath = request.getContextPath();
         if (80 == serverPort) {
-            return "http://" + serverName + "/" + contentPath;
+            return "http://" + serverName + contentPath;
         } else if (443 == serverPort) {
-            return "https://" + serverName + "/" + contentPath;
+            return "https://" + serverName + contentPath;
         } else {
-            return "http://" + serverName + ":" + serverPort + "/" + contentPath;
+            return "http://" + serverName + ":" + serverPort + contentPath;
         }
     }
 }

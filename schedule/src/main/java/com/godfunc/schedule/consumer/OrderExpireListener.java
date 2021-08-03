@@ -1,7 +1,7 @@
 package com.godfunc.schedule.consumer;
 
 import com.godfunc.cache.ChannelRiskCache;
-import com.godfunc.constant.QueueConstant;
+import com.godfunc.constant.RabbitMQConstant;
 import com.godfunc.entity.OrderLog;
 import com.godfunc.enums.OrderStatusEnum;
 import com.godfunc.enums.OrderStatusLogReasonEnum;
@@ -9,15 +9,12 @@ import com.godfunc.queue.model.OrderExpire;
 import com.godfunc.schedule.service.OrderLogService;
 import com.godfunc.schedule.service.OrderService;
 import lombok.RequiredArgsConstructor;
-import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
-import org.apache.rocketmq.spring.core.RocketMQListener;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-@RocketMQMessageListener(topic = QueueConstant.EXPIRE_ORDER_TOPIC,
-        consumerGroup = QueueConstant.EXPIRE_ORDER_GROUP)
-public class OrderExpireListener implements RocketMQListener<OrderExpire> {
+public class OrderExpireListener {
 
     private final OrderService orderService;
     private final ChannelRiskCache channelRiskCache;
@@ -28,7 +25,7 @@ public class OrderExpireListener implements RocketMQListener<OrderExpire> {
      *
      * @param orderExpire
      */
-    @Override
+    @RabbitListener(queues = RabbitMQConstant.DELAYED_ORDER_EXPIRE_QUEUE)
     public void onMessage(OrderExpire orderExpire) {
         boolean flag = orderService.expired(orderExpire.getId(), orderExpire.getStatus());
         if (flag) {

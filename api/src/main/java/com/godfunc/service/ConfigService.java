@@ -9,6 +9,4 @@ import com.godfunc.entity.Config;
  */
 public interface ConfigService extends IService<Config> {
     Config getByName(String name);
-
-    Long getExpireSeconds(Config expireConfig);
 }

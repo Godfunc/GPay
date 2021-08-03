@@ -1,6 +1,7 @@
 package com.godfunc.producer;
 
 import com.godfunc.constant.RabbitMQConstant;
+import com.godfunc.queue.model.FixChannelRisk;
 import com.godfunc.queue.model.OrderExpire;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,17 +13,17 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class OrderExpireQueue {
+public class FixChannelRiskQueue {
 
     private final RabbitTemplate rabbitTemplate;
 
-    public void push(OrderExpire orderExpire) {
-        rabbitTemplate.convertAndSend(RabbitMQConstant.DELAYED_ORDER_EXPIRE_EXCHANGE,
-                RabbitMQConstant.DELAYED_ORDER_EXPIRE_ROUTING_KEY,
-                orderExpire,
+    public void push(FixChannelRisk fixChannelRisk) {
+        rabbitTemplate.convertAndSend(RabbitMQConstant.DELAYED_FIX_CHANNEL_RISK_EXCHANGE,
+                RabbitMQConstant.DELAYED_FIX_CHANNEL_RISK_ROUTING_KEY,
+                fixChannelRisk,
                 message -> {
-                    message.getMessageProperties().setDelay(Long.valueOf(orderExpire.getDelayTime()).intValue());
+                    message.getMessageProperties().setDelay(Long.valueOf(fixChannelRisk.getDelayTime()).intValue());
                     return message;
-                }, new CorrelationData(orderExpire.getId().toString()));
+                }, new CorrelationData(fixChannelRisk.getId().toString()));
     }
 }

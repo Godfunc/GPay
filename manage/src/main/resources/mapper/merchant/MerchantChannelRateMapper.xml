@@ -7,7 +7,8 @@
         <result column="pay_category_name" property="payCategoryName"/>
         <collection property="channelList" ofType="com.godfunc.modules.merchant.dto.ChannelRateDTO">
             <id column="id" property="id"/>
-            <result column="category_channel_id" property="categoryChannelId"/>
+            <result column="pay_category_id" property="payCategoryId"/>
+            <result column="pay_channel_id" property="payChannelId"/>
             <result column="pay_channel_name" property="payChannelName"/>
             <result column="pay_channel_code" property="payChannelCode"/>
             <result column="rate" property="rate"/>
@@ -16,9 +17,10 @@
     <select id="selectListByMerchantCode"
             resultMap="merchantChannelRateList">
         select mcr.id,
-               cc.id        category_channel_id,
+               cate.id      pay_category_id,
                cate.name    pay_category_name,
                cate.code    pay_category_code,
+               channel.id   pay_channel_id,
                channel.name pay_channel_name,
                channel.code pay_channel_code,
                mcr.rate
@@ -26,7 +28,8 @@
                  left join pay_category cate on cate.id = cc.category_id and cate.rm_tag = 0
                  left join pay_channel channel on channel.id = cc.channel_id and channel.rm_tag = 0
                  left join merchant_channel_rate mcr
-                           on mcr.pay_category_channel_id = cc.id and mcr.merchant_code = #{merchantCode}
+                           on mcr.pay_category_id = cc.category_id and mcr.pay_channel_id = cc.channel_id and
+                              mcr.merchant_code = #{merchantCode}
         order by cc.create_time desc
     </select>
 </mapper>

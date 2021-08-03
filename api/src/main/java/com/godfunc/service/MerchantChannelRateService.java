@@ -8,5 +8,5 @@ import com.godfunc.entity.MerchantChannelRate;
  * @email godfunc@outlook.com
  */
 public interface MerchantChannelRateService extends IService<MerchantChannelRate> {
-    MerchantChannelRate getByMerchant(String code, Long payCategoryChannelId);
+    MerchantChannelRate getByMerchant(String code, Long payCategoryId, Long payChannelId);
 }

@@ -87,11 +87,11 @@ public class PayChannelAccountServiceImpl extends ServiceImpl<PayChannelAccountM
                     payChannelAccountList.addAll(temp);
                 } else {
                     // 将没有渠道子账号
-                    payChannelList.remove(payChannel);
+                    payChannelIterator.remove();
                 }
             } else {
                 // 丢弃渠道子类权重 <=0 的
-                payChannelList.remove(payChannel);
+                payChannelIterator.remove();
             }
         }
         return payChannelAccountList;

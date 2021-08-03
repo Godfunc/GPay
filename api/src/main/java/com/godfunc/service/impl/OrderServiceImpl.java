@@ -16,6 +16,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -59,10 +60,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private void intoExpireQueue(Order order) {
         OrderExpire orderExpire = new OrderExpire();
         orderExpire.setId(order.getId());
-        orderExpire.setCreateTime(order.getCreateTime());
         orderExpire.setAmount(order.getAmount());
-        orderExpire.setExpiredTime(order.getDetail().getOrderExpiredTime());
         orderExpire.setStatus(order.getStatus());
+        orderExpire.setDelayTime(Duration.between(LocalDateTime.now(), order.getDetail().getOrderExpiredTime()).toMillis());
         orderExpire.setPayChannelId(order.getDetail().getPayChannelId());
         orderExpire.setPayChannelAccountId(order.getDetail().getPayChannelAccountId());
         orderExpireQueue.push(orderExpire);

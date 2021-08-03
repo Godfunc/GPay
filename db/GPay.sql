@@ -135,17 +135,18 @@ create table pay_category_channel
 
 create table merchant_channel_rate
 (
-    id                      bigint(20)  not null,
-    merchant_id             bigint(20)  not null comment '商户id',
-    merchant_code           varchar(64) not null comment '商户code',
-    pay_category_channel_id bigint(20)  not null comment '渠道关联id',
-    rate                    float(8, 6) not null comment '费率',
-    create_id               bigint(20)  not null comment '创建人id',
-    update_id               bigint(20) comment '更新人id',
-    create_time             datetime    not null comment '创建时间',
-    update_time             datetime    null comment '更新时间',
+    id              bigint(20)  not null,
+    merchant_id     bigint(20)  not null comment '商户id',
+    merchant_code   varchar(64) not null comment '商户code',
+    pay_category_id bigint(20)  not null comment '渠道主类id',
+    pay_channel_id  bigint(20)  not null comment '渠道主类id',
+    rate            float(8, 6) not null comment '费率',
+    create_id       bigint(20)  not null comment '创建人id',
+    update_id       bigint(20) comment '更新人id',
+    create_time     datetime    not null comment '创建时间',
+    update_time     datetime    null comment '更新时间',
     primary key (id),
-    index idx_merchant_code_category_id_channel_id (merchant_code, pay_category_channel_id),
+    unique uq_merchant_code_category_id_channel_id (merchant_code, pay_category_id, pay_channel_id),
     index idx_create_time (create_time)
 ) comment '商户渠道费率';
 
@@ -180,7 +181,6 @@ create table pay_order_detail
     pay_category_id              bigint(20)   not null comment '渠道主类id',
     pay_channel_id               bigint(20)   not null comment '渠道子类id',
     plat_private_key             text comment '平台私钥',
-    pay_category_channel_id      bigint(20)   not null comment '渠道关联id',
     pay_channel_account_id       bigint(20)   not null comment '渠道账号id',
     pay_channel_account_code     varchar(64)  not null comment '渠道账号商户号',
     pay_channel_account_key_info text         null comment '渠道账号密钥',
@@ -324,13 +324,13 @@ create table mg_job
 create table pay_order_log
 (
     id          bigint(20) not null,
-    order_id bigint(20) not null comment '订单id',
+    order_id    bigint(20) not null comment '订单id',
     old_status  tinyint(4) not null comment '原始订单状态',
     new_status  tinyint(4) not null comment '订单新状态',
     reason      text       null comment '状态变更原因',
-    result tinyint(2) not null comment '状态 1成功 2失败',
+    result      tinyint(2) not null comment '状态 1成功 2失败',
     create_time datetime   not null comment '创建时间',
     primary key (id),
-    index idx_order_id(order_id),
+    index idx_order_id (order_id),
     index idx_create_time (create_time)
 ) comment '订单日志表'

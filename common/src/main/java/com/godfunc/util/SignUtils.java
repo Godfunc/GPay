@@ -1,6 +1,7 @@
 package com.godfunc.util;
 
 import com.godfunc.exception.GException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
@@ -13,6 +14,7 @@ import java.util.*;
 /**
  * rsa2签名工具类
  */
+@Slf4j
 public class SignUtils {
 
     private static final String SIGN_SHA256RSA_ALGORITHMS = "SHA256WithRSA";
@@ -146,10 +148,11 @@ public class SignUtils {
 
     public static String getSignContent(Object params, String signName) {
         try {
-            Map<String, String> describe = BeanUtils.describe(params);
+            Map describe = BeanUtils.describe(params);
             describe.remove("class");
             return getSignContent(describe, signName);
         } catch (Exception e) {
+            log.error("签名异常", e);
             throw new GException(e, "签名内容生成异常 params={}, signName={}", params, signName);
         }
     }
@@ -164,11 +167,11 @@ public class SignUtils {
 
         for (int i = 0; i < keys.size(); i++) {
             String key = keys.get(i);
-            String value = params.get(key).toString();
-            if (StringUtils.isNotBlank(signName) && key.equals(signName)) {
+            Object value = params.get(key);
+            if (value != null && key.equals(signName)) {
                 continue;
             }
-            content.append((i == 0 ? "" : "&") + key + "=" + value);
+            content.append(i == 0 ? "" : "&").append(key).append("=").append(value);
         }
         return content.toString();
     }

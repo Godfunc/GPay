@@ -6,6 +6,7 @@ import com.godfunc.mapper.MerchantOrderProfitMapper;
 import com.godfunc.model.MerchantAgentProfit;
 import com.godfunc.service.MerchantChannelRateService;
 import com.godfunc.service.MerchantOrderProfitService;
+import com.godfunc.util.Assert;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
@@ -27,8 +28,10 @@ public class MerchantOrderProfitServiceImpl extends ServiceImpl<MerchantOrderPro
     @Override
     public MerchantAgentProfit calc(Merchant merchant, List<Merchant> agentList, Order order, OrderDetail detail) {
         final Long amount = order.getAmount();
-        final Long categoryChannelId = detail.getPayCategoryChannelId();
-        MerchantChannelRate merchantChannelRate = merchantChannelRateService.getByMerchant(merchant.getCode(), categoryChannelId);
+        final Long payCategoryId = detail.getPayCategoryId();
+        final Long payChannelId = detail.getPayChannelId();
+        MerchantChannelRate merchantChannelRate = merchantChannelRateService.getByMerchant(merchant.getCode(), payCategoryId, payChannelId);
+        Assert.isNull(merchantChannelRate, "商户费率未设置，请先设置");
         float merchantProfit = amount * (1 - merchantChannelRate.getRate());
         MerchantAgentProfit merchantAgentProfit = new MerchantAgentProfit();
         MerchantOrderProfit merchantOrderProfit = new MerchantOrderProfit(order.getId(), amount,
@@ -41,7 +44,8 @@ public class MerchantOrderProfitServiceImpl extends ServiceImpl<MerchantOrderPro
             MerchantChannelRate nextChannelRate = merchantChannelRate;
             for (int i = 0; i < agentList.size(); i++) {
                 Merchant agent = agentList.get(i);
-                MerchantChannelRate agentChannelRate = merchantChannelRateService.getByMerchant(agent.getCode(), categoryChannelId);
+                MerchantChannelRate agentChannelRate = merchantChannelRateService.getByMerchant(agent.getCode(), payCategoryId, payChannelId);
+                Assert.isNull(agentChannelRate, "代理费率未设置，请先设置");
                 float agentProfit = amount * (nextChannelRate.getRate() - agentChannelRate.getRate());
                 agentOrderProfitList.add(new MerchantOrderProfit(order.getId(), amount,
                         agent.getId(), agent.getCode(), agentChannelRate.getRate(), Double.valueOf(Math.floor(agentProfit)).longValue()));

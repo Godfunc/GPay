@@ -2,7 +2,7 @@ package com.godfunc.schedule.service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.godfunc.entity.OrderLog;
-import com.godfunc.mapper.OrderLogMapper;
+import com.godfunc.schedule.mapper.OrderLogMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

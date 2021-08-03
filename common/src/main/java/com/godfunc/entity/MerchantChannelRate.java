@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
 import lombok.Data;
 
 /**
@@ -30,9 +31,14 @@ public class MerchantChannelRate implements Serializable {
     private String merchantCode;
 
     /**
-     * 渠道主类子类关联id
+     * 渠道主类id
      */
-    private Long categoryChannelId;
+    private Long payCategoryId;
+
+    /**
+     * 渠道子类id
+     */
+    private Long payChannelId;
 
     /**
      * 费率

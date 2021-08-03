@@ -1,4 +1,8 @@
 spring:
+  rabbitmq:
+    addresses: 192.168.31.61,192.168.31.62,192.168.31.63
+    username: admin
+    password: admin
   application:
     name: quartz
   datasource:
@@ -14,6 +18,19 @@ spring:
       maximum-pool-size: 12
       idle-timeout: 30000
       max-lifetime: 1200000
+  redis:
+    cluster:
+      nodes:
+        - 192.168.31.61:6379
+        - 192.168.31.62:6379
+        - 192.168.31.63:6379
+    password:
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
   quartz:
     auto-startup: true
     startup-delay: 2s
@@ -43,7 +60,6 @@ spring:
             misfireThreshold: 12000
             tablePrefix: QRTZ_
             useProperties: false
-
 mybatis-plus:
   global-config:
     banner: false
@@ -56,8 +72,3 @@ mybatis-plus:
     jdbc-type-for-null: 'null'
 server:
   port: 8081
-
-rocketmq:
-  name-server: 192.168.31.184:9876
-  producer:
-    group: gpay-producer-group

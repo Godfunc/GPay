@@ -18,8 +18,8 @@
             <version>1.0.0</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.rocketmq</groupId>
-            <artifactId>rocketmq-spring-boot-starter</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
         <!-- spring cloud alibaba -->
         <dependency>

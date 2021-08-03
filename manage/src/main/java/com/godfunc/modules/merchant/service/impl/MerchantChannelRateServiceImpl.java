@@ -1,5 +1,6 @@
 package com.godfunc.modules.merchant.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.godfunc.entity.Merchant;
 import com.godfunc.entity.MerchantChannelRate;
@@ -40,14 +41,22 @@ public class MerchantChannelRateServiceImpl extends ServiceImpl<MerchantChannelR
             MerchantChannelRate merchantChannelRate = new MerchantChannelRate();
             merchantChannelRate.setMerchantCode(param.getMerchantCode());
             merchantChannelRate.setMerchantId(merchant.getId());
-            merchantChannelRate.setCategoryChannelId(param.getCategoryChannelId());
+            merchantChannelRate.setPayCategoryId(param.getPayCategoryId());
+            merchantChannelRate.setPayChannelId(param.getPayChannelId());
             merchantChannelRate.setRate(Float.parseFloat(param.getRate()));
             return save(merchantChannelRate);
         } else {
-            MerchantChannelRate merchantChannelRate = getById(param.getId());
+            MerchantChannelRate merchantChannelRate = getByCategoryChannel(merchant.getCode(), param.getPayCategoryId(), param.getPayChannelId());
             Assert.isNull(merchantChannelRate, "修改的数据不存在或已被删除");
             merchantChannelRate.setRate(Float.parseFloat(param.getRate()));
             return updateById(merchantChannelRate);
         }
+    }
+
+    private MerchantChannelRate getByCategoryChannel(String merchantCode, Long categoryId, Long channelId) {
+        return getOne(Wrappers.<MerchantChannelRate>lambdaQuery()
+                .eq(MerchantChannelRate::getMerchantCode, merchantCode)
+                .eq(MerchantChannelRate::getPayCategoryId, categoryId)
+                .eq(MerchantChannelRate::getPayChannelId, channelId));
     }
 }

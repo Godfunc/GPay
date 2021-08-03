@@ -1,4 +1,8 @@
 server:
+  rabbitmq:
+    addresses: 192.168.31.61,192.168.31.62,192.168.31.63
+    username: admin
+    password: admin
   port: 9090
   servlet:
     context-path: /api
@@ -49,8 +53,3 @@ mybatis-plus:
     cache-enabled: true
     call-setters-on-nulls: true
     jdbc-type-for-null: 'null'
-
-rocketmq:
-  name-server: 192.168.31.184:9876
-  producer:
-    group: gpay-producer-group

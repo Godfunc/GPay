@@ -18,7 +18,10 @@ public class ChannelRateDTO implements Serializable {
     private Long id;
 
     @ApiModelProperty("渠道关联id")
-    private Long categoryChannelId;
+    private Long payCategoryId;
+
+    @ApiModelProperty("渠道关联id")
+    private Long payChannelId;
 
     @ApiModelProperty("渠道子类编号")
     private String payChannelCode;

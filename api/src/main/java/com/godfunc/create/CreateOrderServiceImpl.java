@@ -38,6 +38,8 @@ import java.util.*;
 @RequiredArgsConstructor
 public class CreateOrderServiceImpl implements CreateOrderService {
 
+    private final String GO_PAY_URI = "/goPay/";
+
     private final EarlyProcessorComposite earlyProcessorComposite;
     private final MerchantService merchantService;
     private final OrderService orderService;
@@ -65,7 +67,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
 
         Assert.isNull(merchant, "商户不存在");
         // 验证签名
-        Assert.isTrue(!SignUtils.rsa2Check(param, merchant.getPublicKey(), param.getSign()), "签名验证未通过，请检查签名是否正确");
+        // Assert.isTrue(!SignUtils.rsa2Check(param, merchant.getPublicKey(), param.getSign()), "签名验证未通过，请检查签名是否正确");
         // 检查商户状态
         Assert.isTrue(merchant.getStatus() != MerchantStatusEnum.ENABLE.getValue(), "商户被禁用");
         Assert.isTrue(merchant.getType() != MerchantTypeEnum.MERCHANT.getValue(), "当前商户类型不支持创建订单");
@@ -89,6 +91,8 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         order.setClientCreateTime(param.getTime());
         order.setPayType(param.getType());
         order.setAmount(centAmount);
+        order.setRealAmount(centAmount);
+        order.setStatus(OrderStatusEnum.CREATED.getValue());
 
         // 商户风控
         if (!merchantRiskService.riskMerchant(merchant.getId(), order)) {
@@ -102,6 +106,8 @@ public class CreateOrderServiceImpl implements CreateOrderService {
 
         // 订单详细信息
         OrderDetail detail = new OrderDetail();
+        order.setDetail(detail);
+
         detail.setOrderId(order.getId());
         detail.setPayCategoryId(payCategory.getId());
         detail.setMerchantId(merchant.getId());
@@ -125,7 +131,6 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         order.setChannelAccountCode(payChannelAccount.getAccountCode());
 
         detail.setPayChannelId(payChannel.getId());
-        detail.setPayCategoryChannelId(payChannel.getCategoryChannelId());
         detail.setPayChannelAccountId(payChannelAccount.getId());
         detail.setPayChannelAccountCode(payChannelAccount.getAccountCode());
         detail.setPayChannelAccountKeyInfo(payChannelAccount.getKeyInfo());
@@ -139,10 +144,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         Config expireConfig = configService.getByName(ConfigNameEnum.ORDER_EXPIRED_TIME.getValue());
         Assert.isNull(expireConfig, "初始化参数未设置，请联系管理员");
         Assert.isBlank(expireConfig.getValue(), "初始化参数value未设置完整，请联系管理员");
-        Assert.isBlank(expireConfig.getRemark(), "初始化参数remark未设置完整，请联系管理员");
-        Long expireSecond = configService.getExpireSeconds(expireConfig);
-        Assert.isNull(expireSecond, "expire系统配置错误，请联系管理员");
-        detail.setOrderExpiredTime(LocalDateTime.now().plusSeconds(expireSecond));
+        detail.setOrderExpiredTime(LocalDateTime.now().plusSeconds(Long.parseLong(expireConfig.getValue())));
 
         // 计算收益
         MerchantAgentProfit merchantAgentProfit = merchantOrderProfitService.calc(merchant, agentList, order, detail);
@@ -155,12 +157,13 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         } catch (DuplicateKeyException e) {
             throw new GException("单号已存在，请检查您的订单号");
         } catch (Exception e) {
+            log.error("创建订单异常", e);
             throw new GException(ApiMsg.SYSTEM_BUSY);
         }
         Assert.isTrue(!flag, "订单创建失败");
 
         // 签名返回
-        PayOrderDTO payOrderDTO = new PayOrderDTO(order.getOutTradeNo(), order.getOrderNo(), HostUtils.getFullHost(request) + "goPay" + order.getOrderNo(), LocalDateTime.now().plusMinutes(10));
+        PayOrderDTO payOrderDTO = new PayOrderDTO(order.getOutTradeNo(), order.getOrderNo(), HostUtils.getFullHost(request) + GO_PAY_URI + order.getOrderNo(), detail.getOrderExpiredTime());
         payOrderDTO.setSign(SignUtils.rsa2Sign(payOrderDTO, merchant.getPlatPrivateKey()));
         return payOrderDTO;
     }

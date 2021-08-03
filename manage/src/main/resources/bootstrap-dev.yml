@@ -2,10 +2,10 @@ spring:
   cloud:
     nacos:
       config:
-        server-addr: 192.168.31.46:8848
-        namespace: 46c3ac36-7a9a-42bf-a897-cd7729221689
+        server-addr: 192.168.31.61:8848,192.168.31.62:8848,192.168.31.63:8848
+        namespace: 2ee97429-8803-4b9c-95e6-1110ca72ae5b
       discovery:
-        server-addr: 192.168.31.46:8848
-        namespace: 46c3ac36-7a9a-42bf-a897-cd7729221689
+        server-addr: 192.168.31.61:8848,192.168.31.62:8848,192.168.31.63:8848
+        namespace: 2ee97429-8803-4b9c-95e6-1110ca72ae5b
 log:
   path: /tmp

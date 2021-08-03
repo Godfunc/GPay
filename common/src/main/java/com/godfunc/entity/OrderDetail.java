@@ -63,11 +63,6 @@ public class OrderDetail implements Serializable {
     private Long payChannelId;
 
     /**
-     * 渠道关联id
-     */
-    private Long payCategoryChannelId;
-
-    /**
      * 渠道账号id
      */
     private Long payChannelAccountId;

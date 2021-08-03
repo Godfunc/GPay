@@ -1,17 +1,19 @@
 package com.godfunc.queue.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-public class OrderExpire implements Serializable {
+@NoArgsConstructor
+@AllArgsConstructor
+public class FixChannelRisk implements Serializable {
 
     private Long id;
     private Long amount;
-    private Integer status;
-    private LocalDateTime createTime;
     private Long payChannelId;
     private Long payChannelAccountId;
     private long delayTime;

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDateTime;
+
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -18,8 +20,11 @@ public class OrderExpireQueueTest {
     @Test
     public void test1() {
         OrderExpire orderExpire = new OrderExpire();
-        orderExpire.setId(1L);
-        orderExpire.setExpireLevel(4);
+        orderExpire.setId(13L);
+        orderExpire.setAmount(100L);
+        orderExpire.setStatus(1);
+        orderExpire.setPayChannelId(101L);
+        orderExpire.setPayChannelAccountId(102L);
         orderExpireQueue.push(orderExpire);
     }
 }

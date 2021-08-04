@@ -24,8 +24,8 @@ public class MerchantOrderNotifyDelayQueue {
     }
 
     public void delayPush(OrderNotify orderNotify) {
-        rabbitTemplate.convertAndSend(RabbitMQConstant.DELAYED_MERCHANT_NOTIFY_EXCHANGE,
-                RabbitMQConstant.DELAYED_MERCHANT_NOTIFY_ROUTING_KEY,
+        rabbitTemplate.convertAndSend(RabbitMQConstant.DelayedMerchantNotify.DELAYED_MERCHANT_NOTIFY_EXCHANGE,
+                RabbitMQConstant.DelayedMerchantNotify.DELAYED_MERCHANT_NOTIFY_ROUTING_KEY,
                 orderNotify, message -> {
                     message.getMessageProperties().setDelay(1000 * delay(orderNotify.getTime()));
                     return message;

@@ -29,7 +29,7 @@ public class OrderNotifyQueue {
         orderNotify.setOutTradeNo(order.getOutTradeNo());
         orderNotify.setOrderNo(order.getOrderNo());
         orderNotify.setStatus(order.getStatus());
-        rabbitTemplate.convertAndSend(RabbitMQConstant.MERCHANT_NOTIFY_ORDER_EXCHANGE,
-                RabbitMQConstant.MERCHANT_NOTIFY_ORDER_ROUTING_KEY, orderNotify, new CorrelationData(orderNotify.getId().toString()));
+        rabbitTemplate.convertAndSend(RabbitMQConstant.MerchantNotifyOrder.MERCHANT_NOTIFY_ORDER_EXCHANGE,
+                RabbitMQConstant.MerchantNotifyOrder.MERCHANT_NOTIFY_ORDER_ROUTING_KEY, orderNotify, new CorrelationData(orderNotify.getId().toString()));
     }
 }

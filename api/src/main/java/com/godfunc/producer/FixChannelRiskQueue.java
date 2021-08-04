@@ -18,8 +18,8 @@ public class FixChannelRiskQueue {
     private final RabbitTemplate rabbitTemplate;
 
     public void push(FixChannelRisk fixChannelRisk) {
-        rabbitTemplate.convertAndSend(RabbitMQConstant.DELAYED_FIX_CHANNEL_RISK_EXCHANGE,
-                RabbitMQConstant.DELAYED_FIX_CHANNEL_RISK_ROUTING_KEY,
+        rabbitTemplate.convertAndSend(RabbitMQConstant.DelayFixChannelRisk.DELAYED_FIX_CHANNEL_RISK_EXCHANGE,
+                RabbitMQConstant.DelayFixChannelRisk.DELAYED_FIX_CHANNEL_RISK_ROUTING_KEY,
                 fixChannelRisk,
                 message -> {
                     message.getMessageProperties().setDelay(Long.valueOf(fixChannelRisk.getDelayTime()).intValue());

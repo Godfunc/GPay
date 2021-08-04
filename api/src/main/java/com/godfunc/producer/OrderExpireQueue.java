@@ -17,8 +17,8 @@ public class OrderExpireQueue {
     private final RabbitTemplate rabbitTemplate;
 
     public void push(OrderExpire orderExpire) {
-        rabbitTemplate.convertAndSend(RabbitMQConstant.DELAYED_ORDER_EXPIRE_EXCHANGE,
-                RabbitMQConstant.DELAYED_ORDER_EXPIRE_ROUTING_KEY,
+        rabbitTemplate.convertAndSend(RabbitMQConstant.DelayOrderExpire.DELAYED_ORDER_EXPIRE_EXCHANGE,
+                RabbitMQConstant.DelayOrderExpire.DELAYED_ORDER_EXPIRE_ROUTING_KEY,
                 orderExpire,
                 message -> {
                     message.getMessageProperties().setDelay(Long.valueOf(orderExpire.getDelayTime()).intValue());

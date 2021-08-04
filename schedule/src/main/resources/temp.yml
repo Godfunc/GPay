@@ -1,8 +1,4 @@
 spring:
-  rabbitmq:
-    addresses: 192.168.31.61,192.168.31.62,192.168.31.63
-    username: admin
-    password: admin
   application:
     name: quartz
   datasource:
@@ -31,6 +27,16 @@ spring:
         max-wait: -1
         max-idle: 8
         min-idle: 0
+  rabbitmq:
+    addresses: 192.168.31.61,192.168.31.62,192.168.31.63
+    username: admin
+    password: admin
+    listener:
+      simple:
+        concurrency: 2
+        max-concurrency: 8
+    template:
+      mandatory: true
   quartz:
     auto-startup: true
     startup-delay: 2s

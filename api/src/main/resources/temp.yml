@@ -1,8 +1,4 @@
 server:
-  rabbitmq:
-    addresses: 192.168.31.61,192.168.31.62,192.168.31.63
-    username: admin
-    password: admin
   port: 9090
   servlet:
     context-path: /api
@@ -42,6 +38,16 @@ spring:
         max-wait: -1
         max-idle: 8
         min-idle: 0
+  rabbitmq:
+    addresses: 192.168.31.61,192.168.31.62,192.168.31.63
+    username: admin
+    password: admin
+    listener:
+      simple:
+        concurrency: 2
+        max-concurrency: 8
+    template:
+      mandatory: true
 
 mybatis-plus:
   global-config:

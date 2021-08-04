@@ -6,11 +6,17 @@ import com.godfunc.entity.Order;
 import com.godfunc.enums.OrderStatusEnum;
 import com.godfunc.queue.model.FixChannelRisk;
 import com.godfunc.schedule.service.OrderService;
+import com.rabbitmq.client.Channel;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class FixChannelRiskListener {
@@ -26,16 +32,29 @@ public class FixChannelRiskListener {
      *
      * @param fixChannelRisk
      */
-    @RabbitListener(queues = RabbitMQConstant.DELAYED_FIX_CHANNEL_RISK_QUEUE)
-    public void onMessage(FixChannelRisk fixChannelRisk) {
-        Order order = orderService.getById(fixChannelRisk.getId());
-        if (order != null && check(order.getId()) && (order.getStatus() == OrderStatusEnum.SCAN.getValue() || order.getStatus() == OrderStatusEnum.EXPIRED.getValue())) {
-            if (fixChannelRisk.getPayChannelId() != null) {
-                channelRiskCache.divideTodayAmount(fixChannelRisk.getPayChannelId(), fixChannelRisk.getAmount());
+    @RabbitListener(queues = RabbitMQConstant.DelayFixChannelRisk.DELAYED_FIX_CHANNEL_RISK_QUEUE, ackMode = "MANUAL")
+    public void onMessage(FixChannelRisk fixChannelRisk, Message message, Channel channel) {
+        try {
+            Order order = orderService.getById(fixChannelRisk.getId());
+            if (order != null && check(order.getId()) && (order.getStatus() == OrderStatusEnum.SCAN.getValue() || order.getStatus() == OrderStatusEnum.EXPIRED.getValue())) {
+                if (fixChannelRisk.getPayChannelId() != null) {
+                    channelRiskCache.divideTodayAmount(fixChannelRisk.getPayChannelId(), fixChannelRisk.getAmount());
+                }
+                if (fixChannelRisk.getPayChannelAccountId() != null) {
+                    channelRiskCache.divideTodayAmount(fixChannelRisk.getPayChannelAccountId(), fixChannelRisk.getAmount());
+                }
             }
-            if (fixChannelRisk.getPayChannelAccountId() != null) {
-                channelRiskCache.divideTodayAmount(fixChannelRisk.getPayChannelAccountId(), fixChannelRisk.getAmount());
-            }
+        } catch (Exception e) {
+            log.error("渠道风控金额恢复处理异常", e);
+        }
+        try {
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+        } catch (IOException e) {
+            log.error("应答异常 fixChannelRisk={}，exchange={}, routingKey={} {}",
+                    fixChannelRisk,
+                    message.getMessageProperties().getReceivedExchange(),
+                    message.getMessageProperties().getReceivedRoutingKey(),
+                    e);
         }
     }
 

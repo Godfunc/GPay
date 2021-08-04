@@ -1,8 +1,8 @@
 spring:
   application:
-    name: quartz
+    name: gpay-schedule
   datasource:
-    url: jdbc:mysql://192.168.31.52:3306/quartz?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://192.168.31.61:3306/quartz?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
     password: root
     type: com.zaxxer.hikari.HikariDataSource

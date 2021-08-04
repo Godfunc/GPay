@@ -1,6 +1,5 @@
 package com.godfunc.schedule.consumer;
 
-import com.godfunc.cache.ChannelRiskCache;
 import com.godfunc.constant.RabbitMQConstant;
 import com.godfunc.entity.OrderLog;
 import com.godfunc.enums.OrderStatusEnum;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Component;
 public class OrderExpireListener {
 
     private final OrderService orderService;
-    private final ChannelRiskCache channelRiskCache;
     private final OrderLogService orderLogService;
 
     /**
@@ -28,14 +26,6 @@ public class OrderExpireListener {
     @RabbitListener(queues = RabbitMQConstant.DELAYED_ORDER_EXPIRE_QUEUE)
     public void onMessage(OrderExpire orderExpire) {
         boolean flag = orderService.expired(orderExpire.getId(), orderExpire.getStatus());
-        if (flag) {
-            if (orderExpire.getPayChannelId() != null) {
-                channelRiskCache.divideTodayAmount(orderExpire.getPayChannelId(), orderExpire.getAmount());
-            }
-            if (orderExpire.getPayChannelAccountId() != null) {
-                channelRiskCache.divideTodayAmount(orderExpire.getPayChannelAccountId(), orderExpire.getAmount());
-            }
-        }
         orderLogService.save(new OrderLog(orderExpire.getId(), orderExpire.getStatus(), OrderStatusEnum.EXPIRED.getValue(), OrderStatusLogReasonEnum.ORDER_DELAY_EXPIRED.getValue(), flag));
     }
 }

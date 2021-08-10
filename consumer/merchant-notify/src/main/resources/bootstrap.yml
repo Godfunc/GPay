@@ -1,0 +1,12 @@
+spring:
+  cloud:
+    nacos:
+      config:
+        file-extension: yaml
+        group: GPay
+      discovery:
+        group: GPay
+  application:
+    name: gpay-merchant-notify
+  profiles:
+    active: dev

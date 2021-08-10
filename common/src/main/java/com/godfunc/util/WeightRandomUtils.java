@@ -3,7 +3,7 @@ package com.godfunc.util;
 import com.godfunc.entity.WeightEntity;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.*;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Slf4j

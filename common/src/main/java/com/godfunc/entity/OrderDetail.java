@@ -4,12 +4,11 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * 订单详情表
@@ -141,6 +140,11 @@ public class OrderDetail implements Serializable {
      * 下单客户ip
      */
     private String clientIp;
+
+    /**
+     * 商品信息
+     */
+    private String goodName;
 
     /**
      * 创建时间

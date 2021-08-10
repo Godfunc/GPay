@@ -1,0 +1,12 @@
+spring:
+  cloud:
+    nacos:
+      config:
+        file-extension: yaml
+        group: GPay
+      discovery:
+        group: GPay
+  application:
+    name: gpay-order-expire
+  profiles:
+    active: dev

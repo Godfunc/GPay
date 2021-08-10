@@ -6,6 +6,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.3.7.RELEASE</version>
+        <relativePath/>
     </parent>
     <groupId>com.godfunc</groupId>
     <artifactId>gpay</artifactId>
@@ -27,7 +28,6 @@
         <thumbnailator.version>0.4.8</thumbnailator.version>
         <mybatisplus.version>3.4.1</mybatisplus.version>
         <kaptcha.version>0.0.9</kaptcha.version>
-        <fastjson.version>1.2.9</fastjson.version>
         <swagger.version>3.0.0</swagger.version>
         <jsoup.version>1.13.1</jsoup.version>
         <jBCrypt.version>0.4.3</jBCrypt.version>
@@ -35,10 +35,10 @@
     </properties>
 
     <modules>
-        <module>common</module>
         <module>api</module>
+        <module>common</module>
+        <module>consumer</module>
         <module>manage</module>
-        <module>schedule</module>
     </modules>
 
     <dependencyManagement>
@@ -84,11 +84,6 @@
                 <groupId>com.google.zxing</groupId>
                 <artifactId>javase</artifactId>
                 <version>${zxing.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>fastjson</artifactId>
-                <version>${fastjson.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.axet</groupId>
@@ -142,30 +137,17 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <!-- 阿里云maven仓库 -->
-    <repositories>
-        <repository>
-            <id>public</id>
-            <name>aliyun nexus</name>
-            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>public</id>
-            <name>aliyun nexus</name>
-            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
-
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <!-- 跳过单元测试 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

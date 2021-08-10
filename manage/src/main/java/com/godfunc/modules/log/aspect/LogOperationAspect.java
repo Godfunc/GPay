@@ -1,6 +1,6 @@
 package com.godfunc.modules.log.aspect;
 
-import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.godfunc.modules.log.annotation.LogRecord;
 import com.godfunc.modules.log.entity.LogOperation;
 import com.godfunc.modules.log.enums.LogStatusEnum;
@@ -32,6 +32,7 @@ import java.lang.reflect.Method;
 @Component
 public class LogOperationAspect {
     private final LogOperationService logOperationService;
+    private final ObjectMapper objectMapper;
 
     @Pointcut("@annotation(com.godfunc.modules.log.annotation.LogRecord)")
     public void logPointCut() {
@@ -95,9 +96,9 @@ public class LogOperationAspect {
         try {
             String params = null;
             if (args.length == 1) {
-                params = JSON.toJSONString(args[0]);
+                params = objectMapper.writeValueAsString(args[0]);
             } else if (args.length > 1) {
-                params = JSON.toJSONString(args);
+                params = objectMapper.writeValueAsString(args);
             }
             log.setRequestParams(params);
         } catch (Exception e) {

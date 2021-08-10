@@ -1,0 +1,11 @@
+spring:
+  cloud:
+    nacos:
+      config:
+        server-addr: 192.168.31.62:8848
+        namespace: 97a12ee4-81a2-420f-ba7b-564b47b3279b
+      discovery:
+        server-addr: 192.168.31.61:8848
+        namespace: 97a12ee4-81a2-420f-ba7b-564b47b3279b
+log:
+  path: /usr/local/log/prod/gpay/gpay-merchant-notify

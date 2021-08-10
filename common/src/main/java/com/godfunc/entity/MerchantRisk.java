@@ -1,11 +1,11 @@
 package com.godfunc.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import lombok.Data;
 
 /**
  * 商户风控

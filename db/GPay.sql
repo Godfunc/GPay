@@ -197,6 +197,7 @@ create table pay_order_detail
     ua_str                       text         null comment '客户端ua',
     client_ip                    varchar(128) not null comment '下单客户ip',
     pay_client_ip                varchar(128) null comment '支付客户端ip',
+    good_name                    text         null comment '商品名称',
     create_time                  datetime     not null comment '创建时间',
     primary key (id),
     unique uq_order_id (order_id),

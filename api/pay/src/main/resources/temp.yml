@@ -1,0 +1,64 @@
+server:
+  port: 9090
+  servlet:
+    context-path: /api
+    encoding:
+      charset: utf-8
+      force: true
+      enabled: true
+spring:
+  application:
+    name: gpay-pay
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  datasource:
+    url: jdbc:mysql://192.168.31.61:3306/gpay?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      auto-commit: true
+      connection-timeout: 20000
+      minimum-idle: 5
+      maximum-pool-size: 12
+      idle-timeout: 30000
+      max-lifetime: 1200000
+  redis:
+    cluster:
+      nodes:
+        - 192.168.31.61:6379
+        - 192.168.31.62:6379
+        - 192.168.31.63:6379
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+  rabbitmq:
+    addresses: 192.168.31.61,192.168.31.62,192.168.31.63
+    username: admin
+    password: admin
+    listener:
+      simple:
+        concurrency: 2
+        max-concurrency: 8
+    template:
+      mandatory: true
+
+mybatis-plus:
+  global-config:
+    banner: false
+    db-config:
+      id-type: ASSIGN_ID
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: true
+    call-setters-on-nulls: true
+    jdbc-type-for-null: 'null'
+
+goPayUrl: /gopPay/
+fixChannelFloatMillis: 2000

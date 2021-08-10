@@ -1,10 +1,10 @@
 package com.godfunc.util;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
-import com.alibaba.fastjson.util.IOUtils;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.http.MediaType;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +15,8 @@ import java.util.Map;
 
 @Slf4j
 public class RequestArgumentResolveUtils {
+
+    public static ObjectMapper objectMapper = new ObjectMapper();
 
     public static Map<String, Object> getParams(HttpServletRequest request) {
         if (MediaType.APPLICATION_JSON.includes(MediaType.parseMediaType(request.getContentType()))) {
@@ -40,14 +42,26 @@ public class RequestArgumentResolveUtils {
     }
 
     public static Map<String, Object> requestBody(HttpServletRequest request) {
+        BufferedReader read = null;
         try {
-            BufferedReader read = request.getReader();
-            String body = IOUtils.readAll(read);
-            read.close();
-            return JSON.parseObject(body, new TypeReference<Map<String, Object>>() {
+            read = request.getReader();
+            String str = null;
+            StringBuilder sb = new StringBuilder();
+            while ((str = read.readLine()) != null) {
+                sb.append(str);
+            }
+            return objectMapper.readValue(sb.toString(), new TypeReference<Map<String, Object>>() {
             });
         } catch (IOException e) {
             log.error("获取请求参数异常", e);
+        } finally {
+            try {
+                if (read != null) {
+                    read.close();
+                }
+            } catch (IOException e) {
+                log.error("关闭流异常", e);
+            }
         }
         return null;
     }

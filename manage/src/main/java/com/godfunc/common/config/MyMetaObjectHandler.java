@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.godfunc.modules.security.util.SecurityUser;
 import com.godfunc.modules.sys.model.UserDetail;
 import org.apache.ibatis.reflection.MetaObject;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
  *
  * @author godfunc
  */
+@Primary
 @Component
 public class MyMetaObjectHandler implements MetaObjectHandler {
 

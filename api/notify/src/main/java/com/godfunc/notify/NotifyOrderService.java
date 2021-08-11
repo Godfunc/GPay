@@ -80,7 +80,7 @@ public class NotifyOrderService {
         int currentStatus = OrderStatusEnum.SCAN.getValue();
 
         // 过期订单收到支付通知进行 自动修复
-        if (order.getStatus() != OrderStatusEnum.EXPIRED.getValue()) {
+        if (order.getStatus() == OrderStatusEnum.EXPIRED.getValue()) {
             currentStatus = OrderStatusEnum.EXPIRED.getValue();
             if (detail.getPayChannelDayMax() != null) {
                 channelRiskCache.addTodayAmount(detail.getPayChannelId(), order.getAmount());

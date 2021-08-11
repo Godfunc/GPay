@@ -62,6 +62,7 @@ public class PayChannelServiceImpl extends ServiceImpl<PayChannelMapper, PayChan
         Assert.isNull(payChannel, "修改的数据不存在或已被删除");
         Assert.isTrue(checkCode(param.getCode(), payChannel.getId()), "编号已存在");
         BeanUtils.copyProperties(param, payChannel);
+        payChannel.setCostRate(Float.parseFloat(param.getCostRate()));
         updateById(payChannel);
         payCategoryChannelService.removeByChannel(payChannel.getId());
         saveCategoryChannelBatch(param.getCategoryIds(), payChannel.getId());

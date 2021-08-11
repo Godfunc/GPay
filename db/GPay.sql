@@ -269,8 +269,7 @@ create table pay_merchant_order_profit
     order_amount          bigint(20) not null comment '订单金额',
     merchant_id           bigint(20) not null comment '商户id',
     merchant_code         varchar(64) not null comment '商户号',
-    merchant_channel_rate float(8, 6
-) not null comment '商户渠道费率',
+    merchant_channel_rate float(8, 6) not null comment '商户渠道费率',
     profit_amount         bigint(20)  not null comment '收益',
     create_time           datetime    not null comment '创建时间',
     primary key (id),
@@ -286,8 +285,7 @@ create table pay_platform_order_profit
     order_amount      bigint(20) not null comment '订单金额',
     merchant_id       bigint(20) not null comment '商户id',
     merchant_code     varchar(64) not null comment '商户号',
-    channel_cost_rate float(8, 6
-) not null comment '渠道成本费率',
+    channel_cost_rate float(8, 6) not null comment '渠道成本费率',
     profit_amount       bigint(20)  not null comment '收益',
     channel_cast_amount bigint(20)  not null comment '通道成本',
     create_time         datetime    not null comment '创建时间',

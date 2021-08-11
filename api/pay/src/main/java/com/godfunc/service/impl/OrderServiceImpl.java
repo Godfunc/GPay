@@ -52,13 +52,14 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         boolean platformProfitFlag = platformOrderProfitService.save(platformOrderProfit);
 
         intoExpireQueue(order);
-        orderLogService.save(new OrderLog(order.getId(), 0, order.getStatus(), OrderStatusLogReasonEnum.MERCHANT_CREATE.getValue(), orderFlag));
+        orderLogService.save(new OrderLog(order.getId(), order.getMerchantId(), 0, order.getStatus(), OrderStatusLogReasonEnum.MERCHANT_CREATE.getValue(), orderFlag));
         return orderFlag && orderDetailFlag && merchantProfitFlag && platformProfitFlag;
     }
 
     private void intoExpireQueue(Order order) {
         OrderExpire orderExpire = new OrderExpire();
         orderExpire.setId(order.getId());
+        orderExpire.setMerchantId(order.getMerchantId());
         orderExpire.setAmount(order.getAmount());
         orderExpire.setStatus(order.getStatus());
         orderExpire.setDelayTime(Duration.between(LocalDateTime.now(), order.getDetail().getOrderExpiredTime()).toMillis());
@@ -81,7 +82,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 .eq(Order::getStatus, OrderStatusEnum.CREATED.getValue())
                 .eq(Order::getId, order.getId()).update();
         boolean detailFlag = orderDetailService.updateClientInfo(order.getDetail());
-        orderLogService.save(new OrderLog(order.getId(), OrderStatusEnum.CREATED.getValue(), OrderStatusEnum.SCAN.getValue(), OrderStatusLogReasonEnum.MERCHANT_SCAN.getValue(), orderFlag));
+        orderLogService.save(new OrderLog(order.getId(), order.getMerchantId(), OrderStatusEnum.CREATED.getValue(), OrderStatusEnum.SCAN.getValue(), OrderStatusLogReasonEnum.MERCHANT_SCAN.getValue(), orderFlag));
         return orderFlag;
     }
 

@@ -14,5 +14,5 @@ public interface OrderService extends IService<Order> {
 
     Order getByTradeNo(String tradeNo);
 
-    boolean updatePaid(Long id, int currentStatus, NotifyOrderInfo notifyOrderInfo);
+    boolean updatePaid(Long id, Long merchantId, int currentStatus, NotifyOrderInfo notifyOrderInfo);
 }

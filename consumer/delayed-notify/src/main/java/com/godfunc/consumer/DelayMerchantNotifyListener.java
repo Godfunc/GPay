@@ -36,12 +36,13 @@ public class DelayMerchantNotifyListener {
                 orderNotify.getPlatPrivateKey());
         if (flag) {
             boolean orderFlag = orderService.updateFinish(orderNotify);
-            orderLogService.save(new OrderLog(orderNotify.getId(), OrderStatusEnum.PAID.getValue(), OrderStatusEnum.FINISH.getValue(), OrderStatusLogReasonEnum.NOTIFY_MERCHANT.getValue(), orderFlag));
+            orderLogService.save(new OrderLog(orderNotify.getId(), orderNotify.getMerchantId(), OrderStatusEnum.PAID.getValue(), OrderStatusEnum.FINISH.getValue(), OrderStatusLogReasonEnum.NOTIFY_MERCHANT.getValue(), orderFlag));
         } else {
             if (orderNotify.getTime() <= 5) {
                 orderNotify.setTime(orderNotify.getTime() + 1);
                 merchantOrderNotifyDelayQueue.delayPush(orderNotify);
             }
+            orderLogService.save(new OrderLog(orderNotify.getId(), orderNotify.getMerchantId(), OrderStatusEnum.PAID.getValue(), OrderStatusEnum.FINISH.getValue(), OrderStatusLogReasonEnum.NOTIFY_MERCHANT_FAIL.getValue(), flag));
         }
     }
 }

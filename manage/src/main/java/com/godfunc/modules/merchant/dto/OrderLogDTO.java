@@ -4,7 +4,7 @@ package com.godfunc.modules.merchant.dto;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 public class OrderLogDTO implements Serializable {
@@ -19,5 +19,5 @@ public class OrderLogDTO implements Serializable {
      */
     private Integer result;
 
-    private Date createTime;
+    private LocalDateTime createTime;
 }

@@ -8,7 +8,8 @@ public enum OrderStatusLogReasonEnum {
     ORDER_DELAY_EXPIRED("订单过期（延时任务）"),
     UPDATE_PAID("补单"),
     OPER_NOTIFY_MERCHANT("手动通知商户"),
-    NOTIFY_MERCHANT("通知商户");
+    NOTIFY_MERCHANT("通知商户"),
+    NOTIFY_MERCHANT_FAIL("延时通知商户失败");
 
     private final String value;
 

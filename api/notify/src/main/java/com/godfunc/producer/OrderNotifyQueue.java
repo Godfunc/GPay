@@ -20,6 +20,7 @@ public class OrderNotifyQueue {
     public void push(Order order) {
         OrderNotify orderNotify = new OrderNotify();
         orderNotify.setNotifyUrl(order.getNotifyUrl());
+        orderNotify.setMerchantId(order.getMerchantId());
         orderNotify.setAmount(order.getAmount());
         orderNotify.setRealAmount(order.getRealAmount());
         orderNotify.setPlatPrivateKey(order.getDetail().getPlatPrivateKey());

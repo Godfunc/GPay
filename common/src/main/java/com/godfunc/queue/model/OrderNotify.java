@@ -7,6 +7,7 @@ import java.io.Serializable;
 @Data
 public class OrderNotify implements Serializable {
     private Long id;
+    private Long merchantId;
     private String platPrivateKey;
     private String notifyUrl;
     private String outTradeNo;

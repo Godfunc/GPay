@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 public class OrderExpire implements Serializable {
 
     private Long id;
+    private Long merchantId;
     private Long amount;
     private Integer status;
     private LocalDateTime createTime;

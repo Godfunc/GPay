@@ -74,7 +74,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 .set(Order::getPayTime, LocalDateTime.now())
                 .eq(Order::getId, order.getId())
                 .eq(Order::getStatus, order.getStatus()).update();
-        orderLogService.save(new OrderLog(id, order.getStatus(), OrderStatusEnum.PAID.getValue(), OrderStatusLogReasonEnum.UPDATE_PAID.getValue(), flag));
+        orderLogService.save(new OrderLog(id, order.getMerchantId(), order.getStatus(), OrderStatusEnum.PAID.getValue(), OrderStatusLogReasonEnum.UPDATE_PAID.getValue(), flag));
         return flag;
 
     }
@@ -96,7 +96,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         } else {
             orderFlag = updateStatus(order.getId(), order.getStatus(), OrderStatusEnum.FINISH.getValue());
         }
-        orderLogService.save(new OrderLog(id, order.getStatus(), OrderStatusEnum.FINISH.getValue(), OrderStatusLogReasonEnum.OPER_NOTIFY_MERCHANT.getValue(), orderFlag));
+        orderLogService.save(new OrderLog(id, order.getMerchantId(), order.getStatus(), OrderStatusEnum.FINISH.getValue(), OrderStatusLogReasonEnum.OPER_NOTIFY_MERCHANT.getValue(), orderFlag));
         return orderFlag;
     }
 

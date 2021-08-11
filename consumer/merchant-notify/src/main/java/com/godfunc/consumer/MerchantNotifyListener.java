@@ -43,12 +43,13 @@ public class MerchantNotifyListener {
                     orderNotify.getPlatPrivateKey());
             if (flag) {
                 boolean orderFlag = orderService.updateFinish(orderNotify);
-                orderLogService.save(new OrderLog(orderNotify.getId(), OrderStatusEnum.PAID.getValue(), OrderStatusEnum.FINISH.getValue(), OrderStatusLogReasonEnum.NOTIFY_MERCHANT.getValue(), orderFlag));
+                orderLogService.save(new OrderLog(orderNotify.getId(), orderNotify.getMerchantId(), OrderStatusEnum.PAID.getValue(), OrderStatusEnum.FINISH.getValue(), OrderStatusLogReasonEnum.NOTIFY_MERCHANT.getValue(), orderFlag));
             } else {
                 if (orderNotify.getTime() <= 5) {
                     orderNotify.setTime(orderNotify.getTime() + 1);
                     merchantOrderNotifyDelayQueue.delayPush(orderNotify);
                 }
+                orderLogService.save(new OrderLog(orderNotify.getId(), orderNotify.getMerchantId(), OrderStatusEnum.PAID.getValue(), OrderStatusEnum.FINISH.getValue(), OrderStatusLogReasonEnum.NOTIFY_MERCHANT.getValue(), flag));
             }
         } catch (Exception e) {
             log.error("通知商户异常", e);

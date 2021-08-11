@@ -2,6 +2,7 @@ package com.godfunc.notify;
 
 import com.godfunc.cache.ChannelRiskCache;
 import com.godfunc.constant.ApiConstant;
+import com.godfunc.constant.CommonConstant;
 import com.godfunc.entity.Order;
 import com.godfunc.entity.OrderDetail;
 import com.godfunc.enums.OrderStatusEnum;
@@ -14,11 +15,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -30,6 +34,10 @@ public class NotifyOrderService {
     private final OrderDetailService orderDetailService;
     private final ChannelRiskCache channelRiskCache;
     private final OrderNotifyQueue orderNotifyQueue;
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    @Value("${orderSuccessCacheMinutes}")
+    private Long orderSuccessCacheMinutes;
 
     public String notifyOrder(String logical, HttpServletRequest request) {
         NotifyOrderHandler handler = (NotifyOrderHandler) applicationContext.getBean(ApiConstant.NOTIFY_SERVICE_PREFIX + logical);
@@ -91,14 +99,19 @@ public class NotifyOrderService {
         }
 
         // 更新订单信息
-        if (orderService.updatePaid(order.getId(), currentStatus, notifyOrderInfo)) {
+        if (orderService.updatePaid(order.getId(), order.getMerchantId(), currentStatus, notifyOrderInfo)) {
             order.setStatus(OrderStatusEnum.PAID.getValue());
+            setOrderSuccessCache(order.getId());
             orderNotifyQueue.push(order);
             return handler.successResult();
         } else {
             log.error("订单更新为已支付失败 {}", order.getId());
             return handler.failResult();
         }
+    }
+
+    private void setOrderSuccessCache(Long id) {
+        redisTemplate.opsForValue().set(CommonConstant.ORDER_SUCCESS_CACHE_PREFIX + id, id, orderSuccessCacheMinutes, TimeUnit.MINUTES);
     }
 
     private Order getOrder(NotifyOrderInfo notifyOrderInfo) {

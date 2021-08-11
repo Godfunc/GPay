@@ -16,7 +16,8 @@ import java.time.LocalDateTime;
 @TableName(value = "pay_order_log")
 public class OrderLog implements Serializable {
 
-    public OrderLog(Long orderId, Integer oldStatus, Integer newStatus, String reason, boolean result) {
+    public OrderLog(Long orderId, Long merchantId, Integer oldStatus, Integer newStatus, String reason, boolean result) {
+        this.merchantId = merchantId;
         this.orderId = orderId;
         this.oldStatus = oldStatus;
         this.newStatus = newStatus;
@@ -29,6 +30,8 @@ public class OrderLog implements Serializable {
      */
     @TableId
     private Long id;
+
+    private Long merchantId;
 
     private Long orderId;
 

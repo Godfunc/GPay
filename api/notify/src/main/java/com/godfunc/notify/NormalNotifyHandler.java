@@ -12,7 +12,6 @@ import java.util.Map;
 public class NormalNotifyHandler implements NotifyOrderHandler {
     @Override
     public boolean signCheck(Map<String, Object> params, String publicKey) {
-        // TODO
         return true;
     }
 

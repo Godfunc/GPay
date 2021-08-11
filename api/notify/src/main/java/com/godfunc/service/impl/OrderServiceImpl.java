@@ -9,12 +9,9 @@ import com.godfunc.mapper.OrderMapper;
 import com.godfunc.model.NotifyOrderInfo;
 import com.godfunc.service.*;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 
 /**
@@ -25,12 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
 
-    private final OrderDetailService orderDetailService;
     private final OrderLogService orderLogService;
-
-
-
-
 
     @Override
     public Order getByOrderNo(String orderNo) {
@@ -46,17 +38,15 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     public boolean updatePaid(Long id, int currentStatus, NotifyOrderInfo notifyOrderInfo) {
         boolean flag = lambdaUpdate().set(Order::getTradeNo, notifyOrderInfo.getTradeNo())
                 .set(Order::getRealAmount, notifyOrderInfo.getRealAmount())
-                .set(Order::getStatus, currentStatus)
+                .set(Order::getStatus, OrderStatusEnum.PAID.getValue())
                 .set(Order::getNotifyTime, LocalDateTime.now())
                 .eq(Order::getId, id)
-                .eq(Order::getStatus, OrderStatusEnum.SCAN.getValue())
+                .eq(Order::getStatus, currentStatus)
                 .update();
-        orderLogService.save(new OrderLog(id, currentStatus, OrderStatusEnum.SCAN.getValue(), OrderStatusLogReasonEnum.ORDER_NOTIFY.getValue(), flag));
+        orderLogService.save(new OrderLog(id, currentStatus, OrderStatusEnum.PAID.getValue(), OrderStatusLogReasonEnum.ORDER_NOTIFY.getValue(), flag));
         return flag;
 
     }
-
-
 
 
 }

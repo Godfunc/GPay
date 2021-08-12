@@ -44,6 +44,8 @@ mybatis-plus:
     banner: false
     db-config:
       id-type: ASSIGN_ID
+    workerId: 3
+    dataCenterId: 1
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: true

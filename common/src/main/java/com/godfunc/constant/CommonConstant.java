@@ -23,7 +23,7 @@ public interface CommonConstant {
     String RATE_PATTERN = "^0.\\d+$";
 
     String ONE_AMOUNT_SPLIT = ",";
-    String VALIDATE_SPLIT = ",";
+    String VALIDATE_SPLIT = "，";
 
     String ORDER_SUCCESS_CACHE_PREFIX = "order:success:cache:prefix:";
 }

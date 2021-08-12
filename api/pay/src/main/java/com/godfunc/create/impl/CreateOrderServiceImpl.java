@@ -61,8 +61,6 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     // TODO 方法过长，进行抽取封装
     @Override
     public PayOrderDTO create(PayOrderParam param, HttpServletRequest request) {
-        ValidatorUtils.validate(param);
-
         // 外部风控
         if (earlyProcessorComposite.support(param)) {
             if (!earlyProcessorComposite.check(request, param)) {

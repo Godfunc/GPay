@@ -13,7 +13,6 @@ import com.godfunc.modules.merchant.service.ChannelRiskService;
 import com.godfunc.modules.merchant.service.PayChannelAccountService;
 import com.godfunc.util.Assert;
 import com.godfunc.util.ConvertUtils;
-import com.godfunc.util.ValidatorUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,7 +35,6 @@ public class PayChannelAccountServiceImpl extends ServiceImpl<PayChannelAccountM
 
     @Override
     public Long add(PayChannelAccountAddParam param) {
-        ValidatorUtils.validate(param);
         PayChannelAccount payChannelAccount = ConvertUtils.source2Target(param, PayChannelAccount.class);
         save(payChannelAccount);
         return payChannelAccount.getId();
@@ -44,7 +42,6 @@ public class PayChannelAccountServiceImpl extends ServiceImpl<PayChannelAccountM
 
     @Override
     public Long edit(PayChannelAccountEditParam param) {
-        ValidatorUtils.validate(param);
         PayChannelAccount payChannelAccount = getById(param.getId());
         Assert.isNull(payChannelAccount, "修改的数据不存在或已被删除");
         BeanUtils.copyProperties(param, payChannelAccount);

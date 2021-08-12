@@ -29,6 +29,7 @@ public class UserTokenServiceImpl extends ServiceImpl<UserTokenMapper, UserToken
 
     @Override
     public UserToken createToken(Long userId) {
+        // TODO 使用Jwt生成token 依旧校验token的信息
         UserToken userToken = getOne(Wrappers.<UserToken>lambdaQuery().eq(UserToken::getUserId, userId));
         if (userToken == null) {
             String token = TokenGenerateUtils.getToken();

@@ -13,7 +13,6 @@ import com.godfunc.modules.sys.param.ConfigEditParam;
 import com.godfunc.modules.sys.service.ConfigService;
 import com.godfunc.util.Assert;
 import com.godfunc.util.ConvertUtils;
-import com.godfunc.util.ValidatorUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
@@ -38,7 +37,6 @@ public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config> impleme
 
     @Override
     public Long add(ConfigAddParam param) {
-        ValidatorUtils.validate(param);
         Assert.isTrue(count(Wrappers.<Config>lambdaQuery().eq(Config::getName, param.getName())) >= 1, "配置名已存在");
         Config config = ConvertUtils.source2Target(param, Config.class);
         save(config);
@@ -48,7 +46,6 @@ public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config> impleme
     @Override
     @CachePut(key = "#param.name")
     public Long edit(ConfigEditParam param) {
-        ValidatorUtils.validate(param);
         Config config = ConvertUtils.source2Target(param, Config.class);
         updateById(config);
         return config.getId();

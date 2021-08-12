@@ -14,7 +14,6 @@ import com.godfunc.modules.merchant.param.ChannelRiskEditParam;
 import com.godfunc.modules.merchant.service.ChannelRiskService;
 import com.godfunc.util.AmountUtil;
 import com.godfunc.util.Assert;
-import com.godfunc.util.ValidatorUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,7 +40,6 @@ public class ChannelRiskServiceImpl extends ServiceImpl<ChannelRiskMapper, Chann
 
     @Override
     public Long edit(ChannelRiskEditParam param) {
-        ValidatorUtils.validate(param);
         ChannelRisk channelRisk = getById(param.getId());
         Assert.isNull(channelRisk, "数据不存在或已被删除");
         channelRisk.setDayEndTime(param.getDayEndTime());

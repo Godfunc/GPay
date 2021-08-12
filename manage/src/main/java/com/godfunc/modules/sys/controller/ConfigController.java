@@ -20,6 +20,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 
 /**
  * <p>
@@ -55,7 +57,7 @@ public class ConfigController {
     @LogRecord(LogRecordConstant.ADD)
     @ApiOperation(LogRecordConstant.ADD)
     @PreAuthorize("hasAuthority('mg:config:add')")
-    public R<Long> add(@RequestBody ConfigAddParam param) {
+    public R<Long> add(@Valid @RequestBody ConfigAddParam param) {
         return R.ok(configService.add(param));
     }
 
@@ -63,7 +65,7 @@ public class ConfigController {
     @LogRecord(LogRecordConstant.EDIT)
     @ApiOperation(LogRecordConstant.EDIT)
     @PreAuthorize("hasAuthority('mg:config:edit')")
-    public R<Long> edit(@RequestBody ConfigEditParam param) {
+    public R<Long> edit(@Valid @RequestBody ConfigEditParam param) {
         return R.ok(configService.edit(param));
     }
 

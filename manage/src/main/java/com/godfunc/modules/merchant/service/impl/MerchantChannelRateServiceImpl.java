@@ -9,7 +9,6 @@ import com.godfunc.modules.merchant.mapper.MerchantChannelRateMapper;
 import com.godfunc.modules.merchant.param.MerchantChannelRateSaveParam;
 import com.godfunc.modules.merchant.service.*;
 import com.godfunc.util.Assert;
-import com.godfunc.util.ValidatorUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +33,6 @@ public class MerchantChannelRateServiceImpl extends ServiceImpl<MerchantChannelR
 
     @Override
     public boolean saveData(MerchantChannelRateSaveParam param) {
-        ValidatorUtils.validate(param);
         Merchant merchant = merchantService.getByCode(param.getMerchantCode());
         Assert.isNull(merchant, "商户不存在或已被删除");
         if (Objects.isNull(param.getId())) {

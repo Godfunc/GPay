@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 
@@ -72,7 +73,7 @@ public class RoleController {
     @LogRecord(LogRecordConstant.ADD)
     @ApiOperation(LogRecordConstant.ADD)
     @PreAuthorize("hasAuthority('mg:role:add')")
-    public R<Long> add(@RequestBody RoleAddParam param) {
+    public R<Long> add(@Valid @RequestBody RoleAddParam param) {
         return R.ok(roleService.add(param));
     }
 
@@ -80,7 +81,7 @@ public class RoleController {
     @LogRecord(LogRecordConstant.EDIT)
     @ApiOperation(LogRecordConstant.EDIT)
     @PreAuthorize("hasAuthority('mg:role:edit')")
-    public R<Long> edit(@RequestBody RoleEditParam param) {
+    public R<Long> edit(@Valid @RequestBody RoleEditParam param) {
         return R.ok(roleService.edit(param));
     }
 

@@ -8,7 +8,6 @@ import com.godfunc.modules.merchant.mapper.PayCategoryChannelMapper;
 import com.godfunc.modules.merchant.param.PayCategoryChannelWeightParam;
 import com.godfunc.modules.merchant.service.PayCategoryChannelService;
 import com.godfunc.util.Assert;
-import com.godfunc.util.ValidatorUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
@@ -50,7 +49,6 @@ public class PayCategoryChannelServiceImpl extends ServiceImpl<PayCategoryChanne
 
     @Override
     public boolean weight(PayCategoryChannelWeightParam param) {
-        ValidatorUtils.validate(param);
         PayCategoryChannel payCategoryChannel = getById(param.getId());
         Assert.isNull(payCategoryChannel, "渠道关联数据不存在或已被删除");
         return lambdaUpdate()

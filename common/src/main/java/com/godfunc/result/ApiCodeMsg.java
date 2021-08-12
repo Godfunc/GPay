@@ -25,7 +25,10 @@ public enum ApiCodeMsg {
     OTHER(ApiCode.OTHER, ApiMsg.OTHER),
 
     // 数据库数据重复
-    DATA_DUPLICATION(ApiCode.DATA_DUPLICATION, ApiMsg.DATA_DUPLICATION);
+    DATA_DUPLICATION(ApiCode.DATA_DUPLICATION, ApiMsg.DATA_DUPLICATION),
+
+    // 请求body不存在
+    REQUEST_BOY_IS_EMPTY(ApiCode.PARAM_ERROR, ApiMsg.REQUEST_BOY_IS_EMPTY);
 
 
     private final long code;

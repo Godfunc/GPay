@@ -25,7 +25,6 @@ import com.godfunc.result.ApiCodeMsg;
 import com.godfunc.util.Assert;
 import com.godfunc.util.ConvertUtils;
 import com.godfunc.util.RSAUtils;
-import com.godfunc.util.ValidatorUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -63,7 +62,6 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantMapper, Merchant> i
 
     @Override
     public Long edit(MerchantEditParam param) {
-        ValidatorUtils.validate(param);
         Merchant merchant = getById(param.getId());
         Assert.isNull(merchant, "商户不存在");
         merchant.setName(param.getName());
@@ -75,7 +73,6 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantMapper, Merchant> i
 
     @Override
     public Long add(MerchantAddParam param) {
-        ValidatorUtils.validate(param);
         Assert.isTrue(checkExistByUserId(param.getUserId()), "当前用户已创建过商户信息");
         User user = userService.getById(param.getUserId());
         Assert.isNull(user, "选择的用户不存在或已被删除");

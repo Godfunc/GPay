@@ -18,7 +18,6 @@ import com.godfunc.modules.sys.service.RoleService;
 import com.godfunc.modules.sys.service.UserRoleService;
 import com.godfunc.util.Assert;
 import com.godfunc.util.ConvertUtils;
-import com.godfunc.util.ValidatorUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.cache.annotation.CacheEvict;
@@ -55,7 +54,6 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long add(RoleAddParam param) {
-        ValidatorUtils.validate(param);
         Role role = getOne(Wrappers.<Role>lambdaQuery().eq(Role::getName, param.getName()));
         Assert.isNotNull(role, "角色名[{}]已存在", param.getName());
         role = ConvertUtils.source2Target(param, Role.class);
@@ -68,7 +66,6 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @CacheEvict(cacheNames = "user::detail", allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public Long edit(RoleEditParam param) {
-        ValidatorUtils.validate(param);
         Role role = getOne(Wrappers.<Role>lambdaQuery().eq(Role::getName, param.getName()).ne(Role::getId, param.getId()));
         Assert.isNotNull(role, "角色名[{}]已存在", param.getName());
         role = getById(param.getId());

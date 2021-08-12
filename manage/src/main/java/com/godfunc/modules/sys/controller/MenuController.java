@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -63,7 +64,7 @@ public class MenuController {
     @LogRecord(LogRecordConstant.ADD)
     @ApiOperation(LogRecordConstant.ADD)
     @PreAuthorize("hasAuthority('mg:menu:add')")
-    public R<Long> add(@RequestBody MenuAddParam param) {
+    public R<Long> add(@Valid @RequestBody MenuAddParam param) {
         return R.ok(menuService.add(param));
     }
 
@@ -71,7 +72,7 @@ public class MenuController {
     @LogRecord(LogRecordConstant.EDIT)
     @ApiOperation(LogRecordConstant.EDIT)
     @PreAuthorize("hasAuthority('mg:menu:edit')")
-    public R<Long> edit(@RequestBody MenuEditParam param) {
+    public R<Long> edit(@Valid @RequestBody MenuEditParam param) {
         return R.ok(menuService.edit(param));
     }
 

@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -73,7 +74,7 @@ public class ChannelRiskController {
     @LogRecord(LogRecordConstant.ADD)
     @ApiOperation(LogRecordConstant.ADD)
     @PreAuthorize("hasAuthority('merchant:channelRisk:add')")
-    public R<Long> add(@RequestBody ChannelRiskAddParam param) {
+    public R<Long> add(@Valid @RequestBody ChannelRiskAddParam param) {
         return R.ok(channelRiskService.add(param));
     }
 
@@ -81,7 +82,7 @@ public class ChannelRiskController {
     @LogRecord(LogRecordConstant.EDIT)
     @ApiOperation(LogRecordConstant.EDIT)
     @PreAuthorize("hasAuthority('merchant:channelRisk:edit')")
-    public R<Long> edit(@RequestBody ChannelRiskEditParam param) {
+    public R<Long> edit(@Valid @RequestBody ChannelRiskEditParam param) {
         return R.ok(channelRiskService.edit(param));
     }
 

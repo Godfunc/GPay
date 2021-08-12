@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -65,7 +66,7 @@ public class MerchantController {
     @LogRecord(LogRecordConstant.ADD)
     @ApiOperation(LogRecordConstant.ADD)
     @PreAuthorize("hasAuthority('merchant:merchant:add')")
-    public R<Long> add(@RequestBody MerchantAddParam param) {
+    public R<Long> add(@Valid @RequestBody MerchantAddParam param) {
         return R.ok(merchantService.add(param));
     }
 
@@ -73,7 +74,7 @@ public class MerchantController {
     @LogRecord(LogRecordConstant.EDIT)
     @ApiOperation(LogRecordConstant.EDIT)
     @PreAuthorize("hasAuthority('merchant:merchant:edit')")
-    public R<Long> edit(@RequestBody MerchantEditParam param) {
+    public R<Long> edit(@Valid @RequestBody MerchantEditParam param) {
         return R.ok(merchantService.edit(param));
     }
 

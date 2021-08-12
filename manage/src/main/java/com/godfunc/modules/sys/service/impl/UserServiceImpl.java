@@ -27,7 +27,6 @@ import com.godfunc.modules.sys.service.UserRoleService;
 import com.godfunc.modules.sys.service.UserService;
 import com.godfunc.util.Assert;
 import com.godfunc.util.ConvertUtils;
-import com.godfunc.util.ValidatorUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -138,7 +137,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public Long add(UserAddParam param) {
-        ValidatorUtils.validate(param);
         User user = getOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, param.getUsername()));
         Assert.isNotNull(user, "用户名已存在");
         Assert.isTrue(!param.getPassword().equals(param.getConfirmPassword()), "两次输入密码不一样，请重新输入");
@@ -153,7 +151,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     @CacheEvict(cacheNames = "user::detail", key = "#param.id")
     public Long edit(UserEditParam param) {
-        ValidatorUtils.validate(param);
         User user = getById(param.getId());
         Assert.isNull(user, "用户不存在");
         boolean exitUser = count(Wrappers.<User>lambdaQuery().eq(User::getUsername, param.getUsername()).ne(User::getId, param.getId())) > 0;
@@ -188,7 +185,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public boolean password(UserPasswordParam param) {
-        ValidatorUtils.validate(param);
         Assert.isTrue(!param.getNewPassword().equals(param.getConfirmNewPassword()), "两次密码输入不一致，请重新输入");
         User user = getById(SecurityUser.getUserId());
         user.setPassword(passwordEncoder.encode(param.getNewPassword()));

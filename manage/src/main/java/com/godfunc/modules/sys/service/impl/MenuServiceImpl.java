@@ -17,7 +17,6 @@ import com.godfunc.modules.sys.service.MenuService;
 import com.godfunc.util.Assert;
 import com.godfunc.util.ConvertUtils;
 import com.godfunc.util.TreeUtils;
-import com.godfunc.util.ValidatorUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheEvict;
@@ -83,7 +82,6 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(cacheNames = "user::detail", allEntries = true)
     public Long add(MenuAddParam param) {
-        ValidatorUtils.validate(param);
         if (MenuTypeEnum.MENU.getValue() == param.getType()) {
             Assert.isBlank(param.getComponent(), "组件不能为空");
             Assert.isBlank(param.getPath(), "路由不能为空");
@@ -102,7 +100,6 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     @Transactional
     @CacheEvict(cacheNames = "user::detail", allEntries = true)
     public Long edit(MenuEditParam param) {
-        ValidatorUtils.validate(param);
         if (MenuTypeEnum.MENU.getValue() == param.getType()) {
             Assert.isBlank(param.getComponent(), "组件不能为空");
             Assert.isBlank(param.getPath(), "路由不能为空");

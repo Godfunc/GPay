@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -41,7 +42,7 @@ public class MerchantChannelRateController {
     @LogRecord(LogRecordConstant.SAVE)
     @ApiOperation(LogRecordConstant.SAVE)
     @PreAuthorize("hasAuthority('merchant:merchantChannelRate:save')")
-    public R<Boolean> save(@RequestBody MerchantChannelRateSaveParam param) {
+    public R<Boolean> save(@Valid @RequestBody MerchantChannelRateSaveParam param) {
         return R.ok(merchantChannelRateService.saveData(param));
     }
 

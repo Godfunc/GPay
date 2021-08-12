@@ -31,6 +31,7 @@
         <swagger.version>3.0.0</swagger.version>
         <jsoup.version>1.13.1</jsoup.version>
         <jBCrypt.version>0.4.3</jBCrypt.version>
+        <jwt.version>0.9.1</jwt.version>
         <spring-cloud-alibaba.version>2.2.6.RELEASE</spring-cloud-alibaba.version>
     </properties>
 
@@ -89,6 +90,12 @@
                 <groupId>com.github.axet</groupId>
                 <artifactId>kaptcha</artifactId>
                 <version>${kaptcha.version}</version>
+            </dependency>
+            <!-- Token生成与解析-->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jwt.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.coobird</groupId>

@@ -17,7 +17,6 @@ import com.godfunc.modules.merchant.service.PayCategoryChannelService;
 import com.godfunc.modules.merchant.service.PayChannelService;
 import com.godfunc.util.Assert;
 import com.godfunc.util.ConvertUtils;
-import com.godfunc.util.ValidatorUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -46,7 +45,6 @@ public class PayChannelServiceImpl extends ServiceImpl<PayChannelMapper, PayChan
 
     @Override
     public Long add(PayChannelAddParam param) {
-        ValidatorUtils.validate(param);
         Assert.isTrue(checkCode(param.getCode(), null), "编号已存在");
         PayChannel payChannel = ConvertUtils.source2Target(param, PayChannel.class);
         payChannel.setCostRate(Float.parseFloat(param.getCostRate()));
@@ -57,7 +55,6 @@ public class PayChannelServiceImpl extends ServiceImpl<PayChannelMapper, PayChan
 
     @Override
     public Long edit(PayChannelEditParam param) {
-        ValidatorUtils.validate(param);
         PayChannel payChannel = getById(param.getId());
         Assert.isNull(payChannel, "修改的数据不存在或已被删除");
         Assert.isTrue(checkCode(param.getCode(), payChannel.getId()), "编号已存在");

@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 
@@ -44,7 +45,7 @@ public class PayCategoryChannelController {
     @LogRecord("权重设置")
     @ApiOperation("权重设置")
     @PreAuthorize("hasAuthority('merchant:payCategoryChannel:weight')")
-    public R<Boolean> weight(@RequestBody PayCategoryChannelWeightParam param) {
+    public R<Boolean> weight(@Valid @RequestBody PayCategoryChannelWeightParam param) {
         return R.ok(payCategoryChannelService.weight(param));
     }
 }

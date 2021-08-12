@@ -16,7 +16,6 @@ import com.godfunc.modules.merchant.service.PayCategoryChannelService;
 import com.godfunc.modules.merchant.service.PayCategoryService;
 import com.godfunc.util.Assert;
 import com.godfunc.util.ConvertUtils;
-import com.godfunc.util.ValidatorUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +47,6 @@ public class PayCategoryServiceImpl extends ServiceImpl<PayCategoryMapper, PayCa
 
     @Override
     public Long add(PayCategoryAddParam param) {
-        ValidatorUtils.validate(param);
         Assert.isTrue(checkCodeExist(param.getCode(), null), "编号已存在，请重新设置");
         PayCategory payCategory = ConvertUtils.source2Target(param, PayCategory.class);
         save(payCategory);
@@ -57,7 +55,6 @@ public class PayCategoryServiceImpl extends ServiceImpl<PayCategoryMapper, PayCa
 
     @Override
     public Long edit(PayCategoryEditParam param) {
-        ValidatorUtils.validate(param);
         PayCategory payCategory = getById(param.getId());
         Assert.isNull(payCategory, "修改的数据不存在或已被删除");
         Assert.isTrue(checkCodeExist(param.getCode(), payCategory.getId()), "编号已存在，请重新设置");

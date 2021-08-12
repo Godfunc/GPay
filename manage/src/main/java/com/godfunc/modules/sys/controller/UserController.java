@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -73,7 +74,7 @@ public class UserController {
     @LogRecord(LogRecordConstant.ADD)
     @ApiOperation(LogRecordConstant.ADD)
     @PreAuthorize("hasAuthority('mg:user:add')")
-    public R<Long> add(@RequestBody UserAddParam param) {
+    public R<Long> add(@Valid @RequestBody UserAddParam param) {
         return R.ok(userService.add(param));
     }
 
@@ -81,7 +82,7 @@ public class UserController {
     @LogRecord(LogRecordConstant.EDIT)
     @ApiOperation(LogRecordConstant.EDIT)
     @PreAuthorize("hasAuthority('mg:user:edit')")
-    public R<Long> edit(@RequestBody UserEditParam param) {
+    public R<Long> edit(@Valid @RequestBody UserEditParam param) {
         return R.ok(userService.edit(param));
     }
 
@@ -89,7 +90,7 @@ public class UserController {
     @PostMapping("password")
     @LogRecord("修改密码")
     @ApiOperation("修改密码")
-    public R<Boolean> password(@RequestBody UserPasswordParam param) {
+    public R<Boolean> password(@Valid @RequestBody UserPasswordParam param) {
         return R.ok(userService.password(param));
     }
 

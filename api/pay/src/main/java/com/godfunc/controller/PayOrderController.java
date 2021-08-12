@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 @Controller
 @RequiredArgsConstructor
@@ -24,12 +25,12 @@ public class PayOrderController {
 
     @PostMapping(value = "pay", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @ResponseBody
-    public R<PayOrderDTO> pay(PayOrderParam param, HttpServletRequest request) {
+    public R<PayOrderDTO> pay(@Valid PayOrderParam param, HttpServletRequest request) {
         return R.ok(createOrderService.create(param, request));
     }
 
     @PostMapping(value = "pay", produces = MediaType.TEXT_HTML_VALUE)
-    public void pay(PayOrderParam param, HttpServletRequest request, HttpServletResponse response) {
+    public void pay(@Valid PayOrderParam param, HttpServletRequest request, HttpServletResponse response) {
         createOrderService.create(param, request, response);
     }
 

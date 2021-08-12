@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -59,7 +60,7 @@ public class PayCategoryController {
     @LogRecord(LogRecordConstant.ADD)
     @ApiOperation(LogRecordConstant.ADD)
     @PreAuthorize("hasAuthority('merchant:payCategory:add')")
-    public R<Long> add(@RequestBody PayCategoryAddParam param) {
+    public R<Long> add(@Valid @RequestBody PayCategoryAddParam param) {
         return R.ok(payCategoryService.add(param));
     }
 
@@ -67,7 +68,7 @@ public class PayCategoryController {
     @LogRecord(LogRecordConstant.EDIT)
     @ApiOperation(LogRecordConstant.EDIT)
     @PreAuthorize("hasAuthority('merchant:payCategory:edit')")
-    public R<Long> edit(@RequestBody PayCategoryEditParam param) {
+    public R<Long> edit(@Valid @RequestBody PayCategoryEditParam param) {
         return R.ok(payCategoryService.edit(param));
     }
 

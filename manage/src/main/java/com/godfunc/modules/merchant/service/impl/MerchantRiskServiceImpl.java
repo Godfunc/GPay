@@ -11,7 +11,6 @@ import com.godfunc.modules.merchant.service.MerchantRiskService;
 import com.godfunc.modules.merchant.service.MerchantService;
 import com.godfunc.util.AmountUtil;
 import com.godfunc.util.Assert;
-import com.godfunc.util.ValidatorUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +29,6 @@ public class MerchantRiskServiceImpl extends ServiceImpl<MerchantRiskMapper, Mer
 
     @Override
     public Long add(MerchantRiskAddParam param) {
-        ValidatorUtils.validate(param);
         Merchant merchant = merchantService.getByCode(param.getMerchantCode());
         Assert.isNull(merchant, "商户不存在或已被删除");
         MerchantRisk merchantRisk = new MerchantRisk();
@@ -47,7 +45,6 @@ public class MerchantRiskServiceImpl extends ServiceImpl<MerchantRiskMapper, Mer
 
     @Override
     public Long edit(MerchantRiskEditParam param) {
-        ValidatorUtils.validate(param);
         MerchantRisk merchantRisk = getById(param.getId());
         Assert.isNull(merchantRisk, "修改的数据不存在或已被删除");
         merchantRisk.setOneAmountMax(AmountUtil.convertDollar2Cent(param.getOneAmountMax()));

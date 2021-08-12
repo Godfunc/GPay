@@ -35,6 +35,10 @@ public class MybatisPlusConfig {
         return interceptor;
     }
 
+    /**
+     * 解决id冲突问题，建议使用
+     * @return
+     */
     @Bean
     public DefaultIdentifierGenerator defaultIdentifierGenerator() {
         return new DefaultIdentifierGenerator(workerId, dataCenterId);

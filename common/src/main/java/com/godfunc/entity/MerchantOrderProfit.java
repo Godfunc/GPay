@@ -12,24 +12,18 @@ import java.time.LocalDateTime;
 
 /**
  * 商户订单收益表
+ *
  * @TableName pay_merchant_order_profit
  */
-@TableName(value ="pay_merchant_order_profit")
+@TableName(value = "pay_merchant_order_profit")
 @Data
 @NoArgsConstructor
 public class MerchantOrderProfit implements Serializable {
 
-    public MerchantOrderProfit(Long orderId, Long orderAmount, Long merchantId, String merchantCode, Float merchantChannelRate, Long profitAmount) {
-        this.orderId = orderId;
-        this.orderAmount = orderAmount;
-        this.merchantId = merchantId;
-        this.merchantCode = merchantCode;
-        this.merchantChannelRate = merchantChannelRate;
-        this.profitAmount = profitAmount;
-    }
-
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
     /**
-     * 
+     *
      */
     @TableId
     private Long id;
@@ -70,6 +64,12 @@ public class MerchantOrderProfit implements Serializable {
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
+    public MerchantOrderProfit(Long orderId, Long orderAmount, Long merchantId, String merchantCode, Float merchantChannelRate, Long profitAmount) {
+        this.orderId = orderId;
+        this.orderAmount = orderAmount;
+        this.merchantId = merchantId;
+        this.merchantCode = merchantCode;
+        this.merchantChannelRate = merchantChannelRate;
+        this.profitAmount = profitAmount;
+    }
 }

@@ -18,7 +18,7 @@ import java.util.List;
 public class ConvertUtils {
 
     public static <T> T source2Target(Object source, Class<T> target) {
-        if(source == null) {
+        if (source == null) {
             return null;
         }
         T targetObj = null;
@@ -32,7 +32,7 @@ public class ConvertUtils {
     }
 
     public static <T> List<T> source2Target(Collection<?> sourceCollection, Class<T> target) {
-        if(CollectionUtils.isEmpty(sourceCollection)) {
+        if (CollectionUtils.isEmpty(sourceCollection)) {
             return Collections.emptyList();
         }
         List<T> targetList = new ArrayList<>(sourceCollection.size());

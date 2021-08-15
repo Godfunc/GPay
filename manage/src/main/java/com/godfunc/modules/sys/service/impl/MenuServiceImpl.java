@@ -3,8 +3,8 @@ package com.godfunc.modules.sys.service.impl;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.godfunc.modules.security.util.SecurityUser;
-import com.godfunc.modules.sys.dto.MenuListDTO;
 import com.godfunc.modules.sys.dto.MenuDTO;
+import com.godfunc.modules.sys.dto.MenuListDTO;
 import com.godfunc.modules.sys.dto.MenuTreeDTO;
 import com.godfunc.modules.sys.entity.Menu;
 import com.godfunc.modules.sys.enums.MenuTypeEnum;
@@ -23,7 +23,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * <p>

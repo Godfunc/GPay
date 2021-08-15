@@ -84,7 +84,7 @@ public class NormalPayService extends DefaultAbstractPay {
         int width = 300;
         int height = 300;
         //制定图片格式
-        String format="jpeg";
+        String format = "jpeg";
         //内容
         String content = payInfo.getPayUrl();
 
@@ -96,7 +96,7 @@ public class NormalPayService extends DefaultAbstractPay {
 
         //生成二维码
         try {
-            BitMatrix bitMatrix = new MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, width, height,map);
+            BitMatrix bitMatrix = new MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, width, height, map);
             MatrixToImageWriter.writeToStream(bitMatrix, format, response.getOutputStream());
 
         } catch (Exception e) {

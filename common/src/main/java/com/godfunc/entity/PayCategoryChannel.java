@@ -20,11 +20,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class PayCategoryChannel implements Serializable, WeightEntity {
 
-    public PayCategoryChannel(Long categoryId, Long channelId) {
-        this.categoryId = categoryId;
-        this.channelId = channelId;
-    }
-
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
     /**
      *
      */
@@ -70,6 +67,8 @@ public class PayCategoryChannel implements Serializable, WeightEntity {
     @TableField(fill = FieldFill.UPDATE)
     private LocalDateTime updateTime;
 
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
+    public PayCategoryChannel(Long categoryId, Long channelId) {
+        this.categoryId = categoryId;
+        this.channelId = channelId;
+    }
 }

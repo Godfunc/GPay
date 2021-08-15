@@ -8,5 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface CreateOrderService {
     PayOrderDTO create(PayOrderParam param, HttpServletRequest request);
+
     void create(PayOrderParam param, HttpServletRequest request, HttpServletResponse response);
 }

@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 public class DelayedNotifyTest {
     @Value("${delayNotifySecondArray}")
     private Integer[] delayNotifySecondArray;
+
     @Test
     public void test1() throws InterruptedException {
         System.out.println(Arrays.toString(delayNotifySecondArray));

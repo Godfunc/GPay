@@ -26,6 +26,27 @@ import java.time.LocalDateTime;
 public class UserToken implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    /**
+     * 主键
+     */
+    @TableId
+    private Long id;
+    /**
+     * 用户id
+     */
+    private Long userId;
+    /**
+     * token
+     */
+    private String token;
+    /**
+     * 过期时间
+     */
+    private LocalDateTime expireTime;
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
 
     public UserToken(Long userId, String token, LocalDateTime expireTime) {
         this.userId = userId;
@@ -33,31 +54,5 @@ public class UserToken implements Serializable {
         this.expireTime = expireTime;
         this.createTime = LocalDateTime.now();
     }
-
-    /**
-     * 主键
-     */
-    @TableId
-    private Long id;
-
-    /**
-     * 用户id
-     */
-    private Long userId;
-
-    /**
-     * token
-     */
-    private String token;
-
-    /**
-     * 过期时间
-     */
-    private LocalDateTime expireTime;
-
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createTime;
 
 }

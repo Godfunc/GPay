@@ -18,8 +18,6 @@ import com.godfunc.service.PayChannelService;
 import com.godfunc.util.Assert;
 import com.godfunc.util.IpUtils;
 import com.godfunc.util.UserAgentUtils;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;

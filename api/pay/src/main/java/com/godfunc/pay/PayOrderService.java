@@ -6,7 +6,6 @@ import com.godfunc.entity.OrderDetail;
 import com.godfunc.service.OrderDetailService;
 import com.godfunc.service.OrderService;
 import com.godfunc.util.Assert;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -37,6 +36,6 @@ public class PayOrderService {
         PayService payService = (PayService) applicationContext.getBean(ApiConstant.PAY_SERVICE_PREFIX + detail.getLogicalTag());
         Assert.isNull(payService, "不支持的支付类型");
 
-        payService.pay(order,  request, response);
+        payService.pay(order, request, response);
     }
 }

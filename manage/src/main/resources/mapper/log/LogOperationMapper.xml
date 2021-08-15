@@ -3,7 +3,8 @@
 <mapper namespace="com.godfunc.modules.log.mapper.LogOperationMapper">
 
     <select id="selectCustomPage" resultType="com.godfunc.modules.log.entity.LogOperation">
-        SELECT id, operation, request_url, request_params, request_time, user_agent, ip, status, create_user, create_time
+        SELECT id, operation, request_url, request_params, request_time, user_agent, ip, status, create_user,
+        create_time
         FROM mg_log_operation
         <where>
             <if test="status!=null">

@@ -26,6 +26,29 @@ import java.time.LocalDateTime;
 public class RoleMenu implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    /**
+     * 主键
+     */
+    @TableId
+    private Long id;
+    /**
+     * 角色id
+     */
+    private Long roleId;
+    /**
+     * 菜单id
+     */
+    private Long menuId;
+    /**
+     * 创建人
+     */
+    @TableField(fill = FieldFill.INSERT)
+    private Long createId;
+    /**
+     * 创建时间
+     */
+    @TableField(fill = FieldFill.INSERT)
+    private LocalDateTime createTime;
 
     public RoleMenu(Long roleId, Long menuId) {
         this.roleId = roleId;
@@ -34,34 +57,6 @@ public class RoleMenu implements Serializable {
 
     public RoleMenu() {
     }
-
-    /**
-     * 主键
-     */
-    @TableId
-    private Long id;
-
-    /**
-     * 角色id
-     */
-    private Long roleId;
-
-    /**
-     * 菜单id
-     */
-    private Long menuId;
-
-    /**
-     * 创建人
-     */
-    @TableField(fill = FieldFill.INSERT)
-    private Long createId;
-
-    /**
-     * 创建时间
-     */
-    @TableField(fill = FieldFill.INSERT)
-    private LocalDateTime createTime;
 
 
 }

@@ -25,12 +25,10 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class FixChannelRiskListener {
 
+    private static final String PREFIX = "CHECK:CHANNEL_RISK:";
     private final OrderService orderService;
     private final ChannelRiskCache channelRiskCache;
     private final RedisTemplate<String, Object> redisTemplate;
-
-    private static final String PREFIX = "CHECK:CHANNEL_RISK:";
-
     @Value("${fixChannelRiskCacheMinutes}")
     private Long fixChannelRiskCacheMinutes;
 

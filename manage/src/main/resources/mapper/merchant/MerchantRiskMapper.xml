@@ -5,8 +5,8 @@
 
     <select id="selectMerchantList" resultType="com.godfunc.modules.merchant.dto.MerchantRiskDTO">
         select id,
-               truncate(one_amount_max/100, 2) one_amount_max,
-               truncate(one_amount_min/100, 2) one_amount_min,
+               truncate(one_amount_max / 100, 2) one_amount_max,
+               truncate(one_amount_min / 100, 2) one_amount_min,
                status,
                day_end_time,
                day_start_time,

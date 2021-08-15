@@ -14,10 +14,9 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class MerchantOrderNotifyDelayQueue {
 
+    private final RabbitTemplate rabbitTemplate;
     @Value("${firstDelayNotifyMillis}")
     private Integer firstDelayNotifyMillis;
-
-    private final RabbitTemplate rabbitTemplate;
 
     public void delayPush(OrderNotify orderNotify) {
         rabbitTemplate.convertAndSend(RabbitMQConstant.DelayedMerchantNotify.DELAYED_MERCHANT_NOTIFY_EXCHANGE,

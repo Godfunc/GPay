@@ -35,7 +35,7 @@ public enum OrderStatusEnum {
      * 订单取消 6
      */
     EXPIRED(6);
-    
+
     private final int value;
 
     OrderStatusEnum(int value) {

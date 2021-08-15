@@ -83,7 +83,7 @@ public class AmountUtil {
      * @return
      */
     public static String convertCent2DollarShort(Long s) {
-        if(Objects.isNull(s)) {
+        if (Objects.isNull(s)) {
             return null;
         }
         String ss = convertCent2Dollar(s);

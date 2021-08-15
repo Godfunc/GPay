@@ -10,8 +10,8 @@ import java.util.List;
 
 public interface PayChannelAccountMapper extends BaseMapper<PayChannelAccount> {
     List<PayChannelAccountDTO> selectCustomPage(IPage resultPage,
-                                             @Param("status")Integer status,
-                                             @Param("channelCode")String channelCode,
-                                             @Param("name") String name,
-                                             @Param("accountCode") String accountCode);
+                                                @Param("status") Integer status,
+                                                @Param("channelCode") String channelCode,
+                                                @Param("name") String name,
+                                                @Param("accountCode") String accountCode);
 }

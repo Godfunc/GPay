@@ -17,46 +17,37 @@ import java.util.Set;
 @Data
 public class UserDetail implements Serializable, UserDetails {
 
-    public UserDetail() {
-    }
-
     private Long id;
     /**
      * 用户名
      */
     private String username;
-
     private String password;
-
     /**
      * 手机号
      */
     private String mobile;
-
     /**
      * 超级管理员 0不是 1是
      */
     private Integer superManager;
-
     /**
      * 状态 0停用 1启用
      */
     private Integer status;
-
     /**
      * 创建人
      */
     private Long createId;
-
     /**
      * 创建时间
      */
     private LocalDateTime createTime;
-
     private Collection<? extends GrantedAuthority> authorities;
-
     private Set<String> roles;
 
+    public UserDetail() {
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -7,14 +7,15 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * IP地址
+ *
  * @author godfunc
  * @email godfunc@outlook.com
  */
 @Slf4j
 public class IpUtils {
-	public static String getIpAddr(HttpServletRequest request) {
+    public static String getIpAddr(HttpServletRequest request) {
         String unknown = "unknown";
-    	String ip = null;
+        String ip = null;
         try {
             ip = request.getHeader("X-real-ip");
             if (StringUtils.isEmpty(ip) || unknown.equalsIgnoreCase(ip)) {
@@ -36,10 +37,10 @@ public class IpUtils {
                 ip = request.getRemoteAddr();
             }
         } catch (Exception e) {
-        	log.error("IPUtils ERROR ", e);
+            log.error("IPUtils ERROR ", e);
         }
-        
+
         return ip;
     }
-	
+
 }

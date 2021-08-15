@@ -3,14 +3,17 @@
 <mapper namespace="com.godfunc.modules.sys.mapper.RoleMenuMapper">
 
     <select id="selectRoleMenu" resultType="com.godfunc.modules.sys.model.RoleMenuModel">
-       SELECT rm.role_id, rm.menu_id, m.`permissions` FROM mg_role_menu rm LEFT JOIN mg_menu m ON rm.menu_id = m.id
-       WHERE m.permissions!='' AND rm.role_id
-         IN <foreach collection="roles" item="roleId" open="(" separator="," close=")">
-                #{roleId}
-            </foreach>
+        SELECT rm.role_id, rm.menu_id, m.`permissions` FROM mg_role_menu rm LEFT JOIN mg_menu m ON rm.menu_id = m.id
+        WHERE m.permissions!='' AND rm.role_id
+        IN
+        <foreach collection="roles" item="roleId" open="(" separator="," close=")">
+            #{roleId}
+        </foreach>
     </select>
 
     <select id="selectAllRoleMenu" resultType="com.godfunc.modules.sys.model.RoleMenuModel">
-        SELECT  m.id menu_id, m.`permissions` FROM mg_menu m WHERE m.permissions!=''
+        SELECT m.id menu_id, m.`permissions`
+        FROM mg_menu m
+        WHERE m.permissions != ''
     </select>
 </mapper>

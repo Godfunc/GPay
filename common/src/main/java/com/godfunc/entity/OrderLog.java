@@ -16,15 +16,8 @@ import java.time.LocalDateTime;
 @TableName(value = "pay_order_log")
 public class OrderLog implements Serializable {
 
-    public OrderLog(Long orderId, Long merchantId, Integer oldStatus, Integer newStatus, String reason, boolean result) {
-        this.merchantId = merchantId;
-        this.orderId = orderId;
-        this.oldStatus = oldStatus;
-        this.newStatus = newStatus;
-        this.reason = reason;
-        this.result = result ? OrderLogResultEnum.SUCCESS.getValue() : OrderLogResultEnum.FAIL.getValue();
-    }
-
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
     /**
      *
      */
@@ -52,7 +45,13 @@ public class OrderLog implements Serializable {
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
+    public OrderLog(Long orderId, Long merchantId, Integer oldStatus, Integer newStatus, String reason, boolean result) {
+        this.merchantId = merchantId;
+        this.orderId = orderId;
+        this.oldStatus = oldStatus;
+        this.newStatus = newStatus;
+        this.reason = reason;
+        this.result = result ? OrderLogResultEnum.SUCCESS.getValue() : OrderLogResultEnum.FAIL.getValue();
+    }
 
 }

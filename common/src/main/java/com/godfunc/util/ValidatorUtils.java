@@ -31,7 +31,7 @@ public class ValidatorUtils {
     public static void validate(Object object)
             throws GException {
         Set<ConstraintViolation<Object>> constraintViolations = validator.validate(object);
-        if(!constraintViolations.isEmpty()) {
+        if (!constraintViolations.isEmpty()) {
             throw new GException(constraintViolations.stream()
                     .map(ConstraintViolation::getMessage)
                     .collect(Collectors.joining(CommonConstant.VALIDATE_SPLIT)), ApiCode.PARAM_ERROR);

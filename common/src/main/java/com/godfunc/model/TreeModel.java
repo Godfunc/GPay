@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * @param <T>
  * @author godfunc
  * @email godfunc@outlook.com
- * @param <T>
  */
 @Data
 public class TreeModel<T> implements Serializable {

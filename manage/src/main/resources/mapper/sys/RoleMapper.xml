@@ -4,12 +4,12 @@
 
     <select id="selectCustomPage" resultType="com.godfunc.modules.sys.entity.Role">
         SELECT r.id, r.name, r.remark, r.create_id, r.update_id, r.create_time, r.update_time,
-               (SELECT username FROM mg_user WHERE id = r.create_id) create_user,
-               (SELECT username FROM mg_user WHERE id = r.update_id) update_user
+        (SELECT username FROM mg_user WHERE id = r.create_id) create_user,
+        (SELECT username FROM mg_user WHERE id = r.update_id) update_user
         FROM mg_role r
         <where>
             <if test="name!=null and name!=''">
-            <bind name="_name" value="'%'+name+'%'"/>
+                <bind name="_name" value="'%'+name+'%'"/>
                 r.name LIKE #{_name}
             </if>
         </where>

@@ -20,16 +20,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class PlatformOrderProfit implements Serializable {
 
-    public PlatformOrderProfit(Long orderId, Long orderAmount, Long merchantId, String merchantCode, Float channelCostRate, Long profitAmount, Long channelCastAmount) {
-        this.orderId = orderId;
-        this.orderAmount = orderAmount;
-        this.merchantId = merchantId;
-        this.merchantCode = merchantCode;
-        this.channelCostRate = channelCostRate;
-        this.profitAmount = profitAmount;
-        this.channelCastAmount = channelCastAmount;
-    }
-
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
     /**
      *
      */
@@ -77,6 +69,13 @@ public class PlatformOrderProfit implements Serializable {
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
+    public PlatformOrderProfit(Long orderId, Long orderAmount, Long merchantId, String merchantCode, Float channelCostRate, Long profitAmount, Long channelCastAmount) {
+        this.orderId = orderId;
+        this.orderAmount = orderAmount;
+        this.merchantId = merchantId;
+        this.merchantCode = merchantCode;
+        this.channelCostRate = channelCostRate;
+        this.profitAmount = profitAmount;
+        this.channelCastAmount = channelCastAmount;
+    }
 }

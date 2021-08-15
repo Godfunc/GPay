@@ -2,6 +2,7 @@ package com.godfunc.modules.sys.enums;
 
 /**
  * 菜单类型
+ *
  * @author godfunc
  * @email godfunc@outlook.com
  * @date 2020/7/31

@@ -19,5 +19,6 @@ import java.util.Set;
 public interface RoleMenuMapper extends BaseMapper<RoleMenu> {
 
     List<RoleMenuModel> selectRoleMenu(@Param("roles") Set<Long> roles);
+
     List<RoleMenuModel> selectAllRoleMenu();
 }

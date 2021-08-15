@@ -35,7 +35,7 @@ public class MenuDTO extends TreeModel<MenuDTO> implements Serializable {
     private Integer type;
 
     /**
-     *  默认noRedirect不跳转
+     * 默认noRedirect不跳转
      */
     @ApiModelProperty("跳转地址")
     private String redirect;

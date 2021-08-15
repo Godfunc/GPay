@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * 数据校验
+ *
  * @author godfunc
  * @email godfunc@outlook.com
  */
@@ -15,13 +16,13 @@ public class Assert {
         isBlank(str, message, new Object[]{});
     }
 
-    public static void isBlank(String str, String message, Object...args) {
+    public static void isBlank(String str, String message, Object... args) {
         if (StringUtils.isBlank(str)) {
             throw new GException(MessageFormatUtils.format(message, args), ApiCode.NOT_BE_BLANK);
         }
     }
 
-    public static void isNull(Object object, String message, Object...args) {
+    public static void isNull(Object object, String message, Object... args) {
         if (object == null) {
             throw new GException(MessageFormatUtils.format(message, args), ApiCode.DATA_NOT_EXIST);
         }
@@ -35,7 +36,7 @@ public class Assert {
         isNotNull(object, message, new Object[]{});
     }
 
-    public static void isNotNull(Object object, String message, Object...args) {
+    public static void isNotNull(Object object, String message, Object... args) {
         if (object != null) {
             throw new GException(MessageFormatUtils.format(message, args), ApiCode.DATA_EXIST);
         }

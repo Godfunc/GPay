@@ -2,7 +2,6 @@ package com.godfunc.producer;
 
 import com.godfunc.constant.RabbitMQConstant;
 import com.godfunc.queue.model.FixChannelRisk;
-import com.godfunc.queue.model.OrderExpire;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.connection.CorrelationData;

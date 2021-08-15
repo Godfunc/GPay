@@ -23,7 +23,6 @@ import com.godfunc.modules.sys.enums.SuperManagerEnum;
 import com.godfunc.result.ApiCodeMsg;
 import com.godfunc.service.NotifyMerchantService;
 import com.godfunc.util.Assert;
-import com.godfunc.util.ConvertUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

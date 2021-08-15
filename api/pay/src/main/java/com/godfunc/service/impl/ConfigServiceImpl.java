@@ -2,9 +2,9 @@ package com.godfunc.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.godfunc.entity.*;
+import com.godfunc.entity.Config;
 import com.godfunc.mapper.ConfigMapper;
-import com.godfunc.service.*;
+import com.godfunc.service.ConfigService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;

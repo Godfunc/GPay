@@ -1,12 +1,12 @@
 package com.godfunc.modules.security.config;
 
-import com.godfunc.modules.security.service.CaptchaService;
-import com.godfunc.modules.security.service.UserTokenService;
 import com.godfunc.modules.security.filter.AuthenticationFilter;
 import com.godfunc.modules.security.filter.UsernamePasswordJsonAuthenticationFilter;
 import com.godfunc.modules.security.handler.NoAuthEntryPoint;
 import com.godfunc.modules.security.handler.SecurityAccessDefinedHandler;
 import com.godfunc.modules.security.handler.SecurityLogoutHandler;
+import com.godfunc.modules.security.service.CaptchaService;
+import com.godfunc.modules.security.service.UserTokenService;
 import com.godfunc.modules.sys.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

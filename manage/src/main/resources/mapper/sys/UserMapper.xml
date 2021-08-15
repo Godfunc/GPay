@@ -27,7 +27,8 @@
         from mg_user u
                  left join merchant m on m.user_id = u.id and m.rm_tag = 0
         where u.rm_tag = 0
-          and m.id is null and u.super_manager = 0
+          and m.id is null
+          and u.super_manager = 0
         order by u.create_time desc
     </select>
 </mapper>

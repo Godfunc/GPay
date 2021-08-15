@@ -16,37 +16,28 @@ public class PayChannelAddParam {
     @ApiModelProperty("名称")
     @NotBlank(message = "名称不能为空")
     public String name;
-
+    @ApiModelProperty("渠道主类id集合")
+    public Long[] categoryIds;
     @ApiModelProperty("编号")
     @NotBlank(message = "编号不能为空")
     private String code;
-
     @ApiModelProperty("状态")
     @NotNull(message = "状态不能为空")
     private Integer status;
-
     @ApiModelProperty("下单网关")
     @NotBlank(message = "下单网关不能为空")
     private String createUrl;
-
     @ApiModelProperty("订单查询网关")
     private String queryUrl;
-
     @ApiModelProperty("通知地址")
     private String notifyUrl;
-
     @ApiModelProperty("支付类型信息")
     private String payTypeInfo;
-
     @ApiModelProperty("逻辑标识")
     @NotBlank(message = "逻辑标识不能为空")
     private String logicalTag;
-
     @ApiModelProperty("费率")
     @NotBlank(message = "费率不能为空")
     @Pattern(regexp = "^\\d{1,2}\\.\\d{0,6}$", message = "费率设置不正确")
     private String costRate;
-    
-    @ApiModelProperty("渠道主类id集合")
-    public Long[] categoryIds;
 }

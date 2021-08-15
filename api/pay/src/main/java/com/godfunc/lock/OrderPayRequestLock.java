@@ -2,7 +2,6 @@ package com.godfunc.lock;
 
 import com.godfunc.constant.ApiConstant;
 import com.godfunc.constant.CommonConstant;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;

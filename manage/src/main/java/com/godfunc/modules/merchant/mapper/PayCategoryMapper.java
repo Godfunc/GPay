@@ -11,8 +11,8 @@ import java.util.List;
 public interface PayCategoryMapper extends BaseMapper<PayCategory> {
     List<PayCategory> selectCustomPage(IPage page,
                                        @Param("status") Integer status,
-                                       @Param("code")String code,
-                                       @Param("name")String name);
+                                       @Param("code") String code,
+                                       @Param("name") String name);
 
     List<PayCategorySimpleDTO> selectListByStatus(@Param("status") int status);
 }

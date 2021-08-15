@@ -11,10 +11,10 @@ import com.godfunc.model.PayChannelAccountJoint;
 import com.godfunc.model.ProfitJoint;
 import com.godfunc.param.PayOrderParam;
 import com.godfunc.pay.PayOrderService;
+import com.godfunc.pay.interceptor.EarlyProcessorComposite;
 import com.godfunc.result.ApiCode;
 import com.godfunc.result.ApiMsg;
 import com.godfunc.service.*;
-import com.godfunc.pay.interceptor.EarlyProcessorComposite;
 import com.godfunc.util.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -43,9 +46,6 @@ import java.util.*;
 @RequiredArgsConstructor
 public class CreateOrderServiceImpl implements CreateOrderService {
 
-    @Value("${goPayUrl}")
-    private String goPayUrl;
-
     private final EarlyProcessorComposite earlyProcessorComposite;
     private final MerchantService merchantService;
     private final OrderService orderService;
@@ -57,7 +57,8 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     private final MerchantOrderProfitService merchantOrderProfitService;
     private final PayOrderService payOrderService;
     private final ConfigService configService;
-
+    @Value("${goPayUrl}")
+    private String goPayUrl;
 
     @Override
     public PayOrderDTO create(PayOrderParam param, HttpServletRequest request) {
@@ -99,8 +100,9 @@ public class CreateOrderServiceImpl implements CreateOrderService {
 
     /**
      * 下单方法
-     * @param isSign 是否签名
-     * @param param 请求参数
+     *
+     * @param isSign  是否签名
+     * @param param   请求参数
      * @param request 请求体
      * @return 返回支付对象
      */

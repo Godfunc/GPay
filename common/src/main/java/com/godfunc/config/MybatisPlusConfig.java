@@ -37,6 +37,7 @@ public class MybatisPlusConfig {
 
     /**
      * 解决id冲突问题，建议使用
+     *
      * @return
      */
     @Bean

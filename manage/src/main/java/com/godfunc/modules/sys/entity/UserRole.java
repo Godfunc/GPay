@@ -26,6 +26,34 @@ import java.time.LocalDateTime;
 public class UserRole implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    /**
+     * 主键
+     */
+    @TableId
+    private Long id;
+    /**
+     * 用户id
+     */
+    private Long userId;
+    /**
+     * 角色id
+     */
+    private Long roleId;
+    /**
+     * 创建人
+     */
+    @TableField(fill = FieldFill.INSERT)
+    private Long createId;
+    /**
+     * 创建时间
+     */
+    @TableField(fill = FieldFill.INSERT)
+    private LocalDateTime createTime;
+    /**
+     * 角色名
+     */
+    @TableField(exist = false)
+    private String roleName;
 
     public UserRole() {
     }
@@ -34,40 +62,6 @@ public class UserRole implements Serializable {
         this.userId = userId;
         this.roleId = roleId;
     }
-
-    /**
-     * 主键
-     */
-    @TableId
-    private Long id;
-
-    /**
-     * 用户id
-     */
-    private Long userId;
-
-    /**
-     * 角色id
-     */
-    private Long roleId;
-
-    /**
-     * 创建人
-     */
-    @TableField(fill = FieldFill.INSERT)
-    private Long createId;
-
-    /**
-     * 创建时间
-     */
-    @TableField(fill = FieldFill.INSERT)
-    private LocalDateTime createTime;
-
-    /**
-     * 角色名
-     */
-    @TableField(exist = false)
-    private String roleName;
 
 
 }

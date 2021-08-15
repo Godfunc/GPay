@@ -30,9 +30,9 @@
     </select>
     <select id="selectByAccount" resultType="com.godfunc.modules.merchant.dto.ChannelRiskSimpleDTO">
         select id,
-               truncate(day_amount_max/100, 2) day_amount_max,
-               truncate(one_amount_min/100, 2) one_amount_min,
-               truncate(one_amount_max/100, 2) one_amount_max,
+               truncate(day_amount_max / 100, 2) day_amount_max,
+               truncate(one_amount_min / 100, 2) one_amount_min,
+               truncate(one_amount_max / 100, 2) one_amount_max,
                day_start_time,
                day_end_time,
                one_amount,
@@ -44,9 +44,9 @@
     </select>
     <select id="selectByChannel" resultType="com.godfunc.modules.merchant.dto.ChannelRiskSimpleDTO">
         select id,
-               truncate(day_amount_max/100, 2) day_amount_max,
-               truncate(one_amount_min/100, 2) one_amount_min,
-               truncate(one_amount_max/100, 2) one_amount_max,
+               truncate(day_amount_max / 100, 2) day_amount_max,
+               truncate(one_amount_min / 100, 2) one_amount_min,
+               truncate(one_amount_max / 100, 2) one_amount_max,
                day_start_time,
                day_end_time,
                one_amount,

@@ -36,6 +36,6 @@ public class PayOrderController {
 
     @PostMapping("goPay/{orderNo}")
     public void goPay(@PathVariable String orderNo, HttpServletRequest request, HttpServletResponse response) {
-        payOrderService.goPay(orderNo,  request, response);
+        payOrderService.goPay(orderNo, request, response);
     }
 }

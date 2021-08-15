@@ -7,6 +7,7 @@ import com.godfunc.enums.OrderStatusEnum;
 import com.godfunc.enums.OrderStatusLogReasonEnum;
 import com.godfunc.mapper.OrderMapper;
 import com.godfunc.model.MerchantAgentProfit;
+import com.godfunc.model.ProfitJoint;
 import com.godfunc.producer.OrderExpireQueue;
 import com.godfunc.queue.model.OrderExpire;
 import com.godfunc.service.*;
@@ -41,9 +42,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean create(Order order, OrderDetail detail, MerchantAgentProfit merchantAgentProfit, PlatformOrderProfit platformOrderProfit) {
+    public boolean create(Order order, ProfitJoint profitJoint) {
         boolean orderFlag = save(order);
-        boolean orderDetailFlag = orderDetailService.save(detail);
+        boolean orderDetailFlag = orderDetailService.save(order.getDetail());
+        MerchantAgentProfit merchantAgentProfit = profitJoint.getMerchantAgentProfit();
+        PlatformOrderProfit platformOrderProfit = profitJoint.getPlatformOrderProfit();
         boolean merchantProfitFlag = merchantOrderProfitService.save(merchantAgentProfit.getMerchantProfit());
         List<MerchantOrderProfit> agentProfitList = merchantAgentProfit.getAgentProfitList();
         if (CollectionUtils.isNotEmpty(agentProfitList)) {

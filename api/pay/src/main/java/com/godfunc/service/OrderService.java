@@ -2,9 +2,7 @@ package com.godfunc.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.godfunc.entity.Order;
-import com.godfunc.entity.OrderDetail;
-import com.godfunc.entity.PlatformOrderProfit;
-import com.godfunc.model.MerchantAgentProfit;
+import com.godfunc.model.ProfitJoint;
 
 /**
  * @author Godfunc
@@ -13,7 +11,7 @@ import com.godfunc.model.MerchantAgentProfit;
 public interface OrderService extends IService<Order> {
     boolean checkExist(String outTradeNo, String merchantCode);
 
-    boolean create(Order order, OrderDetail detail, MerchantAgentProfit merchantAgentProfit, PlatformOrderProfit platformOrderProfit);
+    boolean create(Order order, ProfitJoint profitJoint);
 
     Order getByOrderNo(String orderNo);
 

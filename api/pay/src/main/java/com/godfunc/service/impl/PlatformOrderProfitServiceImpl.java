@@ -23,8 +23,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PlatformOrderProfitServiceImpl extends ServiceImpl<PlatformOrderProfitMapper, PlatformOrderProfit> implements PlatformOrderProfitService {
     @Override
-    public PlatformOrderProfit calc(MerchantAgentProfit merchantAgentProfit, Order order, OrderDetail detail) {
+    public PlatformOrderProfit calc(MerchantAgentProfit merchantAgentProfit, Order order) {
         final Long amount = order.getAmount();
+        OrderDetail detail = order.getDetail();
         MerchantOrderProfit merchantProfit = merchantAgentProfit.getMerchantProfit();
         long platProfit = amount - merchantProfit.getProfitAmount();
         List<MerchantOrderProfit> agentProfitList = merchantAgentProfit.getAgentProfitList();

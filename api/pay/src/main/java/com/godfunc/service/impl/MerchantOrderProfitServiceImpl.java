@@ -26,8 +26,9 @@ public class MerchantOrderProfitServiceImpl extends ServiceImpl<MerchantOrderPro
     private final MerchantChannelRateService merchantChannelRateService;
 
     @Override
-    public MerchantAgentProfit calc(Merchant merchant, List<Merchant> agentList, Order order, OrderDetail detail) {
+    public MerchantAgentProfit calc(Merchant merchant, List<Merchant> agentList, Order order) {
         final Long amount = order.getAmount();
+        OrderDetail detail = order.getDetail();
         final Long payCategoryId = detail.getPayCategoryId();
         final Long payChannelId = detail.getPayChannelId();
         MerchantChannelRate merchantChannelRate = merchantChannelRateService.getByMerchant(merchant.getCode(), payCategoryId, payChannelId);

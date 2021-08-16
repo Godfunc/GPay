@@ -1,0 +1,17 @@
+server:
+  port: 9000
+  servlet:
+    context-path: /notify
+spring:
+  application:
+    name: gpay-notify
+  datasource:
+    url: jdbc:mysql://192.168.31.61:3306/gpay?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+mybatis-plus:
+  global-config:
+    workerId: 2
+    dataCenterId: 1
+
+orderSuccessCacheMinutes: 30 # 需要比订单过期时间长

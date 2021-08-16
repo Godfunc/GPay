@@ -1,0 +1,15 @@
+server:
+  port: 9080
+spring:
+  application:
+    name: gpay-roll-channel-risk
+  datasource:
+    url: jdbc:mysql://192.168.31.61:3306/gpay?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+mybatis-plus:
+  global-config:
+    workerId: 6
+    dataCenterId: 1
+
+fixChannelRiskCacheMinutes: 20

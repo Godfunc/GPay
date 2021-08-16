@@ -1,0 +1,14 @@
+server:
+  port: 9050
+spring:
+  application:
+    name: gpay-order-expire
+  datasource:
+    url: jdbc:mysql://192.168.31.61:3306/gpay?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+
+mybatis-plus:
+  global-config:
+    workerId: 5
+    dataCenterId: 1

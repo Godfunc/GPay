@@ -1,0 +1,16 @@
+server:
+  port: 9070
+spring:
+  application:
+    name: gpay-delayed-notify
+  datasource:
+    url: jdbc:mysql://192.168.31.61:3306/gpay?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+
+mybatis-plus:
+  global-config:
+    workerId: 4
+    dataCenterId: 1
+
+delayNotifySecondArray: 5,30,60,90,120

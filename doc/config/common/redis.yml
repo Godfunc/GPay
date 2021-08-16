@@ -1,0 +1,14 @@
+spring:
+  redis:
+    cluster:
+      nodes:
+        - 192.168.31.61:6379
+        - 192.168.31.62:6379
+        - 192.168.31.63:6379
+    password:
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0

@@ -1,7 +1,7 @@
 package com.godfunc.pay;
 
 import com.godfunc.cache.ChannelRiskCache;
-import com.godfunc.dto.PayInfoDto;
+import com.godfunc.dto.PayInfoDTO;
 import com.godfunc.entity.Order;
 import com.godfunc.entity.OrderDetail;
 import com.godfunc.enums.OrderStatusEnum;
@@ -66,7 +66,7 @@ public abstract class DefaultAbstractPay implements PayService {
 
     @Override
     public void pay(Order order, HttpServletRequest request, HttpServletResponse response) {
-        PayInfoDto payInfo = new PayInfoDto();
+        PayInfoDTO payInfo = new PayInfoDTO();
         if (order.getStatus() == OrderStatusEnum.SCAN.getValue() && StringUtils.isNotBlank(order.getPayStr())) {
             payInfo.setPayUrl(order.getPayStr());
             payInfo.setTradeNo(order.getOrderNo());
@@ -122,7 +122,7 @@ public abstract class DefaultAbstractPay implements PayService {
     }
 
     @Override
-    public abstract PayInfoDto doPay(Order order);
+    public abstract PayInfoDTO doPay(Order order);
 
     @Override
     public boolean checkOrder(Order order) {
@@ -165,7 +165,7 @@ public abstract class DefaultAbstractPay implements PayService {
     }
 
     @Override
-    public void handleResponse(PayInfoDto payInfo, HttpServletRequest request, HttpServletResponse response) {
+    public void handleResponse(PayInfoDTO payInfo, HttpServletRequest request, HttpServletResponse response) {
         try {
             response.sendRedirect(payInfo.getPayUrl());
         } catch (IOException e) {
@@ -194,7 +194,7 @@ public abstract class DefaultAbstractPay implements PayService {
         }
     }
 
-    private void payUrlRequestAdviceInvokeAfter(List<PayUrlRequestAdvice> list, PayInfoDto payInfo) {
+    private void payUrlRequestAdviceInvokeAfter(List<PayUrlRequestAdvice> list, PayInfoDTO payInfo) {
         if (CollectionUtils.isEmpty(list)) {
             return;
         }

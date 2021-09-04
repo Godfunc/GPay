@@ -1,9 +1,11 @@
 package com.godfunc.modules.merchant.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.godfunc.dto.PageDTO;
+import com.godfunc.dto.PayOrderDTO;
 import com.godfunc.entity.Merchant;
 import com.godfunc.entity.Order;
 import com.godfunc.entity.OrderDetail;
@@ -11,35 +13,49 @@ import com.godfunc.entity.OrderLog;
 import com.godfunc.enums.OrderStatusEnum;
 import com.godfunc.enums.OrderStatusLogReasonEnum;
 import com.godfunc.exception.GException;
+import com.godfunc.modules.merchant.dto.CreateOrderDTO;
 import com.godfunc.modules.merchant.dto.OrderDTO;
 import com.godfunc.modules.merchant.enums.RoleNameEnum;
 import com.godfunc.modules.merchant.mapper.OrderMapper;
+import com.godfunc.modules.merchant.param.CreateOrderParam;
 import com.godfunc.modules.merchant.service.MerchantService;
 import com.godfunc.modules.merchant.service.OrderDetailService;
 import com.godfunc.modules.merchant.service.OrderLogService;
 import com.godfunc.modules.merchant.service.OrderService;
 import com.godfunc.modules.security.util.SecurityUser;
 import com.godfunc.modules.sys.enums.SuperManagerEnum;
+import com.godfunc.param.PayOrderParam;
 import com.godfunc.result.ApiCodeMsg;
+import com.godfunc.service.CreateOrderService;
 import com.godfunc.service.NotifyMerchantService;
 import com.godfunc.util.Assert;
-import lombok.RequiredArgsConstructor;
+import com.godfunc.util.IpUtils;
+import com.godfunc.util.SignUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.DubboReference;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.List;
 
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
 
-    private final MerchantService merchantService;
-    private final NotifyMerchantService notifyMerchantService;
-    private final OrderDetailService orderDetailService;
-    private final OrderLogService orderLogService;
+    @Autowired
+    private MerchantService merchantService;
+    @Autowired
+    private NotifyMerchantService notifyMerchantService;
+    @Autowired
+    private OrderDetailService orderDetailService;
+    @Autowired
+    private OrderLogService orderLogService;
+    @DubboReference
+    private CreateOrderService createOrderService;
 
     @Override
     public PageDTO<OrderDTO> getPage(Integer page, Integer limit, Integer status,
@@ -97,6 +113,30 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         }
         orderLogService.save(new OrderLog(id, order.getMerchantId(), order.getStatus(), OrderStatusEnum.FINISH.getValue(), OrderStatusLogReasonEnum.OPER_NOTIFY_MERCHANT.getValue(), orderFlag));
         return orderFlag;
+    }
+
+    @Override
+    public CreateOrderDTO createOrder(CreateOrderParam param, HttpServletRequest request, HttpServletResponse response) {
+        PayOrderParam payOrder = new PayOrderParam();
+        if (SecurityUser.getUser().getSuperManager() == SuperManagerEnum.SUPER_MANAGER.getValue()
+                || SecurityUser.checkRole(RoleNameEnum.MANAGE.getValue())) {
+            payOrder.setMerchantCode(param.getMerchantCode());
+        } else {
+            Merchant merchant = merchantService.getByUserId(SecurityUser.getUserId());
+            Assert.isNull(merchant, "您并非商户，无法创建订单");
+            payOrder.setMerchantCode(merchant.getCode());
+        }
+        payOrder.setAmount(param.getAmount());
+        payOrder.setType(param.getType());
+        payOrder.setClientIp(IpUtils.getIpAddr(request));
+        payOrder.setGoodName(param.getGoodName());
+        payOrder.setOutTradeNo(IdWorker.getIdStr());
+        payOrder.setTime(LocalDateTime.now());
+        payOrder.setNotifyUrl(param.getNotifyUrl());
+        payOrder.setRemark("测试订单");
+        payOrder.setSign(SignUtils.rsa2Sign(payOrder, param.getPrivateKey()));
+        PayOrderDTO payOrderDTO = createOrderService.create(false, payOrder, param.getCreateUrl());
+        return new CreateOrderDTO(payOrderDTO.getOutTradeNo(), payOrderDTO.getTradNo(), payOrderDTO.getPayUrl(), payOrderDTO.getExpiredTime());
     }
 
     public boolean updateStatus(Long id, Integer oldStatus, Integer newStatus) {

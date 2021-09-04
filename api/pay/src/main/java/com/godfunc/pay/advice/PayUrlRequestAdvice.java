@@ -1,6 +1,6 @@
 package com.godfunc.pay.advice;
 
-import com.godfunc.dto.PayInfoDto;
+import com.godfunc.dto.PayInfoDTO;
 import com.godfunc.entity.Order;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,5 +20,5 @@ public interface PayUrlRequestAdvice {
      *
      * @param payInfo
      */
-    void afterRequest(PayInfoDto payInfo);
+    void afterRequest(PayInfoDTO payInfo);
 }

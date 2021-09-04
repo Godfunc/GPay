@@ -1,6 +1,6 @@
 package com.godfunc.pay;
 
-import com.godfunc.dto.PayInfoDto;
+import com.godfunc.dto.PayInfoDTO;
 import com.godfunc.entity.Order;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +15,7 @@ public interface PayService {
 
     void pay(Order order, HttpServletRequest request, HttpServletResponse response);
 
-    PayInfoDto doPay(Order order);
+    PayInfoDTO doPay(Order order);
 
     /**
      * 设置客户端信息
@@ -38,6 +38,6 @@ public interface PayService {
      * @param request
      * @param response
      */
-    void handleResponse(PayInfoDto payInfo, HttpServletRequest request, HttpServletResponse response);
+    void handleResponse(PayInfoDTO payInfo, HttpServletRequest request, HttpServletResponse response);
 
 }

@@ -10,7 +10,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.godfunc.constant.ApiConstant;
 import com.godfunc.constant.PayLogicalConstant;
-import com.godfunc.dto.PayInfoDto;
+import com.godfunc.dto.PayInfoDTO;
 import com.godfunc.entity.Order;
 import com.godfunc.entity.OrderDetail;
 import com.godfunc.exception.GException;
@@ -40,7 +40,7 @@ public class NormalPayService extends DefaultAbstractPay {
     private final ObjectMapper objectMapper;
 
     @Override
-    public PayInfoDto doPay(Order order) {
+    public PayInfoDTO doPay(Order order) {
         OrderDetail detail = order.getDetail();
         AlipayConfig alipayConfig = new AlipayConfig();
         alipayConfig.setServerUrl(detail.getChannelCreateUrl());
@@ -68,7 +68,7 @@ public class NormalPayService extends DefaultAbstractPay {
             request.setBizModel(model);
             AlipayTradePrecreateResponse response = defaultAlipayClient.certificateExecute(request);
             if ("10000".equals(response.getCode())) {
-                return new PayInfoDto(null, response.getQrCode());
+                return new PayInfoDTO(null, response.getQrCode());
             } else {
                 throw new GException("上游错误 {}", response.getSubMsg());
             }
@@ -79,7 +79,7 @@ public class NormalPayService extends DefaultAbstractPay {
     }
 
     @Override
-    public void handleResponse(PayInfoDto payInfo, HttpServletRequest request, HttpServletResponse response) {
+    public void handleResponse(PayInfoDTO payInfo, HttpServletRequest request, HttpServletResponse response) {
         response.setContentType(MediaType.IMAGE_JPEG_VALUE);
         int width = 300;
         int height = 300;

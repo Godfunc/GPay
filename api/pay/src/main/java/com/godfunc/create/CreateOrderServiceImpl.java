@@ -1,7 +1,6 @@
-package com.godfunc.create.impl;
+package com.godfunc.create;
 
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
-import com.godfunc.create.CreateOrderService;
 import com.godfunc.dto.PayOrderDTO;
 import com.godfunc.entity.*;
 import com.godfunc.enums.*;
@@ -20,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.dao.DuplicateKeyException;
@@ -42,6 +42,7 @@ import java.util.Map;
  */
 @Slf4j
 @Service
+@DubboService
 @RefreshScope
 @RequiredArgsConstructor
 public class CreateOrderServiceImpl implements CreateOrderService {
@@ -57,18 +58,23 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     private final MerchantOrderProfitService merchantOrderProfitService;
     private final PayOrderService payOrderService;
     private final ConfigService configService;
+
     @Value("${goPayUrl}")
     private String goPayUrl;
 
     @Override
     public PayOrderDTO create(PayOrderParam param, HttpServletRequest request) {
-        return create(true, param, request);
+        // 外部风控
+        invokeEarlyProcessor(param, request);
+        return create(true, param, HostUtils.getFullHost(request));
     }
 
     @Override
     public void create(PayOrderParam param, HttpServletRequest request, HttpServletResponse response) {
         try {
-            PayOrderDTO payOrderDTO = create(false, param, request);
+            // 外部风控
+            invokeEarlyProcessor(param, request);
+            PayOrderDTO payOrderDTO = create(false, param, HostUtils.getFullHost(request));
             payOrderService.goPay(payOrderDTO.getTradNo(), request, response);
         } catch (GException e) {
             Map<String, Object> errorMap = new HashMap<>(2);
@@ -101,14 +107,13 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     /**
      * 下单方法
      *
-     * @param isSign  是否签名
-     * @param param   请求参数
-     * @param request 请求体
+     * @param isSign 是否签名
+     * @param param  请求参数
+     * @param host   主机地址
      * @return 返回支付对象
      */
-    public PayOrderDTO create(boolean isSign, PayOrderParam param, HttpServletRequest request) {
-        // 外部风控
-        invokeEarlyProcessor(param, request);
+    @Override
+    public PayOrderDTO create(boolean isSign, PayOrderParam param, String host) {
 
         Merchant merchant = merchantService.getByCode(param.getMerchantCode());
         Assert.isNull(merchant, "商户不存在");
@@ -147,7 +152,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         saveOrder(order, profitJoint);
 
         // 返回
-        return result(isSign, order, merchant.getPlatPrivateKey(), request);
+        return result(isSign, order, merchant.getPlatPrivateKey(), host);
     }
 
 
@@ -336,11 +341,11 @@ public class CreateOrderServiceImpl implements CreateOrderService {
      * @param isSign         是否签名
      * @param order          订单
      * @param platPrivateKey 平台私钥
-     * @param request        请求体
+     * @param host           主机地址
      * @return 返回支付订单对象
      */
-    private PayOrderDTO result(boolean isSign, Order order, String platPrivateKey, HttpServletRequest request) {
-        PayOrderDTO payOrderDTO = new PayOrderDTO(order.getOutTradeNo(), order.getOrderNo(), HostUtils.getFullHost(request) + goPayUrl + order.getOrderNo(), order.getDetail().getOrderExpiredTime());
+    private PayOrderDTO result(boolean isSign, Order order, String platPrivateKey, String host) {
+        PayOrderDTO payOrderDTO = new PayOrderDTO(order.getOutTradeNo(), order.getOrderNo(), host + goPayUrl + order.getOrderNo(), order.getDetail().getOrderExpiredTime());
         if (isSign) {
             payOrderDTO.setSign(SignUtils.rsa2Sign(payOrderDTO, platPrivateKey));
         }

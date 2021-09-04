@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PayInfoDto {
+public class PayInfoDTO {
 
     private String tradeNo;
 

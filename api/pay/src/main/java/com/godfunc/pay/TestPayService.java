@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.godfunc.constant.ApiConstant;
 import com.godfunc.constant.PayLogicalConstant;
-import com.godfunc.dto.PayInfoDto;
+import com.godfunc.dto.PayInfoDTO;
 import com.godfunc.entity.Order;
 import com.godfunc.exception.GException;
 import com.godfunc.request.TestPayRequest;
@@ -29,7 +29,7 @@ public class TestPayService extends DefaultAbstractPay {
     private final ObjectMapper objectMapper;
 
     @Override
-    public PayInfoDto doPay(Order order) {
+    public PayInfoDTO doPay(Order order) {
         TestPayRequest request = new TestPayRequest();
         request.setAmount(AmountUtil.convertCent2Dollar(order.getAmount()));
         request.setNotifyUrl(order.getNotifyUrl());
@@ -46,7 +46,7 @@ public class TestPayService extends DefaultAbstractPay {
         request.setSign(SignUtils.rsa2Sign(request, keyMap.get("privateKey")));
         ResponseEntity<TestPayResponse> response = restTemplate.postForEntity(order.getDetail().getChannelCreateUrl(), request, TestPayResponse.class);
         if (response.getBody() != null && 0 == response.getBody().getCode() && StringUtils.isNotBlank(response.getBody().getData().getPayUrl())) {
-            return new PayInfoDto(response.getBody().getData().getTradeNo(), response.getBody().getData().getPayUrl());
+            return new PayInfoDTO(response.getBody().getData().getTradeNo(), response.getBody().getData().getPayUrl());
         } else {
             throw new GException("请求支付失败 {}", response.getBody() != null ? response.getBody().getMessage() : "");
         }

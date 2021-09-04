@@ -1,4 +1,8 @@
 spring:
+  application:
+    name: gpay-pay
+  profiles:
+    active: dev
   cloud:
     nacos:
       config:
@@ -19,7 +23,14 @@ spring:
             refresh: true
       discovery:
         group: GPay
-  application:
-    name: gpay-pay
-  profiles:
-    active: dev
+dubbo:
+  registry:
+    protocol: nacos
+    group: GPay
+    parameters:
+      group: GPay
+  protocol:
+    port: -1
+    name: dubbo
+  scan:
+    base-packages: com.godfunc.create

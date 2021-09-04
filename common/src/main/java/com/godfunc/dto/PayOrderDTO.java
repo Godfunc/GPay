@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @ApiModel("订单返回信息")
-public class PayOrderDTO {
+public class PayOrderDTO implements Serializable {
 
     @ApiModelProperty("商户订单号")
     private String outTradeNo;

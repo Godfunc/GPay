@@ -3,7 +3,9 @@ package com.godfunc.modules.merchant.controller;
 import com.godfunc.constant.LogRecordConstant;
 import com.godfunc.dto.PageDTO;
 import com.godfunc.modules.log.annotation.LogRecord;
+import com.godfunc.modules.merchant.dto.CreateOrderDTO;
 import com.godfunc.modules.merchant.dto.OrderDTO;
+import com.godfunc.modules.merchant.param.CreateOrderParam;
 import com.godfunc.modules.merchant.service.OrderService;
 import com.godfunc.result.R;
 import io.swagger.annotations.Api;
@@ -14,6 +16,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 
 @RestController
@@ -70,5 +75,15 @@ public class OrderController {
 
         }
         return R.fail("操作失败");
+    }
+
+    @PostMapping("createOrder")
+    @LogRecord("创建订单")
+    @ApiOperation("创建订单")
+    @PreAuthorize("hasAuthority('merchant:order:createOrder')")
+    public R<CreateOrderDTO> createOrder(@Valid @RequestBody CreateOrderParam param,
+                                         HttpServletRequest request,
+                                         HttpServletResponse response) {
+        return R.ok(orderService.createOrder(param, request, response));
     }
 }

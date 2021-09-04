@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @ApiModel("下单信息")
-public class PayOrderParam {
+public class PayOrderParam implements Serializable {
 
     @ApiModelProperty("商户号")
     @NotBlank(message = "商户号不能为空")

@@ -1,4 +1,8 @@
 spring:
+  application:
+    name: gpay-manage
+  profiles:
+    active: dev
   cloud:
     nacos:
       config:
@@ -16,7 +20,16 @@ spring:
             refresh: true
       discovery:
         group: GPay
-  application:
-    name: gpay-manage
-  profiles:
-    active: dev
+dubbo:
+  registry:
+    protocol: nacos
+    group: GPay
+    parameters:
+      group: GPay
+  protocol:
+    port: -1
+    name: dubbo
+  consumer:
+    check: false
+    timeout: 40000
+    retries: 0

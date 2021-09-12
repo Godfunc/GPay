@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -17,12 +18,30 @@ import java.io.Serializable;
  * @email godfunc@outlook.com
  */
 @Data
+@NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("mg_menu")
 public class Menu implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    public Menu(Long pid, String path, String component, Integer type, String redirect, String name, Boolean alwaysShow, String permissions, Boolean breadcrumb, String activeMenu, String title, String icon, Integer sort, Integer status) {
+        this.pid = pid;
+        this.path = path;
+        this.component = component;
+        this.type = type;
+        this.redirect = redirect;
+        this.name = name;
+        this.alwaysShow = alwaysShow;
+        this.permissions = permissions;
+        this.breadcrumb = breadcrumb;
+        this.activeMenu = activeMenu;
+        this.title = title;
+        this.icon = icon;
+        this.sort = sort;
+        this.status = status;
+    }
 
     /**
      * 主键

@@ -1,9 +1,12 @@
 package com.godfunc.modules.merchant.service.impl;
 
+import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.godfunc.constant.CommonConstant;
 import com.godfunc.dto.PageDTO;
 import com.godfunc.dto.PayOrderDTO;
 import com.godfunc.entity.Merchant;
@@ -16,6 +19,7 @@ import com.godfunc.exception.GException;
 import com.godfunc.modules.merchant.dto.CreateOrderDTO;
 import com.godfunc.modules.merchant.dto.OrderDTO;
 import com.godfunc.modules.merchant.enums.RoleNameEnum;
+import com.godfunc.modules.merchant.excel.OrderExcel;
 import com.godfunc.modules.merchant.mapper.OrderMapper;
 import com.godfunc.modules.merchant.param.CreateOrderParam;
 import com.godfunc.modules.merchant.service.MerchantService;
@@ -24,6 +28,7 @@ import com.godfunc.modules.merchant.service.OrderLogService;
 import com.godfunc.modules.merchant.service.OrderService;
 import com.godfunc.modules.security.util.SecurityUser;
 import com.godfunc.modules.sys.enums.SuperManagerEnum;
+import com.godfunc.modules.sys.model.UserDetail;
 import com.godfunc.param.PayOrderParam;
 import com.godfunc.result.ApiCodeMsg;
 import com.godfunc.service.CreateOrderService;
@@ -32,14 +37,20 @@ import com.godfunc.util.Assert;
 import com.godfunc.util.IpUtils;
 import com.godfunc.util.SignUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -137,6 +148,33 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         payOrder.setSign(SignUtils.rsa2Sign(payOrder, param.getPrivateKey()));
         PayOrderDTO payOrderDTO = createOrderService.create(false, payOrder, param.getCreateUrl());
         return new CreateOrderDTO(payOrderDTO.getOutTradeNo(), payOrderDTO.getTradNo(), payOrderDTO.getPayUrl(), payOrderDTO.getExpiredTime());
+    }
+
+    @Override
+    public void export(LocalDateTime startTime, LocalDateTime endTime, String merchantCode, HttpServletResponse response) {
+        UserDetail user = SecurityUser.getUser();
+        Merchant merchant = merchantService.getByUserId(user.getId());
+        if (user.getSuperManager() != SuperManagerEnum.SUPER_MANAGER.getValue()) {
+            merchantCode = merchant.getCode();
+        }
+        List<Order> list = list(Wrappers.<Order>lambdaQuery()
+                .eq(StringUtils.isNotBlank(merchantCode), Order::getMerchantCode, merchantCode)
+                .between(Order::getCreateTime, startTime, endTime));
+        // TODO test
+        try {
+            if (CollectionUtils.isNotEmpty(list)) {
+                response.setContentType("application/vnd.ms-excel");
+                response.setCharacterEncoding("utf-8");
+                String fileName = URLEncoder.encode("订单（" + startTime.format(DateTimeFormatter.ofPattern(CommonConstant.DATETIME_FORMAT))
+                        + "到"
+                        + endTime.format(DateTimeFormatter.ofPattern(CommonConstant.DATETIME_FORMAT))
+                        + ")", "UTF-8");
+                response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xlsx");
+                EasyExcel.write(response.getOutputStream()).sheet("订单").doWrite(list.parallelStream().map(OrderExcel::new).collect(Collectors.toList()));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean updateStatus(Long id, Integer oldStatus, Integer newStatus) {

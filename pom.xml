@@ -32,6 +32,7 @@
         <jsoup.version>1.13.1</jsoup.version>
         <jBCrypt.version>0.4.3</jBCrypt.version>
         <jwt.version>0.9.1</jwt.version>
+        <easyexcel.version>3.0.3</easyexcel.version>
         <spring-cloud-alibaba.version>2.2.6.RELEASE</spring-cloud-alibaba.version>
     </properties>
 
@@ -90,6 +91,11 @@
                 <groupId>com.github.axet</groupId>
                 <artifactId>kaptcha</artifactId>
                 <version>${kaptcha.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel</artifactId>
+                <version>${easyexcel.version}</version>
             </dependency>
             <!-- Token生成与解析-->
             <dependency>

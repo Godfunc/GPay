@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.godfunc.enums.OrderStatusEnum;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -102,5 +103,22 @@ public class Order implements Serializable {
     private LocalDateTime updateTime;
     @TableField(exist = false)
     private OrderDetail detail;
+
+
+    public String resolverStatus(Integer status) {
+        if (status == OrderStatusEnum.CREATED.getValue()) {
+            return "已下单";
+        } else if (status == OrderStatusEnum.SCAN.getValue()) {
+            return "已扫码";
+        } else if (status == OrderStatusEnum.PAID.getValue()) {
+            return "已支付";
+        } else if (status == OrderStatusEnum.FINISH.getValue()) {
+            return "已完成";
+        } else if (status == OrderStatusEnum.EXPIRED.getValue()) {
+            return "订单取消";
+        } else {
+            return "未知状态";
+        }
+    }
 
 }

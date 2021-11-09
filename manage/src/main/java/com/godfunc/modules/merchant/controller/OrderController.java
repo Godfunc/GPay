@@ -86,4 +86,13 @@ public class OrderController {
                                          HttpServletResponse response) {
         return R.ok(orderService.createOrder(param, request, response));
     }
+
+    @GetMapping("export")
+    @LogRecord("导出")
+    @ApiOperation("导出")
+    @PreAuthorize("hasAuthority('merchant:order:export')")
+    public void export(@RequestParam LocalDateTime startTime, @RequestParam LocalDateTime endTime,
+                       @RequestParam(required = false) String merchantCode, HttpServletResponse response) {
+        orderService.export(startTime, endTime, merchantCode, response);
+    }
 }

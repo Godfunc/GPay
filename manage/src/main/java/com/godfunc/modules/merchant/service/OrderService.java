@@ -22,4 +22,6 @@ public interface OrderService extends IService<Order> {
     Boolean notifyMerchant(Long id);
 
     CreateOrderDTO createOrder(CreateOrderParam param, HttpServletRequest request, HttpServletResponse response);
+
+    void export(LocalDateTime startTime, LocalDateTime endTime, String merchantCode, HttpServletResponse response);
 }

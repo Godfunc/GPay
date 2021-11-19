@@ -1,0 +1,23 @@
+server:
+  port: 9000
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: gpay-api
+          uri: lb://gpay-api
+          predicates:
+            - Path=/api/**
+        - id: gpay-manage
+          uri: lb://gpay-manage
+          predicates:
+            - Path=/manage/**
+        - id: gpay-notify
+          uri: lb://gpay-notify
+          predicates:
+            - Path=/notify/**

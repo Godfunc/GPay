@@ -41,6 +41,7 @@
         <module>common</module>
         <module>consumer</module>
         <module>manage</module>
+        <module>cloud</module>
     </modules>
 
     <dependencyManagement>

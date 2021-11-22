@@ -2,14 +2,14 @@ spring:
   cloud:
     nacos:
       config:
-        server-addr: 192.168.31.62:8848
+        server-addr: node1:8848,node2:8848,node3:8848
         namespace: fbfeb43d-481a-41fd-9fd3-45453f7cf6d9
       discovery:
-        server-addr: 192.168.31.61:8848
+        server-addr: node1:8848,node2:8848,node3:8848
         namespace: fbfeb43d-481a-41fd-9fd3-45453f7cf6d9
 dubbo:
   registry:
-    address: 192.168.31.61:8848,192.168.31.62:8848,192.168.31.63:8848
+    address: node1:8848,node2:8848,node3:8848
     parameters:
       namespace: 2ee97429-8803-4b9c-95e6-1110ca72ae5b
 log:

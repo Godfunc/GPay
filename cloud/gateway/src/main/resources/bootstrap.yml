@@ -4,6 +4,16 @@ spring:
       config:
         file-extension: yaml
         group: GPay
+        shared-configs:
+          - data-id: database.${spring.cloud.nacos.config.file-extension}
+            group: common
+            refresh: true
+          - data-id: mybatis.${spring.cloud.nacos.config.file-extension}
+            group: common
+            refresh: true
+          - data-id: redis.${spring.cloud.nacos.config.file-extension}
+            group: common
+            refresh: true
       discovery:
         group: GPay
   application:

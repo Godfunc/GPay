@@ -3,6 +3,10 @@ server:
 spring:
   application:
     name: gateway
+  datasource:
+    url: jdbc:mysql://node1:3306/gpay?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
   cloud:
     gateway:
       discovery:
@@ -21,3 +25,9 @@ spring:
           uri: lb://gpay-notify
           predicates:
             - Path=/notify/**
+mybatis-plus:
+  global-config:
+    workerId: 8
+    dataCenterId: 1
+
+

@@ -43,8 +43,9 @@ public class MenuLayoutServiceTest {
                 null, "系统功能", "system", ++sort, MenuStatusEnum.ENABLE.getValue());
         menuService.save(systemLayout);
         createUser(systemLayout.getId());
-        createChannel(systemLayout.getId());
-        createAccount(systemLayout.getId());
+        createRole(systemLayout.getId());
+        createLog(systemLayout.getId());
+        createMenu(systemLayout.getId());
         return true;
     }
 
@@ -275,8 +276,8 @@ public class MenuLayoutServiceTest {
 
     private boolean createOrder() {
         Menu orderLayout = new Menu(0L, "/order", "Layout", MenuTypeEnum.MENU.getValue(),
-                null, "订单管理", false, null, true,
-                null, "订单管理", "log", ++sort, MenuStatusEnum.ENABLE.getValue());
+                null, "订单", false, null, true,
+                null, "订单", "log", ++sort, MenuStatusEnum.ENABLE.getValue());
         menuService.save(orderLayout);
         Menu orderRoute = new Menu(orderLayout.getId(), "order", "order/index", MenuTypeEnum.MENU.getValue(),
                 null, "订单管理", true, null, true,

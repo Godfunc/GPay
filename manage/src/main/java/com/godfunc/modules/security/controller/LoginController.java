@@ -1,11 +1,16 @@
 package com.godfunc.modules.security.controller;
 
+import com.godfunc.modules.security.dto.LoginDTO;
+import com.godfunc.modules.security.param.LoginParam;
 import com.godfunc.modules.security.service.CaptchaService;
+import com.godfunc.result.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -35,5 +40,12 @@ public class LoginController {
         ServletOutputStream out = response.getOutputStream();
         ImageIO.write(image, "jpg", out);
         out.close();
+    }
+
+    // 生成swagger接口文档用了，没啥用，根本不会被访问到，会被UsernamePasswordJsonAuthenticationFilter拦截掉并处理返回
+    @PostMapping("login")
+    @ApiOperation("登录")
+    public R<LoginDTO> login(@RequestBody LoginParam param) {
+        return null;
     }
 }

@@ -2,8 +2,9 @@ package com.godfunc.modules.security.service.impl;
 
 import com.godfunc.modules.security.service.CaptchaService;
 import com.google.code.kaptcha.Producer;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.awt.image.BufferedImage;
@@ -17,29 +18,30 @@ import java.util.concurrent.TimeUnit;
 public class CaptchaServiceImpl implements CaptchaService {
 
     private final Producer producer;
-    private final StringRedisTemplate redisTemplate;
 
-    public CaptchaServiceImpl(Producer producer, StringRedisTemplate redisTemplate) {
+    public CaptchaServiceImpl(Producer producer) {
         this.producer = producer;
-        this.redisTemplate = redisTemplate;
     }
 
     /**
      * 有需要可以替换成redis
      */
+    Cache<String, String> captchaCache = CacheBuilder.newBuilder().maximumSize(1000).expireAfterAccess(5, TimeUnit.MINUTES).build();
 
     @Override
     public BufferedImage create(String uuid) {
         String code = producer.createText();
-        redisTemplate.opsForValue().set(uuid, code, 5, TimeUnit.MINUTES);
-        return producer.createImage(code);
+        String mathStr = code.substring(0, code.lastIndexOf("=") + 1);
+        //获取运算式结果
+        String result = code.substring(code.lastIndexOf("=") + 1);
+        captchaCache.put(uuid, result);
+        return producer.createImage(mathStr + "?");
     }
 
     @Override
     public boolean validate(String uuid, String code) {
-        String text = redisTemplate.opsForValue().get(uuid);
+        String text = captchaCache.getIfPresent(uuid);
         if (StringUtils.isNotBlank(text)) {
-            redisTemplate.delete(uuid);
             return code.equalsIgnoreCase(text);
         }
         return false;

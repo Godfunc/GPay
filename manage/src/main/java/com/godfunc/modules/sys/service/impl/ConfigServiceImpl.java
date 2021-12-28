@@ -13,46 +13,50 @@ import com.godfunc.modules.sys.param.ConfigEditParam;
 import com.godfunc.modules.sys.service.ConfigService;
 import com.godfunc.util.Assert;
 import com.godfunc.util.ConvertUtils;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CachePut;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
+ * <p>
+ * 配置表 服务实现类
+ * </p>
+ *
  * @author Godfunc
  * @since 2019-12-01
  */
 @Service
-@CacheConfig(cacheNames = "config")
 public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config> implements ConfigService {
 
     @Override
     public PageDTO<ConfigDTO> getPage(Long page, Long limit, String name) {
         IPage<ConfigDTO> resultPage = new Page<>(page, limit);
-        List<ConfigDTO> list = this.baseMapper.selectCustomPage(resultPage, name);
-        resultPage.setRecords(list);
+        List<Config> list = this.baseMapper.selectCustomPage(resultPage, name);
+        resultPage.setRecords(ConvertUtils.source2Target(list, ConfigDTO.class));
         return new PageDTO<ConfigDTO>(resultPage);
     }
 
     @Override
     public Long add(ConfigAddParam param) {
-        Assert.isTrue(count(Wrappers.<Config>lambdaQuery().eq(Config::getName, param.getName())) >= 1, "配置名已存在");
-        Config config = ConvertUtils.source2Target(param, Config.class);
+        Config config = getOne(Wrappers.<Config>lambdaQuery().eq(Config::getName, param.getName()));
+        Assert.isNotNull(config, "配置名称[{}]已存在", param.getName());
+        config = new Config();
+        BeanUtils.copyProperties(param, config);
         save(config);
         return config.getId();
     }
 
     @Override
-    @CachePut(key = "#param.name")
     public Long edit(ConfigEditParam param) {
-        Config config = ConvertUtils.source2Target(param, Config.class);
+        Config config = getOne(Wrappers.<Config>lambdaQuery().ne(Config::getId, param.getId()).eq(Config::getName, param.getName()));
+        Assert.isNotNull(config, "配置名称[{}]已存在", param.getName());
+        config = getById(param.getId());
+        Assert.isNull(config, "当前配置已不存");
+        config.setName(param.getName());
+        config.setValue(param.getValue());
+        config.setRemark(param.getRemark());
         updateById(config);
         return config.getId();
-    }
-
-    @Override
-    public Boolean removeDate(Long id) {
-        return removeById(id);
     }
 }

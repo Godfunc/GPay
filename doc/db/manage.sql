@@ -1,8 +1,7 @@
 CREATE DATABASE `gpay`;
 USE `gpay`;
-
-drop table if exists mg_dict;
-create table mg_dict
+drop table if exists mg_config;
+create table mg_config
 (
     id          bigint(20)   not null comment '主键',
     name        varchar(512) not null comment '名称',
@@ -13,10 +12,10 @@ create table mg_dict
     create_time datetime     not null comment '创建时间',
     update_time datetime   default null comment '更新时间',
     primary key (id),
-    unique uk_name (name),
+    index idx_name (name),
     index idx_create_time (create_time)
 ) engine = innodb
-  default charset = utf8mb4 comment ='字典表';
+  default charset = utf8mb4 comment ='配置表';
 
 drop table if exists mg_log_operation;
 create table mg_log_operation

@@ -31,7 +31,7 @@ public class MenuLayoutServiceTest {
         createChannel();
         createOrder();
         createSystem();
-        Menu swagger = new Menu(0L, "http://localhost:9568/manage/swagger-ui.html", "Layout", MenuTypeEnum.MENU.getValue(),
+        Menu swagger = new Menu(0L, "http://localhost:9568/swagger-ui/index.html", "Layout", MenuTypeEnum.MENU.getValue(),
                 null, "接口文档", false, null, true,
                 null, "接口文档", "link", ++sort, MenuStatusEnum.ENABLE.getValue());
         return false;
@@ -46,6 +46,7 @@ public class MenuLayoutServiceTest {
         createRole(systemLayout.getId());
         createLog(systemLayout.getId());
         createMenu(systemLayout.getId());
+        createConfig(systemLayout.getId());
         return true;
     }
 
@@ -121,6 +122,26 @@ public class MenuLayoutServiceTest {
                 null, "查询", false, "mg:log:page", true,
                 null, null, null, 0, MenuStatusEnum.ENABLE.getValue());
         return menuService.saveBatch(Arrays.asList(selectBtn));
+    }
+
+    public boolean createConfig(Long layoutId) {
+        Menu roleRoute = new Menu(layoutId, "config", "config/index", MenuTypeEnum.MENU.getValue(),
+                null, "配置管理", false, null, true,
+                null, "配置管理", "nested", 4, MenuStatusEnum.ENABLE.getValue());
+        menuService.save(roleRoute);
+        Menu selectBtn = new Menu(roleRoute.getId(), null, "Button", MenuTypeEnum.BUTTON.getValue(),
+                null, "查询", false, "mg:config:page", true,
+                null, null, null, 0, MenuStatusEnum.ENABLE.getValue());
+        Menu addBtn = new Menu(roleRoute.getId(), null, "Button", MenuTypeEnum.BUTTON.getValue(),
+                null, "新增", false, "mg:config:add", true,
+                null, null, null, 0, MenuStatusEnum.ENABLE.getValue());
+        Menu editBtn = new Menu(roleRoute.getId(), null, "Button", MenuTypeEnum.BUTTON.getValue(),
+                null, "修改", false, "mg:config:edit", true,
+                null, null, null, 0, MenuStatusEnum.ENABLE.getValue());
+        Menu removeBtn = new Menu(roleRoute.getId(), null, "Button", MenuTypeEnum.BUTTON.getValue(),
+                null, "删除", false, "mg:config:remove", true,
+                null, null, null, 0, MenuStatusEnum.ENABLE.getValue());
+        return menuService.saveBatch(Arrays.asList(selectBtn, addBtn, editBtn, removeBtn));
     }
 
 

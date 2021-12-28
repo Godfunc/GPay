@@ -3,6 +3,7 @@ package com.godfunc.modules.sys.dto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -12,16 +13,17 @@ import java.time.LocalDateTime;
  * @email godfunc@outlook.com
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 @ApiModel("配置分页")
 public class ConfigDTO implements Serializable {
 
-    @ApiModelProperty("配置id")
+    @ApiModelProperty("id")
     private Long id;
 
-    @ApiModelProperty("配置名")
+    @ApiModelProperty("名称")
     private String name;
 
-    @ApiModelProperty("配置值")
+    @ApiModelProperty("值")
     private String value;
 
     @ApiModelProperty("备注")

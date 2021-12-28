@@ -19,23 +19,23 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-
 /**
  * <p>
- * 角色表 前端控制器
+ * 配置表 前端控制器
  * </p>
  *
  * @author Godfunc
  * @since 2019-12-01
  */
 @RestController
-@LogRecord("系统配置")
-@Api(tags = "系统配置")
-@RequestMapping("config")
+@LogRecord("配置")
+@Api(tags = "配置")
+@RequestMapping("/config")
 @RequiredArgsConstructor
 public class ConfigController {
 
     private final ConfigService configService;
+
 
     @GetMapping("page/{page}/{limit}")
     @LogRecord(LogRecordConstant.PAGE)
@@ -44,7 +44,7 @@ public class ConfigController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "page", value = "当前页码", paramType = "path", required = true, dataType = "int", dataTypeClass = Integer.class),
             @ApiImplicitParam(name = "limit", value = "每页条数", paramType = "path", required = true, dataType = "int", dataTypeClass = Integer.class),
-            @ApiImplicitParam(name = "name", value = "角色名", paramType = "query", dataType = "String", dataTypeClass = String.class)
+            @ApiImplicitParam(name = "name", value = "名称", paramType = "query", dataType = "String", dataTypeClass = String.class)
     })
     public R<PageDTO<ConfigDTO>> page(@PathVariable Long page, @PathVariable Long limit, @RequestParam(required = false) String name) {
         return R.ok(configService.getPage(page, limit, name));
@@ -70,9 +70,8 @@ public class ConfigController {
     @LogRecord(LogRecordConstant.REMOVE)
     @ApiOperation(LogRecordConstant.REMOVE)
     @PreAuthorize("hasAuthority('mg:config:remove')")
-    @ApiImplicitParam(name = "id", value = "配置id", paramType = "path", required = true, dataType = "Long", dataTypeClass = Long.class)
+    @ApiImplicitParam(name = "id", value = "id", paramType = "path", required = true, dataType = "Long", dataTypeClass = Long.class)
     public R<Boolean> remove(@PathVariable Long id) {
-        return R.ok(configService.removeDate(id));
+        return R.ok(configService.removeById(id));
     }
-
 }

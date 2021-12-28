@@ -12,11 +12,11 @@ import com.godfunc.modules.sys.param.ConfigEditParam;
  * @email godfunc@outlook.com
  */
 public interface ConfigService extends IService<Config> {
+
     PageDTO<ConfigDTO> getPage(Long page, Long limit, String name);
 
     Long add(ConfigAddParam param);
 
     Long edit(ConfigEditParam param);
 
-    Boolean removeDate(Long id);
 }

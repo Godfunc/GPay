@@ -143,35 +143,3 @@ create table mg_user_token
     unique uk_token (token)
 ) engine = innodb
   default charset = utf8mb4 comment ='用户token表';
-
-
--- api module tables
--- user table
-create table t_user
-(
-    id          bigint(20)           not null comment '主键',
-    username    varchar(128)         not null comment '用户名',
-    password    varchar(128)         not null comment '密码',
-    mobile      varchar(16)          not null comment '手机号',
-    status      tinyint(2) default 1 not null comment '用户状态 0停用 1启用',
-    create_time datetime             not null comment '创建时间',
-    update_time datetime             null comment '创建时间',
-    rm_tag      tinyint(2) default 0 not null comment '删除标记 0正常 1删除',
-    primary key (id),
-    key idx_create_time (create_time)
-) engine = innodb
-  default charset = utf8mb4 comment '用户表';
-
-
-create table t_user_token
-(
-    id          bigint(20)   not null comment '主键',
-    user_id     bigint(20)   not null comment '用户id',
-    token       varchar(512) not null comment 'token',
-    expire_time datetime     not null comment '过期时间',
-    create_time datetime     not null comment '创建时间',
-    primary key (id),
-    unique index (user_id),
-    unique key token (token)
-) engine = innodb
-  default charset = utf8mb4 comment '用户token表';

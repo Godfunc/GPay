@@ -11,7 +11,7 @@ public enum ConfigNameEnum {
      */
     ORDER_ERROR_PAGE("ORDER_ERROR_PAGE"),
     /**
-     * 订单有效时间
+     * 订单有效时间 单位秒
      */
     ORDER_EXPIRED_TIME("ORDER_EXPIRED_TIME");
 

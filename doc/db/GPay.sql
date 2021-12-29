@@ -16,7 +16,7 @@ create table merchant
     update_time      datetime     null comment '更新时间',
     rm_tag           tinyint(2)   not null default 0 comment '删除标识 0正常 1删除',
     primary key (id),
-    unique uq_user_id (user_id),
+    unique uq_user_id (user_id, rm_tag),
     unique uq_code (code),
     index idx_create_time (create_time)
 ) comment '商户信息';

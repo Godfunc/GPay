@@ -26,6 +26,7 @@ import com.godfunc.util.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -99,11 +100,12 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantMapper, Merchant> i
     }
 
     @Override
+    @Transactional
     public boolean removeData(Long id) {
+        Merchant merchant = getById(id);
         if (SecurityUser.getUser().getSuperManager() == SuperManagerEnum.SUPER_MANAGER.getValue() || SecurityUser.checkRole(RoleNameEnum.MANAGE.getValue())) {
 
         } else if (SecurityUser.checkRole(RoleNameEnum.AGENT.getValue())) {
-            Merchant merchant = getById(id);
             Assert.isNull(merchant, "删除的商户不存在或已被删除");
             Merchant agent = getByUserId(SecurityUser.getUserId());
             if (Objects.isNull(agent) || !agent.getId().equals(merchant.getAgentId())) {
@@ -113,6 +115,9 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantMapper, Merchant> i
             throw new GException(ApiCodeMsg.NOPERMISSION);
         } else {
             throw new GException(ApiCodeMsg.NOPERMISSION);
+        }
+        if (merchant != null) {
+            userService.removeById(merchant.getUserId());
         }
         return removeById(id);
     }

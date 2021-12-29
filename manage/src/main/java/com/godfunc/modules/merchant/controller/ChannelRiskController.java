@@ -49,8 +49,8 @@ public class ChannelRiskController {
     }
 
     @GetMapping("listByAccount/{channelAccountId}")
-    @LogRecord("listByAccount")
-    @ApiOperation("listByAccount")
+    @LogRecord("获取账号风控列表")
+    @ApiOperation("获取账号风控列表")
     @PreAuthorize("hasAuthority('merchant:channelRisk:listByAccount')")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "channelAccountId", value = "渠道账号id", paramType = "query", dataType = "Long", dataTypeClass = Long.class)
@@ -60,8 +60,8 @@ public class ChannelRiskController {
     }
 
     @GetMapping("listByChannel/{channelId}")
-    @LogRecord("listByChannel")
-    @ApiOperation("listByChannel")
+    @LogRecord("获取渠道风控列表")
+    @ApiOperation("获取渠道风控列表")
     @PreAuthorize("hasAuthority('merchant:channelRisk:listByChannel')")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "channelId", value = "渠道子类id", paramType = "query", dataType = "Long", dataTypeClass = Long.class)

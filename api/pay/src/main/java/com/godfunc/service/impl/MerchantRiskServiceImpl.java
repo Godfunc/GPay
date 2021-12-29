@@ -51,7 +51,7 @@ public class MerchantRiskServiceImpl extends ServiceImpl<MerchantRiskMapper, Mer
 
     /**
      * 进行商户风控，对使用时间段、单笔金额等进行风控，不符合风控规则就抛出异常或者返回false
-     * 如果是抛出异常，将会直接返回给
+     * 如果是抛出异常，将会直接返回给客户端
      *
      * @param merchantRisk 风控规则
      * @param order        订单

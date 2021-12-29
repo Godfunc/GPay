@@ -72,7 +72,6 @@ public class OrderController {
     public R notifyMerchant(@PathVariable Long id) {
         if (orderService.notifyMerchant(id)) {
             return R.ok();
-
         }
         return R.fail("操作失败");
     }

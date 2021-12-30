@@ -61,6 +61,8 @@ public class CreateOrderServiceImpl implements CreateOrderService {
 
     @Value("${goPayUrl}")
     private String goPayUrl;
+    @Value("${orderExpiredTime}")
+    private Long orderExpiredTime;
 
     @Override
     public PayOrderDTO create(PayOrderParam param, HttpServletRequest request) {
@@ -302,10 +304,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     }
 
     private void setOrderExpireTime(OrderDetail detail) {
-        Config expireConfig = configService.getByName(ConfigNameEnum.ORDER_EXPIRED_TIME.getValue());
-        Assert.isNull(expireConfig, "初始化参数未设置，请联系管理员");
-        Assert.isBlank(expireConfig.getValue(), "初始化参数value未设置完整，请联系管理员");
-        detail.setOrderExpiredTime(LocalDateTime.now().plusSeconds(Long.parseLong(expireConfig.getValue())));
+        detail.setOrderExpiredTime(LocalDateTime.now().plusSeconds(orderExpiredTime));
     }
 
     /**

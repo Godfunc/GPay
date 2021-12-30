@@ -17,3 +17,4 @@ mybatis-plus:
 
 goPayUrl: /goPay/
 fixChannelFloatMillis: 2000
+orderExpiredTime: 1200 # 订单过期时间 单位秒

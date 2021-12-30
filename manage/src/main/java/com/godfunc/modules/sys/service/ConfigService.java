@@ -19,4 +19,5 @@ public interface ConfigService extends IService<Config> {
 
     Long edit(ConfigEditParam param);
 
+    boolean removeData(Long id);
 }

@@ -14,6 +14,8 @@ import com.godfunc.modules.sys.service.ConfigService;
 import com.godfunc.util.Assert;
 import com.godfunc.util.ConvertUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +29,7 @@ import java.util.List;
  * @since 2019-12-01
  */
 @Service
+@CacheConfig(cacheNames = "config")
 public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config> implements ConfigService {
 
     @Override
@@ -48,6 +51,7 @@ public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config> impleme
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     public Long edit(ConfigEditParam param) {
         Config config = getOne(Wrappers.<Config>lambdaQuery().ne(Config::getId, param.getId()).eq(Config::getName, param.getName()));
         Assert.isNotNull(config, "配置名称[{}]已存在", param.getName());
@@ -58,5 +62,11 @@ public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config> impleme
         config.setRemark(param.getRemark());
         updateById(config);
         return config.getId();
+    }
+
+    @Override
+    @CacheEvict(allEntries = true)
+    public boolean removeData(Long id) {
+        return removeById(id);
     }
 }

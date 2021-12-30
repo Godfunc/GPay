@@ -9,11 +9,7 @@ public enum ConfigNameEnum {
     /**
      * 订单错误页
      */
-    ORDER_ERROR_PAGE("ORDER_ERROR_PAGE"),
-    /**
-     * 订单有效时间 单位秒
-     */
-    ORDER_EXPIRED_TIME("ORDER_EXPIRED_TIME");
+    ORDER_ERROR_PAGE("ORDER_ERROR_PAGE");
 
     private final String value;
 

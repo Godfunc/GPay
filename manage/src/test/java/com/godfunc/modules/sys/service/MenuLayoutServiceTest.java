@@ -317,7 +317,7 @@ public class MenuLayoutServiceTest {
                 null, "日志", false, "merchant:orderLog:page", true,
                 null, null, null, 3, MenuStatusEnum.ENABLE.getValue());
         Menu createOrder = new Menu(orderRoute.getId(), null, "Button", MenuTypeEnum.BUTTON.getValue(),
-                null, "下单", false, "merchant:order:createOrder", true,
+                null, "下单", false, "merchant:order:createOrder,merchant:payCategory:list", true,
                 null, null, null, 4, MenuStatusEnum.ENABLE.getValue());
         return menuService.saveBatch(Arrays.asList(selectBtn, orderNotify, orderPaid, orderLog, createOrder));
     }

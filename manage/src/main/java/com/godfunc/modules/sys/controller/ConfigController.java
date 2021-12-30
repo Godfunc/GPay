@@ -72,6 +72,6 @@ public class ConfigController {
     @PreAuthorize("hasAuthority('mg:config:remove')")
     @ApiImplicitParam(name = "id", value = "id", paramType = "path", required = true, dataType = "Long", dataTypeClass = Long.class)
     public R<Boolean> remove(@PathVariable Long id) {
-        return R.ok(configService.removeById(id));
+        return R.ok(configService.removeData(id));
     }
 }

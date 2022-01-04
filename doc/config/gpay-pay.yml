@@ -16,5 +16,5 @@ mybatis-plus:
     dataCenterId: 1
 
 goPayUrl: /goPay/
-fixChannelFloatMillis: 2000
+fixChannelFloatMillis: 2000 # 订单过期后，延时多久回滚风控限额 单位毫秒
 orderExpiredTime: 1200 # 订单过期时间 单位秒

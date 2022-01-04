@@ -29,10 +29,10 @@ public interface PayService {
     boolean checkOrder(Order order);
 
     // 检查渠道状态
-    boolean checkChannel(Order order);
+    boolean checkChannelAndRollbackRisk(Order order);
 
     /**
-     * 处理接口响应
+     * 处理接口响应 尽量捕获该方法中的异常
      *
      * @param payInfo
      * @param request

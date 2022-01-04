@@ -14,4 +14,4 @@ mybatis-plus:
     workerId: 2
     dataCenterId: 1
 
-orderSuccessCacheMinutes: 30 # 需要比订单过期时间长
+orderSuccessCacheMinutes: 30 # 接收到支付成功通知后，将订单保存到缓存中，尽量保证比订单过期时间长 单位分钟

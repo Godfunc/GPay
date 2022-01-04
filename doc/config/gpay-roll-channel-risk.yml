@@ -12,4 +12,4 @@ mybatis-plus:
     workerId: 6
     dataCenterId: 1
 
-fixChannelRiskCacheMinutes: 20
+fixChannelRiskCacheMinutes: 20 # 因订单未支付过期，导致风控金额回滚，回滚成功之后将回滚成功的订单缓存多久（防止重复操作） 单位分钟

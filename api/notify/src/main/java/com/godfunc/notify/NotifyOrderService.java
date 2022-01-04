@@ -90,6 +90,7 @@ public class NotifyOrderService {
         // 过期订单收到支付通知进行 自动修复
         if (order.getStatus() == OrderStatusEnum.EXPIRED.getValue()) {
             currentStatus = OrderStatusEnum.EXPIRED.getValue();
+            // 修正渠道和子账号的每日金额，可能存在跨日的情况（暂时忽略）
             if (detail.getPayChannelDayMax() != null) {
                 channelRiskCache.addTodayAmount(detail.getPayChannelId(), order.getAmount());
             }

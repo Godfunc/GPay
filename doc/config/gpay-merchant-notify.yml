@@ -13,4 +13,4 @@ mybatis-plus:
     workerId: 3
     dataCenterId: 1
 
-firstDelayNotifyMillis: 5000
+firstDelayNotifyMillis: 5000 # 第一次通知失败后的延时时间 单位毫秒

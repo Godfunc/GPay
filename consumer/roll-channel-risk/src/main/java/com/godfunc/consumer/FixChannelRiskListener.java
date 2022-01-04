@@ -33,7 +33,7 @@ public class FixChannelRiskListener {
     private Long fixChannelRiskCacheMinutes;
 
     /**
-     * 渠道风控修复：订单过期未支付
+     * 渠道风控修复：订单过期未支付 （可重入）
      *
      * @param fixChannelRisk
      */

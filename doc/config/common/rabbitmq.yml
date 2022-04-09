@@ -3,6 +3,8 @@ spring:
     addresses: 192.168.31.61,192.168.31.62,192.168.31.63
     username: admin
     password: admin
+    rabbitmq:
+      publisher-confirm-type: correlated # 开启发布确认回调
     listener:
       simple:
         concurrency: 2

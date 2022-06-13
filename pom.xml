@@ -33,6 +33,7 @@
         <jBCrypt.version>0.4.3</jBCrypt.version>
         <jwt.version>0.9.1</jwt.version>
         <spring-cloud-alibaba.version>2.2.6.RELEASE</spring-cloud-alibaba.version>
+        <pf4j-spring.version>0.7.0</pf4j-spring.version>
     </properties>
 
     <modules>
@@ -40,6 +41,7 @@
         <module>common</module>
         <module>consumer</module>
         <module>manage</module>
+        <module>api-interface</module>
     </modules>
 
     <dependencyManagement>
@@ -121,6 +123,12 @@
                 <groupId>de.svenkubiak</groupId>
                 <artifactId>jBCrypt</artifactId>
                 <version>${jBCrypt.version}</version>
+            </dependency>
+            <!-- pf4j 插件-->
+            <dependency>
+                <groupId>org.pf4j</groupId>
+                <artifactId>pf4j-spring</artifactId>
+                <version>${pf4j-spring.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -12,6 +12,12 @@
     <artifactId>common</artifactId>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.godfunc</groupId>
+            <artifactId>api-interface</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
         <!--utils-->
         <dependency>
             <groupId>org.projectlombok</groupId>

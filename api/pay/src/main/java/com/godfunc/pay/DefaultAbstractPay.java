@@ -64,6 +64,25 @@ public abstract class DefaultAbstractPay implements PayService {
     @Value("${fixChannelFloatMillis}")
     private Long fixChannelFloatMillis;
 
+    /**
+     * 1. 检查修改订单状态为已扫码
+     * 2. 检查订单是否过期
+     * 3. 锁住当前当前订单的请求
+     * 4. 检查渠道子类和账号的每个限额（修改已使用金额）
+     * 5. 获取advices
+     * 6. 获取客户端信息，存储到订单中
+     * 7. 执行advice前置处理
+     * 8. 执行支付请求
+     * 9. 更新订单支付信息
+     * 10. 将渠道子类和账号push到限额延时回滚队列中
+     * 11. 支付请求异常，进行渠道子类和账号限额回滚
+     * 12. 执行advice的后置处理
+     * 13. 响应信息给用户
+     * 14. 进行当前订单的锁释放
+     * @param order
+     * @param request
+     * @param response
+     */
     @Override
     public void pay(Order order, HttpServletRequest request, HttpServletResponse response) {
         PayInfoDTO payInfo = new PayInfoDTO();
@@ -89,6 +108,9 @@ public abstract class DefaultAbstractPay implements PayService {
 
             try {
                 payInfo = doPay(order);
+                Assert.isNull(payInfo, "请求支付失败，请稍后再试");
+                Assert.isBlank(payInfo.getPayUrl(), "请求支付失败，请稍后再试");
+
                 order.setTradeNo(payInfo.getTradeNo());
                 order.setPayStr(payInfo.getPayUrl());
                 // 更新订单支付信息

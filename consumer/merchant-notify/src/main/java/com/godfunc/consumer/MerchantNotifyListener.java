@@ -55,6 +55,7 @@ public class MerchantNotifyListener {
             log.error("通知商户异常", e);
         }
         try {
+            // false 不进行批量应答
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
         } catch (IOException e) {
             log.error("应答异常 orderNotify={}，exchange={}, routingKey={} {}",

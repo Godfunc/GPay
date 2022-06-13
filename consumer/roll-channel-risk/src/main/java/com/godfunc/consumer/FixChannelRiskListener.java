@@ -34,7 +34,7 @@ public class FixChannelRiskListener {
 
     /**
      * 渠道风控修复：订单过期未支付 （可重入）
-     *
+     * 使用redis处理消息重复问题（场景：如果业务处理完了，但是ack失败了）
      * @param fixChannelRisk
      */
     @RabbitListener(queues = RabbitMQConstant.DelayFixChannelRisk.DELAYED_FIX_CHANNEL_RISK_QUEUE, ackMode = "MANUAL")
@@ -53,6 +53,7 @@ public class FixChannelRiskListener {
             log.error("渠道风控金额恢复处理异常", e);
         }
         try {
+            // false 不进行批量应答
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
         } catch (IOException e) {
             log.error("应答异常 fixChannelRisk={}，exchange={}, routingKey={} {}",

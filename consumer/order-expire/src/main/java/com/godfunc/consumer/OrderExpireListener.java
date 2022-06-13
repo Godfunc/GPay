@@ -39,9 +39,11 @@ public class OrderExpireListener {
                 boolean flag = orderService.expired(orderExpire.getId(), OrderStatusEnum.CREATED.getValue(), OrderStatusEnum.SCAN.getValue());
                 orderLogService.save(new OrderLog(orderExpire.getId(), orderExpire.getMerchantId(), orderExpire.getStatus(), OrderStatusEnum.EXPIRED.getValue(), OrderStatusLogReasonEnum.ORDER_DELAY_EXPIRED.getValue(), flag));
             } catch (Exception e) {
+                // TODO 添加到错误日志
                 e.printStackTrace();
             }
             try {
+                // false 不进行批量应答
                 channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
             } catch (IOException e) {
                 log.error("应答异常 orderExpire={}，exchange={}, routingKey={} {}",

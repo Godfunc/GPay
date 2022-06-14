@@ -8,12 +8,20 @@ import com.alipay.api.request.AlipayTradePrecreateRequest;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.godfunc.cache.ChannelRiskCache;
 import com.godfunc.constant.ApiConstant;
 import com.godfunc.constant.PayLogicalConstant;
 import com.godfunc.dto.PayInfoDTO;
 import com.godfunc.entity.Order;
 import com.godfunc.entity.OrderDetail;
 import com.godfunc.exception.GException;
+import com.godfunc.lock.OrderPayRequestLock;
+import com.godfunc.pay.advice.PayUrlRequestAdvice;
+import com.godfunc.pay.advice.PayUrlRequestAdviceFinder;
+import com.godfunc.producer.FixChannelRiskQueue;
+import com.godfunc.service.OrderService;
+import com.godfunc.service.PayChannelAccountService;
+import com.godfunc.service.PayChannelService;
 import com.godfunc.util.AmountUtil;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -21,23 +29,32 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
 @Slf4j
 @Service(ApiConstant.PAY_SERVICE_PREFIX + PayLogicalConstant.NORMAL)
-@RequiredArgsConstructor
 public class NormalPayService extends DefaultAbstractPay {
 
-    private final ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
+
+    public NormalPayService(RestTemplate restTemplate, PayChannelService payChannelService, PayChannelAccountService payChannelAccountService,
+                            ChannelRiskCache channelRiskCache, OrderService orderService, OrderPayRequestLock orderPayRequestLock,
+                            PayUrlRequestAdviceFinder payUrlRequestAdviceFinder, FixChannelRiskQueue fixChannelRiskQueue,
+                            List<PayUrlRequestAdvice> payUrlRequestAdvicesCacheList, ObjectMapper objectMapper) {
+        super(restTemplate, payChannelService, payChannelAccountService, channelRiskCache, orderService, orderPayRequestLock,
+                payUrlRequestAdviceFinder, fixChannelRiskQueue, payUrlRequestAdvicesCacheList);
+        this.objectMapper = objectMapper;
+    }
 
     @Override
     public PayInfoDTO doPay(Order order) {

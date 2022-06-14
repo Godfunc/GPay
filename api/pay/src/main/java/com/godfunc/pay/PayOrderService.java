@@ -1,17 +1,23 @@
 package com.godfunc.pay;
 
 import com.godfunc.constant.ApiConstant;
+import com.godfunc.dto.PayInfoDTO;
 import com.godfunc.entity.Order;
 import com.godfunc.entity.OrderDetail;
+import com.godfunc.pay.plugin.PluginPayServiceBuilder;
+import com.godfunc.plugin.BasePlugin;
 import com.godfunc.service.OrderDetailService;
 import com.godfunc.service.OrderService;
 import com.godfunc.util.Assert;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
+import org.pf4j.PluginManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * @author godfunc
@@ -26,15 +32,25 @@ public class PayOrderService {
     private final OrderDetailService orderDetailService;
     private final ApplicationContext applicationContext;
 
+    private final PluginManager pluginManager;
+
+    private final PluginPayServiceBuilder pluginPayServiceBuilder;
+
     public void goPay(String orderNo, HttpServletRequest request, HttpServletResponse response) {
         Order order = orderService.getByOrderNo(orderNo);
         Assert.isNull(order, "订单不存在");
         OrderDetail detail = orderDetailService.getByOrderId(order.getId());
         Assert.isNull(detail, "订单信息不全，请重新下单");
         order.setDetail(detail);
-        PayService payService = (PayService) applicationContext.getBean(ApiConstant.PAY_SERVICE_PREFIX + detail.getLogicalTag());
+        List<BasePlugin> extensions = pluginManager.getExtensions(BasePlugin.class, detail.getLogicalTag() + "Plugin");
+        PayService payService = null;
+        if (CollectionUtils.isNotEmpty(extensions)) {
+            BasePlugin basePlugin = extensions.get(0);
+            payService = pluginPayServiceBuilder.build(basePlugin);
+        } else {
+            payService = (PayService) applicationContext.getBean(ApiConstant.PAY_SERVICE_PREFIX + detail.getLogicalTag());
+        }
         Assert.isNull(payService, "不支持的支付类型");
-
         payService.pay(order, request, response);
     }
 }

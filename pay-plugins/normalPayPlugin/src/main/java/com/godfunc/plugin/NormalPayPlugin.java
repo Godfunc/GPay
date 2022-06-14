@@ -9,8 +9,8 @@ import com.alipay.api.response.AlipayTradePrecreateResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.godfunc.dto.PayInfoDTO;
-import com.godfunc.entity.OrderDetailTemp;
-import com.godfunc.entity.OrderTemp;
+import com.godfunc.entity.Order;
+import com.godfunc.entity.OrderDetail;
 import org.pf4j.PluginWrapper;
 
 import java.util.Map;
@@ -31,8 +31,8 @@ public class NormalPayPlugin extends BasePlugin {
     }
 
     @Override
-    public PayInfoDTO doPay(OrderTemp order) {
-        OrderDetailTemp detail = order.getDetail();
+    public PayInfoDTO doPay(Order order) {
+        OrderDetail detail = order.getDetail();
         AlipayConfig alipayConfig = new AlipayConfig();
         alipayConfig.setServerUrl(detail.getChannelCreateUrl());
         alipayConfig.setAppId(detail.getPayChannelAccountCode());

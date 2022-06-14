@@ -1,7 +1,7 @@
 package com.godfunc.plugin;
 
 import com.godfunc.dto.PayInfoDTO;
-import com.godfunc.entity.OrderTemp;
+import com.godfunc.entity.Order;
 import org.pf4j.Plugin;
 import org.pf4j.PluginWrapper;
 
@@ -26,7 +26,7 @@ public abstract class BasePlugin extends Plugin {
      * @param order
      * @return
      */
-    public abstract PayInfoDTO doPay(OrderTemp order);
+    public abstract PayInfoDTO doPay(Order order);
 
     /**
      * default handler response

@@ -8,8 +8,15 @@ import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class FixChannelRisk implements Serializable {
+
+
+    public FixChannelRisk(Long id, Long amount, Long payChannelId, Long payChannelAccountId) {
+        this.id = id;
+        this.amount = amount;
+        this.payChannelId = payChannelId;
+        this.payChannelAccountId = payChannelAccountId;
+    }
 
     private Long id;
     private Long amount;

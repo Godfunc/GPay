@@ -18,6 +18,7 @@ import com.godfunc.service.PayChannelService;
 import com.godfunc.util.Assert;
 import com.godfunc.util.IpUtils;
 import com.godfunc.util.UserAgentUtils;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -42,27 +43,28 @@ import java.util.List;
 @RefreshScope
 public abstract class DefaultAbstractPay implements PayService {
 
-    @Autowired
     protected RestTemplate restTemplate;
-    @Autowired
     protected PayChannelService payChannelService;
-    @Autowired
     protected PayChannelAccountService payChannelAccountService;
-    @Autowired
     protected ChannelRiskCache channelRiskCache;
-    @Autowired
     protected OrderService orderService;
-    @Autowired
     private OrderPayRequestLock orderPayRequestLock;
-    @Autowired
     private PayUrlRequestAdviceFinder payUrlRequestAdviceFinder;
-    @Autowired
     private FixChannelRiskQueue fixChannelRiskQueue;
 
     private List<PayUrlRequestAdvice> payUrlRequestAdvicesCacheList;
 
-    @Value("${fixChannelFloatMillis}")
-    private Long fixChannelFloatMillis;
+    public DefaultAbstractPay(RestTemplate restTemplate, PayChannelService payChannelService, PayChannelAccountService payChannelAccountService, ChannelRiskCache channelRiskCache, OrderService orderService, OrderPayRequestLock orderPayRequestLock, PayUrlRequestAdviceFinder payUrlRequestAdviceFinder, FixChannelRiskQueue fixChannelRiskQueue, List<PayUrlRequestAdvice> payUrlRequestAdvicesCacheList) {
+        this.restTemplate = restTemplate;
+        this.payChannelService = payChannelService;
+        this.payChannelAccountService = payChannelAccountService;
+        this.channelRiskCache = channelRiskCache;
+        this.orderService = orderService;
+        this.orderPayRequestLock = orderPayRequestLock;
+        this.payUrlRequestAdviceFinder = payUrlRequestAdviceFinder;
+        this.fixChannelRiskQueue = fixChannelRiskQueue;
+        this.payUrlRequestAdvicesCacheList = payUrlRequestAdvicesCacheList;
+    }
 
     /**
      * 1. 检查修改订单状态为已扫码
@@ -79,6 +81,7 @@ public abstract class DefaultAbstractPay implements PayService {
      * 12. 执行advice的后置处理
      * 13. 响应信息给用户
      * 14. 进行当前订单的锁释放
+     *
      * @param order
      * @param request
      * @param response
@@ -121,10 +124,9 @@ public abstract class DefaultAbstractPay implements PayService {
                 // 进入渠道风控金额回滚队列，单独用一个延时队列是为了让订单过期之后，再进行风控金额回滚，尽量减少超额的情况。
                 // 但是还是可能出现超额，因为如果上游超时回调了会自动修复过期的订单。
                 fixChannelRiskQueue.push(new FixChannelRisk(order.getId(), order.getAmount(),
-                        order.getDetail().getPayChannelDayMax() != null ? order.getDetail().getPayChannelId() : null,
-                        order.getDetail().getPayChannelAccountDayMax() != null ? order.getDetail().getPayChannelAccountId() : null,
-                        // 在订单过期之后，才进行金额回滚，fixChannelFloatMillis是一个相对安全的时间范围，一般为正数
-                        Duration.between(LocalDateTime.now(), order.getDetail().getOrderExpiredTime()).toMillis() + fixChannelFloatMillis));
+                                order.getDetail().getPayChannelDayMax() != null ? order.getDetail().getPayChannelId() : null,
+                                order.getDetail().getPayChannelAccountDayMax() != null ? order.getDetail().getPayChannelAccountId() : null),
+                        order.getDetail().getOrderExpiredTime());
             } catch (Exception e) {
                 // 请求失败就把缓存中扣的金额给恢复
                 if (order.getDetail().getPayChannelDayMax() != null) {

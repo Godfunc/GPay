@@ -12,11 +12,9 @@
     <artifactId>common</artifactId>
 
     <dependencies>
-
         <dependency>
-            <groupId>com.godfunc</groupId>
-            <artifactId>api-interface</artifactId>
-            <version>${project.parent.version}</version>
+            <groupId>org.pf4j</groupId>
+            <artifactId>pf4j-spring</artifactId>
         </dependency>
         <!--utils-->
         <dependency>

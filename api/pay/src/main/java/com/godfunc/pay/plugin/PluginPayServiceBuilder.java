@@ -8,7 +8,7 @@ import com.godfunc.pay.DefaultAbstractPay;
 import com.godfunc.pay.PayService;
 import com.godfunc.pay.advice.PayUrlRequestAdvice;
 import com.godfunc.pay.advice.PayUrlRequestAdviceFinder;
-import com.godfunc.plugin.BasePlugin;
+import com.godfunc.plugin.PayPluginExecutor;
 import com.godfunc.producer.FixChannelRiskQueue;
 import com.godfunc.service.OrderService;
 import com.godfunc.service.PayChannelAccountService;
@@ -37,16 +37,16 @@ public class PluginPayServiceBuilder {
     private final FixChannelRiskQueue fixChannelRiskQueue;
     private final List<PayUrlRequestAdvice> payUrlRequestAdvicesCacheList;
 
-    public PayService build(BasePlugin basePlugin) {
+    public PayService build(PayPluginExecutor executor) {
         return new DefaultAbstractPay(restTemplate, payChannelService, payChannelAccountService, channelRiskCache, orderService, orderPayRequestLock, payUrlRequestAdviceFinder, fixChannelRiskQueue, payUrlRequestAdvicesCacheList) {
             @Override
             public PayInfoDTO doPay(Order order) {
-                return basePlugin.doPay(order);
+                return executor.doPay(order);
             }
 
             @Override
             public void handleResponse(PayInfoDTO payInfo, HttpServletRequest request, HttpServletResponse response) {
-                basePlugin.handleResponse(payInfo, request, response);
+                executor.handleResponse(payInfo, request, response);
             }
         };
     }

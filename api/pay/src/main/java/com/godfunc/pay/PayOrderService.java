@@ -1,11 +1,10 @@
 package com.godfunc.pay;
 
 import com.godfunc.constant.ApiConstant;
-import com.godfunc.dto.PayInfoDTO;
 import com.godfunc.entity.Order;
 import com.godfunc.entity.OrderDetail;
 import com.godfunc.pay.plugin.PluginPayServiceBuilder;
-import com.godfunc.plugin.BasePlugin;
+import com.godfunc.plugin.PayPluginExecutor;
 import com.godfunc.service.OrderDetailService;
 import com.godfunc.service.OrderService;
 import com.godfunc.util.Assert;
@@ -42,11 +41,11 @@ public class PayOrderService {
         OrderDetail detail = orderDetailService.getByOrderId(order.getId());
         Assert.isNull(detail, "订单信息不全，请重新下单");
         order.setDetail(detail);
-        List<BasePlugin> extensions = pluginManager.getExtensions(BasePlugin.class, detail.getLogicalTag() + "Plugin");
+        List<PayPluginExecutor> extensions = pluginManager.getExtensions(PayPluginExecutor.class, detail.getLogicalTag() + "Pay-plugin");
         PayService payService = null;
         if (CollectionUtils.isNotEmpty(extensions)) {
-            BasePlugin basePlugin = extensions.get(0);
-            payService = pluginPayServiceBuilder.build(basePlugin);
+            PayPluginExecutor executor = extensions.get(0);
+            payService = pluginPayServiceBuilder.build(executor);
         } else {
             payService = (PayService) applicationContext.getBean(ApiConstant.PAY_SERVICE_PREFIX + detail.getLogicalTag());
         }

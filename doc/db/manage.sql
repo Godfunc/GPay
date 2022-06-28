@@ -143,3 +143,9 @@ create table mg_user_token
     unique uk_token (token)
 ) engine = innodb
   default charset = utf8mb4 comment ='用户token表';
+
+-- admin/admin
+INSERT INTO mg_user(id, username, password, gender, mobile, super_manager, status, create_id,
+                    update_id, create_time, update_time, rm_tag)
+VALUES (1, 'admin', '$2a$10$Da613qPxrtIomxeWenWn3.0PHOfbuxFxrjQCeKAMsYA6syfWeHv36', 1, '17332345631', 1, 1, 0, NULL,
+        '2019-12-18 20:29:16', NULL, 0);

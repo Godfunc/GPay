@@ -293,21 +293,6 @@ create table pay_platform_order_profit
     index idx_create_time (create_time)
 ) comment '平台订单收益表';
 
-create table mg_config
-(
-    id          bigint(20)   not null,
-    name        varchar(512) not null comment '名称',
-    value       text comment '值',
-    remark      text         null comment '额外信息',
-    create_id   bigint(20)   not null comment '创建人id',
-    update_id   bigint(20) comment '更新人id',
-    create_time datetime     not null comment '创建时间',
-    update_time datetime     null comment '更新时间',
-    primary key (id),
-    unique uq_name (name),
-    index idx_create_time (create_time)
-) comment '系统配置表';
-
 create table mg_job
 (
     id         bigint(20)   not null,
@@ -335,4 +320,4 @@ create table pay_order_log
     primary key (id),
     index idx_order_id_merchant_id (order_id, merchant_id),
     index idx_create_time (create_time)
-) comment '订单日志表'
+) comment '订单日志表';

@@ -15,13 +15,16 @@ import java.time.LocalDateTime;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class FixChannelRiskQueue {
 
     private final RabbitTemplate rabbitTemplate;
 
-    @Value("${fixChannelFloatMillis}")
     private final Long fixChannelFloatMillis;
+
+    public FixChannelRiskQueue(RabbitTemplate rabbitTemplate, @Value("${fixChannelFloatMillis}") Long fixChannelFloatMillis) {
+        this.rabbitTemplate = rabbitTemplate;
+        this.fixChannelFloatMillis = fixChannelFloatMillis;
+    }
 
     public void push(FixChannelRisk fixChannelRisk, LocalDateTime orderExpiredTime) {
         // 在订单过期之后，才进行金额回滚，fixChannelFloatMillis是一个相对安全的时间范围，一般为正数

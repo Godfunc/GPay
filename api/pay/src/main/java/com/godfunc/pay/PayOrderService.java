@@ -41,12 +41,14 @@ public class PayOrderService {
         OrderDetail detail = orderDetailService.getByOrderId(order.getId());
         Assert.isNull(detail, "订单信息不全，请重新下单");
         order.setDetail(detail);
+        // 1. 先从plugins里面去找
         List<PayPluginExecutor> extensions = pluginManager.getExtensions(PayPluginExecutor.class, detail.getLogicalTag() + "Pay-plugin");
         PayService payService = null;
         if (CollectionUtils.isNotEmpty(extensions)) {
             PayPluginExecutor executor = extensions.get(0);
             payService = pluginPayServiceBuilder.build(executor);
         } else {
+            // 2. plugins没有就去IoC容器里面去找
             payService = (PayService) applicationContext.getBean(ApiConstant.PAY_SERVICE_PREFIX + detail.getLogicalTag());
         }
         Assert.isNull(payService, "不支持的支付类型");

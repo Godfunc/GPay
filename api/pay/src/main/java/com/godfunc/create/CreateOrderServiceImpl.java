@@ -126,7 +126,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         // 检查商户状态 检查商户代理的状态
         List<Merchant> agentList = merchantCheck(merchant);
 
-        // 检查订单是否已存在
+        // 检查订单是否已存在 TODO 使用 redis 优化
         orderExistCheck(param.getOutTradeNo(), merchant.getCode());
 
         // 设置订单基本信息
